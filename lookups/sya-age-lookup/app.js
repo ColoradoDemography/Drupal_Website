@@ -1,9 +1,9 @@
 /* =====================================================================
    State Demography Office - County Single Year of Age Lookup Logic
-   Refactored to utilize Global_SDO_Utilities.js safely across environments
+   Production Edition - Optimized to use centralized global utilities
    ===================================================================== */
 
-function startSdoSYAApp() {
+window.addEventListener("load", () => {
     
     // --- LOAD DATATABLES CORE CSS ---
     var dtCss = document.createElement("link");
@@ -11,7 +11,7 @@ function startSdoSYAApp() {
     dtCss.href = "https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.css";
     document.head.appendChild(dtCss);
     
-    // 1. DYNAMICALLY LOAD DEPENDENCIES SEQUENTIALLY
+    // 1. DYNAMICALLY LOAD DEPENDENCIES SEQUENTIALLY (Preserves working asset isolation)
     function loadScript(url, callback) {
         var script = document.createElement("script");
         script.type = "text/javascript";
@@ -20,7 +20,7 @@ function startSdoSYAApp() {
         document.head.appendChild(script);
     }
 
-    // Load jQuery -> DataTables -> D3 -> Run Main Application Logic
+    // Load jQuery -> DataTables -> D3 -> Run App
     loadScript("https://code.jquery.com/jquery-3.7.0.js", function() {
         loadScript("https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.js", function() {
             loadScript("https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js", function() {
@@ -32,46 +32,7 @@ function startSdoSYAApp() {
     // 2. MAIN APPLICATION FUNCTION
     function initSYALookup() {
         
-        // --- LOCAL SUBJECT-SPECIFIC UTILITIES ---
-        
-        function countyName(cty) {
-            var name = "";
-            if(cty == 0) name = "Colorado";
-            if(cty == 1) name = 'Adams County'; if(cty == 3) name = 'Alamosa County';
-            if(cty == 5) name = 'Arapahoe County'; if(cty == 7) name = 'Archuleta County';
-            if(cty == 9) name = 'Baca County'; if(cty == 11) name = 'Bent County';
-            if(cty == 13) name = 'Boulder County'; if(cty == 14) name = 'Broomfield County';
-            if(cty == 15) name = 'Chaffee County'; if(cty == 17) name = 'Cheyenne County';
-            if(cty == 19) name = 'Clear Creek County'; if(cty == 21) name = 'Conejos County';
-            if(cty == 23) name = 'Costilla County'; if(cty == 25) name = 'Crowley County';
-            if(cty == 27) name = 'Custer County'; if(cty == 29) name = 'Delta County';
-            if(cty == 31) name = 'Denver County'; if(cty == 33) name = 'Dolores County';
-            if(cty == 35) name = 'Douglas County'; if(cty == 37) name = 'Eagle County';
-            if(cty == 39) name = 'Elbert County'; if(cty == 41) name = 'El Paso County';
-            if(cty == 43) name = 'Fremont County'; if(cty == 45) name = 'Garfield County';
-            if(cty == 47) name = 'Gilpin County'; if(cty == 49) name = 'Grand County';
-            if(cty == 51) name = 'Gunnison County'; if(cty == 53) name = 'Hinsdale County';
-            if(cty == 55) name = 'Huerfano County'; if(cty == 57) name = 'Jackson County';
-            if(cty == 59) name = 'Jefferson County'; if(cty == 61) name = 'Kiowa County';
-            if(cty == 63) name = 'Kit Carson County'; if(cty == 65) name = 'Lake County';
-            if(cty == 67) name = 'La Plata County'; if(cty == 69) name = 'Larimer County';
-            if(cty == 71) name = 'Las Animas County'; if(cty == 73) name = 'Lincoln County';
-            if(cty == 75) name = 'Logan County'; if(cty == 77) name = 'Mesa County';
-            if(cty == 79) name = 'Mineral County'; if(cty == 81) name = 'Moffat County';
-            if(cty == 83) name = 'Montezuma County'; if(cty == 85) name = 'Montrose County';
-            if(cty == 87) name = 'Morgan County'; if(cty == 89) name = 'Otero County';
-            if(cty == 91) name = 'Ouray County'; if(cty == 93) name = 'Park County';
-            if(cty == 95) name = 'Phillips County'; if(cty == 97) name = 'Pitkin County';
-            if(cty == 99) name = 'Prowers County'; if(cty == 101) name = 'Pueblo County';
-            if(cty == 103) name = 'Rio Blanco County'; if(cty == 105) name = 'Rio Grande County';
-            if(cty == 107) name = 'Routt County'; if(cty == 109) name = 'Saguache County';
-            if(cty == 111) name = 'San Juan County'; if(cty == 113) name = 'San Miguel County';
-            if(cty == 115) name = 'Sedgwick County'; if(cty == 117) name = 'Summit County';
-            if(cty == 119) name = 'Teller County'; if(cty == 121) name = 'Washington County';
-            if(cty == 123) name = 'Weld County'; if(cty == 125) name = 'Yuma County';
-            return name;
-        }
-
+        // --- LOCAL INTERFACE GENERATORS ---
         function popDropdown(level, ddid, callpg) {
             var county = [
                 {'location':'Colorado', 'fips': '000'}, {'location':'Adams County', 'fips': '001'},
@@ -218,7 +179,7 @@ function startSdoSYAApp() {
                             for (let [key1, value1] of value) {
                                 out_data.push({
                                     'countyfips': key,
-                                    'countyname': sdoGetCountyName(key), // Swapped to global!
+                                    'countyname': sdoGetCountyName(key), // Central Global Map
                                     'year': key1,
                                     'age': grp,
                                     'male': value1.male,
@@ -246,7 +207,7 @@ function startSdoSYAApp() {
                                 for (let [key1, value1] of value) {
                                     out_data.push({
                                         'countyfips': key, 
-                                        'countyname': sdoGetCountyName(key), // Swapped to global!
+                                        'countyname': sdoGetCountyName(key), // Central Global Map
                                         'year': key1, 
                                         'male': value1.male, 
                                         'female': value1.female, 
@@ -314,7 +275,7 @@ function startSdoSYAApp() {
                 data.forEach(i => {
                     raw_data.push({
                         "countyfips": i.countyfips,
-                        "countyname": sdoGetCountyName(i.countyfips),
+                        "countyname": sdoGetCountyName(i.countyfips), // Central Global Map
                         "year": i.year,
                         "age": i.age,
                         "male": +i.malepopulation,
@@ -397,7 +358,6 @@ function startSdoSYAApp() {
         }
 
         // --- MAIN INITIALIZATION & EVENT BINDING ---
-        
         var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
         var globalYearData = [];
 
@@ -406,7 +366,7 @@ function startSdoSYAApp() {
             popDropdown('county', 'county-dropdown', '');
             var yeardata2 = yeardata.filter(i => i.year >= 1990);
             
-            // Calls Centralized SDO Utilities library
+            // Central SDO Global Helper
             sdoPopulateYears("year-dropdown", yeardata2);
 
             var radios = document.querySelectorAll('input[name="age_grouping"]');
@@ -422,9 +382,7 @@ function startSdoSYAApp() {
                 document.getElementById('tbl_output').innerHTML = "";
 
                 var fipsdd = document.getElementById('county-dropdown');
-                
-                // Calls Centralized SDO Utilities library
-                var selectedfips = sdoGetSelectValues(fipsdd);
+                var selectedfips = sdoGetSelectValues(fipsdd); // Central Global Helper
 
                 if (selectedfips.length == 0) {
                     outputmsg += " > Please select one or more counties.\n";
@@ -432,9 +390,7 @@ function startSdoSYAApp() {
                 }
 
                 var yrdd = document.getElementById('year-dropdown');
-                
-                // Calls Centralized SDO Utilities library
-                var selectedyr = sdoGetSelectValues(yrdd);
+                var selectedyr = sdoGetSelectValues(yrdd); // Central Global Helper
 
                 if (selectedyr.length == 0) {
                     outputmsg += " > Please select one or more years.\n";
@@ -483,9 +439,7 @@ function startSdoSYAApp() {
                         break;
                     case "single":
                         var agesel = document.getElementById("agesel");
-                        
-                        // Calls Centralized SDO Utilities library
-                        age_range = sdoGetSelectValues(agesel);
+                        age_range = sdoGetSelectValues(agesel); // Central Global Helper
                         if (age_range.length == 0) {
                             outputmsg += " > Please select a range of ages.\n";
                             complete = false;
@@ -524,11 +478,4 @@ function startSdoSYAApp() {
             });
         }); 
     }
-}
-
-// Bulletproof execution trigger for both Drupal and Sandbox lifecycles
-if (document.readyState === "complete" || document.readyState === "interactive") {
-    startSdoSYAApp();
-} else {
-    window.addEventListener("load", startSdoSYAApp);
-}
+});
