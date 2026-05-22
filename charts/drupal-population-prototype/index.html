@@ -1,0 +1,32 @@
+<div class="sdo-lookup-container">
+    <p>
+        The following page shows graphs and charts for various datasets for Colorado, multi-county regions, and counties. Select the geography type and geography from the list below.
+    </p>
+    <p>
+        <em>Click on the download icon next to each chart to download the image or underlying data.</em>
+    </p>
+    <hr>
+    <form class="sdo-form-grid" id="dashboard-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="geo-dropdown"><strong>Select Geography Type:</strong></label> <select class="form-control" id="geo-dropdown">
+                                                                                <option value="region">Region</option>
+                                                                                <option value="county" selected="">County</option>
+                                                                              </select>
+        </div>
+        <div class="form-group">
+            <label for="location-dropdown"><strong>Select Geography:</strong></label> <select class="form-control" id="location-dropdown"></select>
+        </div>
+        <div class="form-group" style="display:none;" id="county-wrap">
+            <label for="county-dropdown"><strong>Select County in Region:</strong></label> <select class="form-control" id="county-dropdown"></select>
+        </div>
+    </form>
+    <hr>
+    <div class="sdo-chart-section">
+        <h3 class="h3_style">
+            Population Estimates and Forecasts
+        </h3>
+        <div style="height:400px;width:100%;" id="est_output" aria-live="polite">
+            &nbsp;
+        </div>
+    </div>
+</div>

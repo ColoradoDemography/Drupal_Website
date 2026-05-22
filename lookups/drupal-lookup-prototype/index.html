@@ -1,0 +1,45 @@
+<div class="sdo-lookup-container">
+    <h2>
+        INSTRUCTIONS:
+    </h2>
+    <p>
+        This application creates custom tables for SDO County estimates by age.
+    </p>
+    <p>
+        A spreadsheet with detailed information for population by age is available on the <a href="https://demography.dola.colorado.gov/assets/html/population.html" target="_blank">SDO Population Spreadsheets</a> page.
+    </p>
+    <hr>
+    <form class="sdo-form-grid" id="sya-lookup-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="county-dropdown"><strong>Select one or more Counties:</strong></label> <select class="form-control" id="county-dropdown" size="6" multiple="" aria-label="Select Counties"></select>
+        </div>
+        <div class="form-group">
+            <label for="year-dropdown"><strong>Select one or more years:</strong></label> <select class="form-control" id="year-dropdown" size="6" multiple="" aria-label="Select Years"></select>
+        </div>
+        <fieldset class="form-group sdo-fieldset">
+            <legend><strong>Select Age Groups:</strong></legend>
+            <div class="radio-wrap">
+                <input type="radio" id="age5" name="age_grouping" value="5yr" checked=""> <label for="age5">Five Year Intervals</label>
+            </div>
+            <div class="radio-wrap">
+                <input type="radio" id="census" name="age_grouping" value="census"> <label for="census">Census Categories</label>
+            </div>
+            <div class="radio-wrap">
+                <input type="radio" id="customage" name="age_grouping" value="custom"> <label for="customage">Custom Intervals</label>
+            </div>
+            <div class="radio-wrap">
+                <input type="radio" id="sya" name="age_grouping" value="single"> <label for="sya">Single Year Selections</label>
+            </div>
+        </fieldset>
+        <div class="form-group" id="ageselect" aria-live="polite">
+            &nbsp;
+        </div>
+        <div class="form-group sdo-actions">
+            <button class="button button--primary" type="button" id="gentable">Generate Table</button> <button class="button button--secondary" type="button" id="cleartable">Reset Selections</button>
+        </div>
+    </form>
+    <hr>
+    <div id="tbl_output" aria-live="polite">
+        &nbsp;
+    </div>
+</div>
