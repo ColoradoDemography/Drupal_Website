@@ -1,40 +1,165 @@
-/**
- * lookups/sya-age-lookup/app.js
- * State Demography Office - Single Year of Age Lookup Page Logic
- */
+/* =====================================================================
+   State Demography Office - County Single Year of Age Lookup Logic
+   Refactored to utilize Global_SDO_Utilities.js safely across environments
+   ===================================================================== */
 
-window.addEventListener("load", () => {
-    // Initialize the tool once the DOM is fully ready
-    initSYALookup(); 
+function startSdoSYAApp() {
+    
+    // --- LOAD DATATABLES CORE CSS ---
+    var dtCss = document.createElement("link");
+    dtCss.rel = "stylesheet";
+    dtCss.href = "https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.css";
+    document.head.appendChild(dtCss);
+    
+    // 1. DYNAMICALLY LOAD DEPENDENCIES SEQUENTIALLY
+    function loadScript(url, callback) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.onload = function() { if (callback) callback(); };
+        script.src = url;
+        document.head.appendChild(script);
+    }
 
+    // Load jQuery -> DataTables -> D3 -> Run Main Application Logic
+    loadScript("https://code.jquery.com/jquery-3.7.0.js", function() {
+        loadScript("https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.js", function() {
+            loadScript("https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js", function() {
+                initSYALookup(); 
+            });
+        });
+    });
+
+    // 2. MAIN APPLICATION FUNCTION
     function initSYALookup() {
         
-        /**
-         * Generates the dynamic inputs for age selection based on UI choices
-         */
-        function genAgeGroup(group) {
+        // --- LOCAL SUBJECT-SPECIFIC UTILITIES ---
+        
+        function countyName(cty) {
+            var name = "";
+            if(cty == 0) name = "Colorado";
+            if(cty == 1) name = 'Adams County'; if(cty == 3) name = 'Alamosa County';
+            if(cty == 5) name = 'Arapahoe County'; if(cty == 7) name = 'Archuleta County';
+            if(cty == 9) name = 'Baca County'; if(cty == 11) name = 'Bent County';
+            if(cty == 13) name = 'Boulder County'; if(cty == 14) name = 'Broomfield County';
+            if(cty == 15) name = 'Chaffee County'; if(cty == 17) name = 'Cheyenne County';
+            if(cty == 19) name = 'Clear Creek County'; if(cty == 21) name = 'Conejos County';
+            if(cty == 23) name = 'Costilla County'; if(cty == 25) name = 'Crowley County';
+            if(cty == 27) name = 'Custer County'; if(cty == 29) name = 'Delta County';
+            if(cty == 31) name = 'Denver County'; if(cty == 33) name = 'Dolores County';
+            if(cty == 35) name = 'Douglas County'; if(cty == 37) name = 'Eagle County';
+            if(cty == 39) name = 'Elbert County'; if(cty == 41) name = 'El Paso County';
+            if(cty == 43) name = 'Fremont County'; if(cty == 45) name = 'Garfield County';
+            if(cty == 47) name = 'Gilpin County'; if(cty == 49) name = 'Grand County';
+            if(cty == 51) name = 'Gunnison County'; if(cty == 53) name = 'Hinsdale County';
+            if(cty == 55) name = 'Huerfano County'; if(cty == 57) name = 'Jackson County';
+            if(cty == 59) name = 'Jefferson County'; if(cty == 61) name = 'Kiowa County';
+            if(cty == 63) name = 'Kit Carson County'; if(cty == 65) name = 'Lake County';
+            if(cty == 67) name = 'La Plata County'; if(cty == 69) name = 'Larimer County';
+            if(cty == 71) name = 'Las Animas County'; if(cty == 73) name = 'Lincoln County';
+            if(cty == 75) name = 'Logan County'; if(cty == 77) name = 'Mesa County';
+            if(cty == 79) name = 'Mineral County'; if(cty == 81) name = 'Moffat County';
+            if(cty == 83) name = 'Montezuma County'; if(cty == 85) name = 'Montrose County';
+            if(cty == 87) name = 'Morgan County'; if(cty == 89) name = 'Otero County';
+            if(cty == 91) name = 'Ouray County'; if(cty == 93) name = 'Park County';
+            if(cty == 95) name = 'Phillips County'; if(cty == 97) name = 'Pitkin County';
+            if(cty == 99) name = 'Prowers County'; if(cty == 101) name = 'Pueblo County';
+            if(cty == 103) name = 'Rio Blanco County'; if(cty == 105) name = 'Rio Grande County';
+            if(cty == 107) name = 'Routt County'; if(cty == 109) name = 'Saguache County';
+            if(cty == 111) name = 'San Juan County'; if(cty == 113) name = 'San Miguel County';
+            if(cty == 115) name = 'Sedgwick County'; if(cty == 117) name = 'Summit County';
+            if(cty == 119) name = 'Teller County'; if(cty == 121) name = 'Washington County';
+            if(cty == 123) name = 'Weld County'; if(cty == 125) name = 'Yuma County';
+            return name;
+        }
+
+        function popDropdown(level, ddid, callpg) {
+            var county = [
+                {'location':'Colorado', 'fips': '000'}, {'location':'Adams County', 'fips': '001'},
+                {'location':'Alamosa County', 'fips': '003'},{'location':'Arapahoe County', 'fips': '005'},
+                {'location':'Archuleta County', 'fips': '007'},{'location':'Baca County', 'fips': '009'},
+                {'location':'Bent County', 'fips': '011'},{'location':'Boulder County', 'fips': '013'},
+                {'location':'Broomfield County', 'fips': '014'},{'location':'Chaffee County', 'fips': '015'},
+                {'location':'Cheyenne County', 'fips': '017'},{'location':'Clear Creek County', 'fips': '019'},
+                {'location':'Conejos County', 'fips': '021'},{'location':'Costilla County', 'fips': '023'},
+                {'location':'Crowley County', 'fips': '025'},{'location':'Custer County', 'fips': '027'},
+                {'location':'Delta County', 'fips': '029'},{'location':'Denver County', 'fips': '031'},
+                {'location':'Dolores County', 'fips': '033'},{'location':'Douglas County', 'fips': '035'},
+                {'location':'Eagle County', 'fips': '037'},{'location':'Elbert County', 'fips': '039'},
+                {'location':'El Paso County', 'fips': '041'},{'location':'Fremont County', 'fips': '043'},
+                {'location':'Garfield County', 'fips': '045'},{'location':'Gilpin County', 'fips': '047'},
+                {'location':'Grand County', 'fips': '049'},{'location':'Gunnison County', 'fips': '051'},
+                {'location':'Hinsdale County', 'fips': '053'},{'location':'Huerfano County', 'fips': '055'},
+                {'location':'Jackson County', 'fips': '057'},{'location':'Jefferson County', 'fips': '059'},
+                {'location':'Kiowa County', 'fips': '061'},{'location':'Kit Carson County', 'fips': '063'},
+                {'location':'Lake County', 'fips': '065'},{'location':'La Plata County', 'fips': '067'},
+                {'location':'Larimer County', 'fips': '069'},{'location':'Las Animas County', 'fips': '071'},
+                {'location':'Lincoln County', 'fips': '073'},{'location':'Logan County', 'fips': '075'},
+                {'location':'Mesa County', 'fips': '077'},{'location':'Mineral County', 'fips': '079'},
+                {'location':'Moffat County', 'fips': '081'},{'location':'Montezuma County', 'fips': '083'},
+                {'location':'Montrose County', 'fips': '085'},{'location':'Morgan County', 'fips': '087'},
+                {'location':'Otero County', 'fips': '089'},{'location':'Ouray County', 'fips': '091'},
+                {'location':'Park County', 'fips': '093'},{'location':'Phillips County', 'fips': '095'},
+                {'location':'Pitkin County', 'fips': '097'},{'location':'Prowers County', 'fips': '099'},
+                {'location':'Pueblo County', 'fips': '101'},{'location':'Rio Blanco County', 'fips': '103'},
+                {'location':'Rio Grande County', 'fips': '105'},{'location':'Routt County', 'fips': '107'},
+                {'location':'Saguache County', 'fips': '109'},{'location':'San Juan County', 'fips': '111'},
+                {'location':'San Miguel County', 'fips': '113'},{'location':'Sedgwick County', 'fips': '115'},
+                {'location':'Summit County', 'fips': '117'},{'location':'Teller County', 'fips': '119'},
+                {'location':'Washington County', 'fips': '121'},{'location':'Weld County', 'fips': '123'},
+                {'location':'Yuma County', 'fips': '125'}
+            ];
+            var sel = document.getElementById(ddid);
+            sel.innerHTML = "";
+            for (var i = 0; i < county.length; i++) {
+                var el = document.createElement("option");
+                el.textContent = county[i].location;
+                el.value = county[i].fips;
+                sel.appendChild(el);
+            }
+        }
+
+        function genAgeGroup(group, type) {
             var outcell = document.getElementById('ageselect');
-            if (!outcell) return;
             outcell.innerHTML = "";
-            
             var tabdiv = document.createElement('div');
             var tabtxt = document.createElement('p');
-            
             if (group == "custom") {
                 tabtxt.innerHTML = '<strong>Designate up to 5 intervals between 0 and 100:</strong><br>';
                 var outitem = document.createElement("table");
                 for (let i = 0; i < 5; i++) {
                     var tblrow = document.createElement("tr");
-                    tblrow.innerHTML = `<td><label for="agestart${i}">From: </label><input type="text" id="agestart${i}" name="agestart${i}" size="5"></td>
-                                       <td><label for="ageend${i}">To: </label><input type="text" id="ageend${i}" name="ageend${i}" size="5"></td>`;
+                    var cella = document.createElement("td");
+                    var labela = document.createElement("label");
+                    labela.htmlFor = "agestart" + i;
+                    labela.innerHTML = "From: ";
+                    var inputa = document.createElement("input");
+                    inputa.type = "text";
+                    inputa.id = "agestart" + i;
+                    inputa.name = "agestart" + i;
+                    cella.appendChild(labela);
+                    cella.appendChild(inputa);
+
+                    var cellb = document.createElement("td");
+                    var labelb = document.createElement("label");
+                    labelb.htmlFor = "ageend" + i;
+                    labelb.innerHTML = "To: ";
+                    var inputb = document.createElement("input");
+                    inputb.type = "text";
+                    inputb.id = "ageend" + i;
+                    inputb.name = "ageend" + i;
+                    cellb.appendChild(labelb);
+                    cellb.appendChild(inputb);
+
+                    tblrow.appendChild(cella);
+                    tblrow.appendChild(cellb);
                     outitem.appendChild(tblrow);
                 }
                 tabdiv.appendChild(tabtxt);
                 tabdiv.appendChild(outitem);
             }
-            
             if (group == "single") {
                 tabtxt.innerHTML = '<strong>Select one or more ages:</strong><br>';
+                var outdiv = document.createElement("div");
                 var outitem = document.createElement("select");
                 outitem.id = "agesel";
                 outitem.setAttribute('size', '6');
@@ -47,197 +172,363 @@ window.addEventListener("load", () => {
                     outitem.appendChild(el);
                 }
                 
-                var grpOptions = [
-                    { id: 'NoGrp', txt: 'No Grouping', val: 'opt0' },
-                    { id: 'yrGrp', txt: 'Group by Year', val: 'opt1' },
-                    { id: 'ctyGrp', txt: 'Group by County and Year', val: 'opt2' },
-                    { id: 'ageGrp', txt: 'Group by Age and Year', val: 'opt3' }
+                var grparr = [
+                    {'id': 'NoGrp', 'txt': 'No Grouping', 'optval': 'opt0'},
+                    {'id': 'yrGrp', 'txt': 'Group by Year', 'optval': 'opt1'},
+                    {'id': 'ctyGrp', 'txt': 'Group by County and Year', 'optval': 'opt2'},
+                    {'id': 'ageGrp', 'txt': 'Group by Age and Year', 'optval': 'opt3'}
                 ];
                 
-                var radioContainer = document.createElement("div");
-                grpOptions.forEach(opt => {
+                for (let i = 0; i < grparr.length; i++) {
                     var wrap = document.createElement('div');
                     wrap.className = 'radio-wrap';
-                    wrap.innerHTML = `<input type="radio" id="${opt.id}" name="age_summary" value="${opt.val}">
-                                      <label for="${opt.id}"> ${opt.txt}</label>`;
-                    radioContainer.appendChild(wrap);
-                });
-
+                    var radioInput = document.createElement('input');
+                    var radioLabel = document.createElement('label');
+                    radioInput.type = "radio";
+                    radioInput.id = grparr[i].id;
+                    radioInput.name = "age_summary";
+                    radioInput.value = grparr[i].optval;
+                    radioLabel.htmlFor = grparr[i].id;
+                    radioLabel.innerHTML = " " + grparr[i].txt;
+                    wrap.appendChild(radioInput);
+                    wrap.appendChild(radioLabel);
+                    outdiv.appendChild(wrap);
+                }
                 tabdiv.appendChild(tabtxt);
                 tabdiv.appendChild(outitem);
-                tabdiv.appendChild(radioContainer);
+                tabdiv.appendChild(outdiv);
             }
 
             if (group == "custom" || group == "single") {
                 outcell.appendChild(tabdiv);
-                if (group == "single") document.getElementById('NoGrp').checked = true;
+                if (group == "single") {
+                    document.getElementById('NoGrp').checked = true;
+                }
             }
         }
 
-        /**
-         * Fetches endpoint data and processes queries
-         */
-        function genSYACty(loc, year_arr, group, agespec, age_arr, yeardata) {
-            var fips_list = loc.join(",");
-            var year_list = year_arr.join(",");
-            
-            let age_list = "0,100";
-            let choice = agespec;
-            if (agespec === "custom" || agespec === "single") {
-                choice = "single";
-                if (agespec === "custom") age_list = Array.from({ length: 101 }, (_, i) => i).join(",");
-                else age_list = age_arr.join(",");
-            }
-            
-            var urlstr = `https://gis.dola.colorado.gov/lookups/sya?age=${age_list}&county=${fips_list}&year=${year_list}&choice=${choice}`;
-
-            d3.json(urlstr).then(function(data) {
-                // Map raw JSON keys to explicit data models
-                let raw_data = data.map(i => ({
-                    countyfips: i.countyfips,
-                    countyname: (typeof countyName === "function") ? countyName(parseInt(i.countyfips)) : "County " + i.countyfips,
-                    year: i.year,
-                    age: i.age,
-                    male: +i.malepopulation,
-                    female: +i.femalepopulation,
-                    total: +i.totalpopulation,
-                    datatype: i.datatype
-                }));
-
-                let processed_data = [];
-
-                if (agespec === "custom") {
-                    // Manual rollup execution for custom ranges
-                    age_arr.forEach(range => {
-                        let filtered = raw_data.filter(d => d.age >= range[0] && d.age <= range[1]);
-                        
-                        // Fallback rollup if legacy central processing is missing
-                        let rolled = d3.rollups(filtered, 
-                            v => ({
-                                male: d3.sum(v, d => d.male),
-                                female: d3.sum(v, d => d.female),
-                                total: d3.sum(v, d => d.total)
-                            }), 
-                            d => d.countyfips, d => d.year
-                        );
-
-                        rolled.forEach(([cfips, yearsMap]) => {
-                            yearsMap.forEach((metrics, yr) => {
-                                processed_data.push({
-                                    countyfips: cfips,
-                                    year: yr,
-                                    age: `${range[0]} to ${range[1]}`,
-                                    countyname: (typeof countyName === "function") ? countyName(parseInt(cfips)) : "County " + cfips,
-                                    male: metrics.male,
-                                    female: metrics.female,
-                                    total: metrics.total
+        function sumSYA(in_data, spec, grp, type) {
+            var out_data = [];
+            var columnsToSum = ["male", "female", "total"];
+            switch (spec) {
+                case "custom":
+                    if (type == "county") {
+                        var binroll = d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.countyfips, d => d.year);
+                        for (let [key, value] of binroll) {
+                            for (let [key1, value1] of value) {
+                                out_data.push({
+                                    'countyfips': key,
+                                    'countyname': sdoGetCountyName(key), // Swapped to global!
+                                    'year': key1,
+                                    'age': grp,
+                                    'male': value1.male,
+                                    'female': value1.female,
+                                    'total': value1.total
                                 });
-                            });
-                        });
-                    });
-                } else if (agespec === "single") {
-                    // Route standard groupings via native D3 rollups
-                    let keys = [d => d.countyfips, d => d.year, d => d.age];
-                    if (group === 'opt1') keys = [d => d.year];
-                    else if (group === 'opt2') keys = [d => d.countyfips, d => d.year];
-                    else if (group === 'opt3') keys = [d => d.year, d => d.age];
+                            }
+                        }
+                    }
+                    break;
+                case "single":
+                    switch (grp) {
+                        case "opt0":
+                            out_data = in_data;
+                            break;
+                        case "opt1":
+                            var binroll = d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.year);
+                            for (let [key, value] of binroll) {
+                                out_data.push({'year': key, 'male': value.male, 'female': value.female, 'total': value.total});
+                            }
+                            break;
+                        case "opt2":
+                            var binroll = d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.countyfips, d => d.year);
+                            for (let [key, value] of binroll) {
+                                for (let [key1, value1] of value) {
+                                    out_data.push({
+                                        'countyfips': key, 
+                                        'countyname': sdoGetCountyName(key), // Swapped to global!
+                                        'year': key1, 
+                                        'male': value1.male, 
+                                        'female': value1.female, 
+                                        'total': value1.total
+                                    });
+                                }
+                            }
+                            break;
+                        case "opt3":
+                            var binroll = d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.year, d => d.age);
+                            for (let [key, value] of binroll) {
+                                for (let [key1, value1] of value) {
+                                    out_data.push({'year': key, 'age': key1, 'male': value1.male, 'female': value1.female, 'total': value1.total});
+                                }
+                            }
+                            break;
+                    }
+                    break;
+            }
+            return out_data;
+        }
 
-                    // Structural execution of dynamic rollups will occur directly in line
-                    processed_data = raw_data; // Default passing state
-                } else {
-                    processed_data = raw_data;
+        function genSYACty(loc, year_arr, group, agespec, age_arr, yeardata) {
+            var fips_arr2 = [];
+            for (var j = 0; j < loc.length; j++) {
+                fips_arr2.push(parseInt(loc[j]));
+            }
+
+            var age_arr2 = [];
+            var age_range = [];
+            switch (agespec) {
+                case "custom":
+                    for (var i = 0; i < age_arr.length; i++) {
+                        age_range.push({'age_start': age_arr[i][0], 'age_end': age_arr[i][1], "age_str": age_arr[i][0] + " to " + age_arr[i][1]});
+                    }
+                    break;
+                case "single":
+                    age_arr2 = age_arr;
+                    break;
+            }
+
+            var fips_list = fips_arr2.join(",");
+            var year_list = year_arr.join(",");
+            var urlstr = "";
+
+            switch (agespec) {
+                case "custom":
+                    var age_arr2 = [];
+                    for (var a = 0; a <= 100; a++) { age_arr2.push(a); }
+                    var age_list = age_arr2.join(",");
+                    urlstr = "https://gis.dola.colorado.gov/lookups/sya?age=" + age_list + "&county=" + fips_list + "&year=" + year_list + "&choice=single";
+                    break;
+                case "single":
+                    var age_list = age_arr2.join(",");
+                    urlstr = "https://gis.dola.colorado.gov/lookups/sya?age=" + age_list + "&county=" + fips_list + "&year=" + year_list + "&choice=single";
+                    break;
+                default:
+                    urlstr = "https://gis.dola.colorado.gov/lookups/sya?age=0,100&county=" + fips_list + "&year=" + year_list + "&choice=" + agespec;
+                    break;
+            }
+
+            // Fetch data
+            d3.json(urlstr).then(function(data) {
+                var raw_data = [];
+                data.forEach(i => {
+                    raw_data.push({
+                        "countyfips": i.countyfips,
+                        "countyname": sdoGetCountyName(i.countyfips),
+                        "year": i.year,
+                        "age": i.age,
+                        "male": +i.malepopulation,
+                        "female": +i.femalepopulation,
+                        "total": +i.totalpopulation,
+                        "datatype": i.datatype
+                    });
+                });
+
+                var tab_data = [];
+                switch (agespec) {
+                    case "custom":
+                        for (var j = 0; j < age_range.length; j++) {
+                            var rng_data = raw_data.filter(d => ((d.age >= age_range[j].age_start) && (d.age <= age_range[j].age_end)));
+                            var sum_data = sumSYA(rng_data, agespec, age_range[j].age_str, "county");
+                            tab_data = tab_data.concat(sum_data);
+                        }
+                        break;
+                    case "single":
+                        tab_data = sumSYA(raw_data, agespec, group, "county");
+                        break;
+                    default:
+                        tab_data = raw_data;
                 }
 
-                renderTable(processed_data, group, agespec, yeardata);
+                // Generate Table HTML
+                var out_tab = "<thead><tr>";
+                if (agespec == "single") {
+                    switch (group) {
+                        case "opt0": out_tab += "<th>County FIPS</th><th>County Name</th><th>Year</th><th>Age</th><th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th>"; break;
+                        case "opt1": out_tab += "<th>Year</th><th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th>"; break;
+                        case "opt2": out_tab += "<th>County FIPS</th><th>County Name</th><th>Year</th><th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th>"; break;
+                        case "opt3": out_tab += "<th>Year</th><th>Age</th><th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th>"; break;
+                    }
+                } else {
+                    out_tab += "<th>County FIPS</th><th>County Name</th><th>Year</th><th>Age</th><th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th>";
+                }
+                out_tab += "</tr></thead><tbody>";
+
+                for (var i = 0; i < tab_data.length; i++) {
+                    var filtData = yeardata.filter(b => tab_data[i].year == b.year);
+                    var dtType = filtData.length > 0 ? filtData[0].datatype : "Estimate";
+                    
+                    var tmp_row = "<tr>";
+                    if (agespec == "single") {
+                        switch (group) {
+                            case "opt0":
+                                tmp_row += "<td>" + tab_data[i].countyfips + "</td><td>" + tab_data[i].countyname + "</td><td>" + tab_data[i].year + "</td><td>" + tab_data[i].age + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].male, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].female, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].total, "num") + "</td><td>" + dtType + "</td>";
+                                break;
+                            case "opt1":
+                                tmp_row += "<td>" + tab_data[i].year + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].male, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].female, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].total, "num") + "</td><td>" + dtType + "</td>";
+                                break;
+                            case "opt2":
+                                tmp_row += "<td>" + tab_data[i].countyfips + "</td><td>" + tab_data[i].countyname + "</td><td>" + tab_data[i].year + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].male, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].female, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].total, "num") + "</td><td>" + dtType + "</td>";
+                                break;
+                            case "opt3":
+                                tmp_row += "<td>" + tab_data[i].year + "</td><td>" + tab_data[i].age + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].male, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].female, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].total, "num") + "</td><td>" + dtType + "</td>";
+                                break;
+                        }
+                    } else {
+                        tmp_row += "<td>" + tab_data[i].countyfips + "</td><td>" + tab_data[i].countyname + "</td><td>" + tab_data[i].year + "</td><td>" + tab_data[i].age + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].male, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].female, "num") + "</td><td style='text-align: right'>" + formatSDO(tab_data[i].total, "num") + "</td><td>" + dtType + "</td>";
+                    }
+                    tmp_row += "</tr>";
+                    out_tab += tmp_row;
+                }
+                out_tab += "</tbody>";
+
+                // Render Output table
+                var tabDivOut = document.getElementById("tbl_output");
+                tabDivOut.innerHTML = "";
+                var tabName = "syaTab";
+                $(tabDivOut).append("<table id=" + tabName + " class='display' style='width:100%'></table>");
+                $("#" + tabName).append(out_tab);
+
+                $("#" + tabName).DataTable({
+                    dom: 'Bfrtip',
+                    buttons: ['csv']
+                });
             });
         }
 
-        /**
-         * Renders the interactive DataTables matrix
-         */
-        function renderTable(data, group, agespec, yeardata) {
-            var out_tab = "<thead><tr>";
-            if (data[0] && data[0].countyfips) out_tab += "<th>County FIPS</th><th>County Name</th>";
-            out_tab += "<th>Year</th>";
-            if (data[0] && data[0].age !== undefined) out_tab += "<th>Age</th>";
-            out_tab += "<th>Male Population</th><th>Female Population</th><th>Total Population</th><th>Data Type</th></tr></thead><tbody>";
+        // --- MAIN INITIALIZATION & EVENT BINDING ---
+        
+        var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+        var globalYearData = [];
 
-            data.forEach(row => {
-                let yrInfo = yeardata.find(b => row.year == b.year);
-                let dtType = yrInfo ? yrInfo.datatype : "Estimate";
-                
-                out_tab += "<tr>";
-                if (row.countyfips) out_tab += `<td>${row.countyfips}</td><td>${row.countyname}</td>`;
-                out_tab += `<td>${row.year}</td>`;
-                if (row.age !== undefined) out_tab += `<td>${row.age}</td>`;
-                
-                // Leans directly on your new Global Utility Formatter!
-                out_tab += `<td style="text-align: right">${formatSDO(row.male)}</td>`;
-                out_tab += `<td style="text-align: right">${formatSDO(row.female)}</td>`;
-                out_tab += `<td style="text-align: right">${formatSDO(row.total)}</td>`;
-                out_tab += `<td>${dtType}</td></tr>`;
-            });
-            out_tab += "</tbody>";
-
-            var tabDivOut = document.getElementById("tbl_output");
-            if (tabDivOut) {
-                tabDivOut.innerHTML = `<table id="syaTab" class="display" style="width:100%">${out_tab}</table>`;
-                $("#syaTab").DataTable({ dom: 'Bfrtip', buttons: ['csv'] });
-            }
-        }
-
-        // --- CORE EXECUTION TRIGGER ---
-        d3.json("https://gis.dola.colorado.gov/lookups/componentYRS").then(function(yeardata) {
+        d3.json(urlstr).then(function(yeardata) {
+            globalYearData = yeardata;
+            popDropdown('county', 'county-dropdown', '');
+            var yeardata2 = yeardata.filter(i => i.year >= 1990);
             
-            // Build the primary UI elements using the legacy central populators
-            if (typeof popDropdown === "function") popDropdown('county', 'county-dropdown');
-            
-            var yeardata_recent = yeardata.filter(i => i.year >= 1990);
-            
-            // Leans on your new global script to organize the years dropdown list safely!
-            sdoPopulateYears("year-dropdown", yeardata_recent);
+            // Calls Centralized SDO Utilities library
+            sdoPopulateYears("year-dropdown", yeardata2);
 
-            // Establish DOM Event Bindings
-            document.querySelectorAll('input[name="age_grouping"]').forEach(r => {
-                r.addEventListener('change', function() { genAgeGroup(this.value); });
+            var radios = document.querySelectorAll('input[name="age_grouping"]');
+            radios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    genAgeGroup(this.value, 'county');
+                });
             });
 
             document.getElementById('gentable').addEventListener("click", function() {
-                var fips = sdoGetSelectValues(document.getElementById('county-dropdown'));
-                var years = sdoGetSelectValues(document.getElementById('year-dropdown'));
+                var complete = true;
+                var outputmsg = "";
+                document.getElementById('tbl_output').innerHTML = "";
+
+                var fipsdd = document.getElementById('county-dropdown');
                 
-                if (fips.length === 0 || years.length === 0) {
-                    alert("Please select both a county and at least one year.");
-                    return;
+                // Calls Centralized SDO Utilities library
+                var selectedfips = sdoGetSelectValues(fipsdd);
+
+                if (selectedfips.length == 0) {
+                    outputmsg += " > Please select one or more counties.\n";
+                    complete = false;
                 }
 
-                var age_group = document.querySelector('input[name="age_grouping"]:checked').value;
-                var age_range = [];
+                var yrdd = document.getElementById('year-dropdown');
+                
+                // Calls Centralized SDO Utilities library
+                var selectedyr = sdoGetSelectValues(yrdd);
+
+                if (selectedyr.length == 0) {
+                    outputmsg += " > Please select one or more years.\n";
+                    complete = false;
+                }
+
                 var selectedgroup = "";
+                var age_range = [];
+                var age_group = document.querySelector('input[name="age_grouping"]:checked').value;
 
-                if (age_group === "custom") {
-                    for (let i = 0; i < 5; i++) {
-                        let s = document.getElementById("agestart" + i).value;
-                        let e = document.getElementById("ageend" + i).value;
-                        if (s !== "" && e !== "") age_range.push([+s, +e]);
-                    }
-                } else if (age_group === "single") {
-                    age_range = sdoGetSelectValues(document.getElementById("agesel"));
-                    selectedgroup = document.querySelector('input[name="age_summary"]:checked').value;
+                switch (age_group) {
+                    case "custom":
+                        for (var i = 0; i < 5; i++) {
+                            var box_val1 = "agestart" + i;
+                            var box_val2 = "ageend" + i;
+                            var startval = 0;
+                            var endval = 0;
+                            
+                            var el1 = document.getElementById(box_val1);
+                            var el2 = document.getElementById(box_val2);
+                            
+                            if (el1 && el1.value !== "") {
+                                startval = el1.value;
+                                if (isNaN(startval)) {
+                                    outputmsg += " > One of the age entries is not numeric. Please check the inputs.\n";
+                                    complete = false;
+                                }
+                            }
+                            if (el2 && el2.value !== "") {
+                                endval = el2.value;
+                                if (isNaN(endval)) {
+                                    outputmsg += " > One of the age entries is not numeric. Please check the inputs.\n";
+                                    complete = false;
+                                }
+                            }
+                            if (+startval > +endval) {
+                                outputmsg += " > One of the age ranges is incorrect. Please check the inputs.\n";
+                                complete = false;
+                            }
+                            if (complete) {
+                                if (!((+startval == 0) && (+endval == 0))) {
+                                    age_range.push([+startval, +endval]);
+                                }
+                            }
+                        } 
+                        break;
+                    case "single":
+                        var agesel = document.getElementById("agesel");
+                        
+                        // Calls Centralized SDO Utilities library
+                        age_range = sdoGetSelectValues(agesel);
+                        if (age_range.length == 0) {
+                            outputmsg += " > Please select a range of ages.\n";
+                            complete = false;
+                        }
+                        var grp_check = document.querySelector('input[name="age_summary"]:checked');
+                        selectedgroup = grp_check ? grp_check.value : "opt0";
+                        break;
                 }
 
-                // Loading layout states
-                document.getElementById('tbl_output').innerHTML = '<div class="sdo-loader"></div><div style="margin:10px 0;">Fetching data matrix, please wait...</div>';
-                document.getElementById('tbl_output').scrollIntoView({ behavior: 'smooth' });
+                if (complete) {
+                    var loadingHTML = '<div class="sdo-loader"></div><div class="sdo-loading-text">Fetching data, please wait...</div>';
+                    var outputDiv = document.getElementById('tbl_output');
+                    outputDiv.innerHTML = loadingHTML;
 
-                genSYACty(fips, years, selectedgroup, age_group, age_range, yeardata_recent);
+                    outputDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    genSYACty(selectedfips, selectedyr, selectedgroup, age_group, age_range, yeardata2);
+                } else {
+                    window.alert(outputmsg);
+                }
             });
 
-            document.getElementById('cleartable').addEventListener("click", () => {
+            document.getElementById('cleartable').addEventListener("click", function() {
                 document.getElementById('tbl_output').innerHTML = "";
                 document.getElementById('ageselect').innerHTML = "";
-                document.querySelectorAll('select').forEach(s => s.selectedIndex = -1);
+
+                var elements = document.getElementsByTagName('select');
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].selectedIndex = -1;
+                }
+                var ele = document.getElementsByName("age_grouping");
+                for (var i = 0; i < ele.length; i++) {
+                    ele[i].checked = false;
+                }
+                ele[0].checked = true;
             });
-        });
+        }); 
     }
-});
+}
+
+// Bulletproof execution trigger for both Drupal and Sandbox lifecycles
+if (document.readyState === "complete" || document.readyState === "interactive") {
+    startSdoSYAApp();
+} else {
+    window.addEventListener("load", startSdoSYAApp);
+}
