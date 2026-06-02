@@ -11,7 +11,7 @@ Every lookup application must be cleanly separated into two distinct components:
 1. **The HTML Snippet (`index.html`):** A pure, minimalist layout fragment. It must contain zero boilerplate layout definitions (`<html>`, `<head>`, `<body>`) and no embedded `<script>` or `<style>` tags. It maps 1:1 into a Drupal Custom Block container.
 2. **The JavaScript Director (`app.js`):** A sandboxed operation file containing only page-specific form listeners and UI state logic. It shifts formatting, data transformations, and geography resolution directly onto `Global_SDO_Utilities.js`. It maps into a Drupal Asset Injector instance.
 
-All application views must adhere to a single unified global stylesheet (`Global_SDO_Lookups.css`) to maintain a standardized user experience and control payload sizes.
+All application views must adhere to a single unified global stylesheet (`Global_SDO_Lookups.css`) to maintain visual consistency and limit payload sizes.
 
 ---
 
@@ -37,10 +37,13 @@ Input element parameters must precisely match the raw strings expected by the ba
 | `sdoResolveTiersToFips(tier, codes)` | Explodes regions/counties into a clean, unified FIPS array and map tracking index. |
 | `sdoAggregateAgeData(...)` | Unified client-side D3 engine processing data into structured category buckets. |
 
-### D. CSS Collision Defense
-Drupal theme architectures often corrupt DataTables layout components (such as pagination buttons, filter search fields, and clear floats). 
-* All output tables must explicitly declare standard layout classes (`display lookup_tab stripe cell-border`).
-* Style overrides must be safely scoped under the main container selector (`.sdo-lookup-container`) inside the global stylesheet to prevent style bleeding.
+### D. Form Layouts & Tabular Anti-Patterns
+* **Do not use HTML `<table>` elements for input layout alignment.** Global CMS styles and DataTables style sheets aggressively target generic tabular tags, causing layout degradation and style bleeding.
+* **Dynamic Drawer Pattern:** Any input options generated dynamically by form actions (e.g., custom range text boxes) must be built inside standard block dividers (`<div>`) styled via CSS Flexbox or Grid utilities.
+* **Container Boundaries:** All dynamic form fields must be encased in a `.sdo-drawer-enclosure` container and restricted to a maximum width (`max-width: 460px`) to prevent input controls from stretching across the entire width of the page viewport.
+
+### E. Typography & Theme Coexistence
+* **Never declare hardcoded `font-family` parameters or absolute font sizes within tool assets.** * Components must rely completely on native font inheritance to cleanly match the overarching typography and styling of the active Drupal subtheme automatically.
 
 ---
 
@@ -51,32 +54,47 @@ Drupal theme architectures often corrupt DataTables layout components (such as p
 <div class="sdo-lookup-container">
     <h2>INSTRUCTIONS:</h2>
     <p class="lookup_p">Application summary instructions go here...</p>
-    <hr>
+    <hr class="sdo-hr">
     <form class="sdo-form-grid" id="sdo-lookup-form" onsubmit="return false;">
         <div class="form-group">
-            <label for="location-dropdown"><strong>Select Location(s):</strong></label> 
-            <select class="form-control" id="location-dropdown" size="6" multiple="" aria-label="Select Locations"></select>
+            <label for="tier-dropdown"><strong>1. Select Tier:</strong></label>
+            <select class="form-control" id="tier-dropdown" size="2">
+                <option value="alpha" selected>Option A</option>
+                <option value="beta">Option B</option>
+            </select>
         </div>
+        
         <div class="form-group">
-            <label for="year-dropdown"><strong>Select Year(s):</strong></label> 
-            <select class="form-control" id="year-dropdown" size="6" multiple="" aria-label="Select Years"></select>
+            <label for="location-dropdown">
+                <strong>2. Select Location(s):</strong>
+                <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+            </label> 
+            <select class="form-control" id="location-dropdown" size="6" multiple role="listbox"></select>
+        </div>
+        
+        <div class="form-group">
+            <label for="year-dropdown">
+                <strong>3. Select Year(s):</strong>
+                <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+            </label> 
+            <select class="form-control" id="year-dropdown" size="6" multiple role="listbox"></select>
         </div>
         
         <fieldset class="form-group sdo-fieldset">
-            <legend><strong>Configuration Options:</strong></legend>
+            <legend><strong>4. Configuration Options:</strong></legend>
             <div class="radio-wrap">
-                <input type="radio" id="opt_default" name="ui_grouping" value="default" checked=""> 
-                <label for="opt_default">Standard Option</label>
+                <input type="radio" id="opt_default" name="ui_grouping" value="5yr" checked> 
+                <label for="opt_default">Standard Filter Option</label>
             </div>
         </fieldset>
         
-        <div class="form-group" id="ageselect" aria-live="polite">&nbsp;</div>
+        <div class="form-group sdo-drawer-fullwidth" id="ageselect" aria-live="polite"></div>
         
         <div class="form-group sdo-actions">
             <button class="button button--primary" type="button" id="gentable">Generate Table</button> 
             <button class="button button--secondary" type="button" id="cleartable">Reset Selections</button>
         </div>
     </form>
-    <hr>
+    <hr class="sdo-hr">
     <div id="tbl_output" aria-live="polite">&nbsp;</div>
 </div>
