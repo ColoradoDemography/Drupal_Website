@@ -4,7 +4,7 @@
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   1. MAIN CONTAINER, CARD HOOKS, & TYPOGRAPHY
+   1. MAIN CONTAINER & INSTRUCTIONS PANEL
    --------------------------------------------------------------------- */
 .sdo-lookup-container {
     width: 100%;
@@ -34,11 +34,12 @@
 }
 
 /* ---------------------------------------------------------------------
-   2. FORM GRID ARCHITECTURE
+   2. FORM LAYOUT (MOBILE-FIRST RESPONSIVE BREAKPOINTS)
    --------------------------------------------------------------------- */
+/* Mobile Profile Default: Clean Single Column Stack */
 .sdo-form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.25rem;
     align-items: flex-start;
     margin: 1.25rem 0 0 0;
@@ -47,8 +48,33 @@
 .sdo-form-grid .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0 !important; /* Drupal base block reset override */
+    margin-bottom: 0 !important; /* Drupal platform margin reset override */
     padding-bottom: 0 !important;
+    grid-column: span 1 !important; /* Force full width on mobile viewports */
+}
+
+/* Tablet / Medium Screens: Balanced 2-Column Split Layout */
+@media (min-width: 600px) and (max-width: 1023px) {
+    .sdo-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Allow the location box to span full width on tablets so text doesn't clip */
+    .sdo-form-grid .sdo-col-span-2 {
+        grid-column: span 2 !important;
+    }
+}
+
+/* Desktop Viewports: Stable 5-Column Structural Grid */
+@media (min-width: 1024px) {
+    .sdo-form-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+    
+    /* Dynamically expand location column to resolve text truncation errors safely */
+    .sdo-form-grid .sdo-col-span-2 {
+        grid-column: span 2 !important;
+    }
 }
 
 /* ---------------------------------------------------------------------
@@ -133,27 +159,32 @@
     color: #A51C30 !important;
 }
 
-/* ---------------------------------------------------------------------
+/* =====================================================================
    5. CONDENSED FLEXBOX DRAWER ENCLOSURE [TABLE ANTI-PATTERN REPLACEMENT]
-   --------------------------------------------------------------------- */
+   ===================================================================== */
 .sdo-form-grid .sdo-drawer-fullwidth {
     grid-column: 1 / -1;
     width: 100%;
 }
 
-/* Clean background shell for context isolation */
+/* Clean dynamic option background shell */
 .sdo-lookup-container .sdo-drawer-enclosure {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     display: inline-block;
-    max-width: 460px; /* FIX: Strict maximum-width boundary control policy */
+    width: 100%;        /* FIX: Fluid constraint for narrow mobile viewports */
+    max-width: 480px;   /* Constrain horizontal footprint alignment rules */
     box-sizing: border-box;
 }
 
-/* Condensed vertical layout container */
+.sdo-lookup-container .sdo-drawer-enclosure p {
+    margin: 0 0 8px 0 !important;
+}
+
+/* Condensed semantic input rows grouping layout */
 .sdo-custom-intervals-container {
     display: flex;
     flex-direction: column;
@@ -164,9 +195,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background: transparent;
-    border: none;
+    background: transparent !important;
+    border: none !important;
     padding: 0;
+    flex-wrap: wrap;    /* FIX: Prevents horizontal blowout on micro mobile screens */
 }
 
 .sdo-custom-interval-row .sdo-row-index {
@@ -189,10 +221,10 @@
     white-space: nowrap;
 }
 
-/* Legacy-matching tight manual textbox inputs layout override */
+/* Tight legacy-matching input specifications layout definitions */
 .sdo-custom-interval-row .sdo-input-pair input[type="text"] {
-    width: 44px !important;
-    height: 26px !important;
+    width: 46px !important;
+    height: 24px !important;
     padding: 2px 4px !important;
     margin: 0 !important;
     border: 1px solid #cbd5e0 !important;
@@ -210,7 +242,6 @@
     outline: none;
 }
 
-/* Adjust single select layouts under enclosure boundaries */
 .sdo-drawer-enclosure select.form-control[multiple] {
     max-width: 100%;
     min-height: 110px;

@@ -31,7 +31,7 @@ const SDO_COUNTY_NAMES = {
 };
 
 const SDO_REGION_NAMES = {
-    0: "Colorado (State Total)",
+    0: "Colorado",
     1: "Region 1: Northern Eastern Plains",
     2: "Region 2: Northern Front Range",
     3: "Region 3: Denver Metropolitan Area",
@@ -46,33 +46,106 @@ const SDO_REGION_NAMES = {
     12: "Region 12: Northern Mountains",
     13: "Region 13: Central Mountains",
     14: "Region 14: Southern Mountains",
-    15: "Region 15 (Geographic Central Mountains)",
-    16: "Region 16 (Geographic Eastern Plains)",
-    17: "Region 17 (Geographic Front Range)",
-    18: "Region 18 (Geographic San Luis Valley)",
-    19: "Region 19 (Geographic Western Slope)",
-    20: "Region 20 (Denver PMSA)",
-    21: "Region 21 (Denver-Boulder Metro)",
-    22: "Region 22 (Denver-Boulder-Greeley CMSA)",
-    23: "Region 23 (Denver Metro 10-County)",
-    24: "Region 24 (Boulder MSA)",
-    25: "Region 25 (Colorado Springs MSA)",
-    26: "Region 26 (Denver-Aurora-Lakewood MSA)",
-    27: "Region 27 (Fort Collins MSA)",
-    28: "Region 28 (Grand Junction MSA)",
-    29: "Region 29 (Greeley MSA)",
-    30: "Region 30 (Pueblo MSA)",
-    31: "Region 31 (Breckenridge Micro)",
-    32: "Region 32 (Cañon City Micro)",
-    33: "Region 33 (Craig Micro)",
-    34: "Region 34 (Durango Micro)",
-    35: "Region 35 (Edwards Micro)",
-    36: "Region 36 (Fort Morgan Micro)",
-    37: "Region 37 (Glenwood Springs Micro)",
-    38: "Region 38 (Montrose Micro)",
-    39: "Region 39 (Steamboat Springs Micro)",
-    40: "Region 40 (Sterling Micro)"
+    15: "Central Mountains",
+    16: "Eastern Plains",
+    17: "Front Range",
+    18: "San Luis Valley",
+    19: "Western Slope",
+    20: "Denver PMSA",
+    21: "Denver-Boulder Metro Area",
+    22: "Denver-Boulder-Greeley CMSA",
+    23: "Denver Metro (10-County)",
+    24: "Boulder",
+    25: "Colorado Springs",
+    26: "Denver-Aurora-Lakewood",
+    27: "Fort Collins",
+    28: "Grand Junction",
+    29: "Greeley",
+    30: "Pueblo",
+    31: "Breckenridge",
+    32: "Cañon City",
+    33: "Craig",
+    34: "Durango",
+    35: "Edwards",
+    36: "Fort Morgan",
+    37: "Glenwood Springs",
+    38: "Montrose",
+    39: "Steamboat Springs",
+    40: "Sterling"
 };
+
+// --- STRUCTURAL REGION OPTGROUP MAP LAYOUT ---
+const SDO_REGIONS_STRUCTURE = [
+    {
+        label: "State Total",
+        options: [{ value: "000", text: "Colorado" }]
+    },
+    {
+        label: "Geographic Region",
+        options: [
+            { value: "15", text: "Central Mountains" },
+            { value: "16", text: "Eastern Plains" },
+            { value: "17", text: "Front Range" },
+            { value: "18", text: "San Luis Valley" },
+            { value: "19", text: "Western Slope" }
+        ]
+    },
+    {
+        label: "Colorado Planning and Management Regions",
+        options: [
+            { value: "01", text: "Region 1: Northern Eastern Plains" },
+            { value: "02", text: "Region 2: Northern Front Range" },
+            { value: "03", text: "Region 3: Denver Metropolitan Area" },
+            { value: "04", text: "Region 4: Southern Front Range" },
+            { value: "05", text: "Region 5: Central Eastern Plains" },
+            { value: "06", text: "Region 6: Southern Eastern Plains" },
+            { value: "07", text: "Region 7: Pueblo County" },
+            { value: "08", text: "Region 8: San Luis Valley" },
+            { value: "09", text: "Region 9: Southern Western Slope" },
+            { value: "10", text: "Region 10: Central Western Slope" },
+            { value: "11", text: "Region 11: Northern Western Slope" },
+            { value: "12", text: "Region 12: Northern Mountains" },
+            { value: "13", text: "Region 13: Central Mountains" },
+            { value: "14", text: "Region 14: Southern Mountains" }
+        ]
+    },
+    {
+        label: "Denver Regions",
+        options: [
+            { value: "20", text: "Denver PMSA" },
+            { value: "21", text: "Denver-Boulder Metro Area" },
+            { value: "22", text: "Denver-Boulder-Greeley CMSA" },
+            { value: "23", text: "Denver Metro (10-County)" }
+        ]
+    },
+    {
+        label: "Census Metropolitan Statistical Areas",
+        options: [
+            { value: "24", text: "Boulder" },
+            { value: "25", text: "Colorado Springs" },
+            { value: "26", text: "Denver-Aurora-Lakewood" },
+            { value: "27", text: "Fort Collins" },
+            { value: "28", text: "Grand Junction" },
+            { value: "29", text: "Greeley" },
+            { value: "30", text: "Pueblo" }
+        ]
+    },
+    {
+        label: "Census Micropolitan Statistical Areas",
+        options: [
+            { value: "31", text: "Breckenridge" },
+            { value: "32", text: "Cañon City" },
+            { value: "33", text: "Craig" },
+            { value: "34", text: "Durango" },
+            { value: "35", text: "Edwards" },
+            { value: "36", text: "Fort Morgan" },
+            { value: "37", text: "Glenwood Springs" },
+            { value: "38", text: "Montrose" },
+            { value: "39", text: "Steamboat Springs" },
+            { value: "40", text: "Sterling" }
+        ]
+    }
+];
 
 // --- SYSTEM STATIC AGE BUCKET MAPS ---
 const SDO_AGE_BUCKETS_5YR = [];
@@ -126,7 +199,7 @@ function sdoGetRegionCounties(regnum) {
 // --- UNIVERSAL INTERFACE GENERATION & RESOLUTION CORES ---
 
 /**
- * Universal layout builder for generating normalized multi-select form selectors
+ * Enhanced layout selector builder supporting categorized HTML optgroups for regions [Legacy Match Engine]
  */
 function sdoPopulateGeographies(dropdownId, tier) {
     const dropdown = document.getElementById(dropdownId);
@@ -144,23 +217,22 @@ function sdoPopulateGeographies(dropdownId, tier) {
             }
         });
     } else if (tier === "region") {
-        let stateOpt = document.createElement("option");
-        stateOpt.value = "0";
-        stateOpt.textContent = sdoGetRegionName(0);
-        dropdown.appendChild(stateOpt);
-        
-        for (let i = 1; i <= 40; i++) {
-            let opt = document.createElement("option");
-            opt.value = i.toString();
-            opt.textContent = sdoGetRegionName(i);
-            dropdown.appendChild(opt);
-        }
+        // Build nested semantic categories from global manifest
+        SDO_REGIONS_STRUCTURE.forEach(group => {
+            let optGroup = document.createElement("optgroup");
+            optGroup.label = group.label;
+            
+            group.options.forEach(option => {
+                let opt = document.createElement("option");
+                opt.value = option.value;
+                opt.textContent = option.text;
+                optGroup.appendChild(opt);
+            });
+            dropdown.appendChild(optGroup);
+        });
     }
 }
 
-/**
- * Universal cross-tier resolution engine. Maps complex inputs to plain county lists and returns structural tracking references.
- */
 function sdoResolveTiersToFips(tier, selectedCodes) {
     let processedFipsArray = [];
     let crossTierMapReference = [];
@@ -228,13 +300,9 @@ function sdoPopulateYears(dropdownId, yeardata) {
 
 // --- CENTRAL D3 LOGICAL DATA TRANSFORMATIONS ENGINE ---
 
-/**
- * Universal mathematical data processing model. Aggregates microdata payloads completely into standard/custom configurations on the client.
- */
 function sdoAggregateAgeData(rawPayload, tier, groupingMode, ageRanges, summaryStrategy, mapReference) {
     let structuredRows = [];
     
-    // Standardize baseline input rows via global translation indices mapping
     rawPayload.forEach(record => {
         let ctyFipsInt = parseInt(record.countyfips, 10);
         let calcRegId = (tier === "region") ? mapReference.find(m => m.countyFips === ctyFipsInt)?.regionId : null;
@@ -260,7 +328,6 @@ function sdoAggregateAgeData(rawPayload, tier, groupingMode, ageRanges, summaryS
         ageRanges.forEach(r => { buckets.push({ label: `${r[0]} to ${r[1]}`, min: r[0], max: r[1] }); });
     }
 
-    // Branch A: Binned Interval Pipeline Calculations
     if (groupingMode === "5yr" || groupingMode === "census" || groupingMode === "custom") {
         let binnedResult = [];
         buckets.forEach(b => {
@@ -294,7 +361,6 @@ function sdoAggregateAgeData(rawPayload, tier, groupingMode, ageRanges, summaryS
         return binnedResult;
     }
 
-    // Branch B: Precise Single Year Pipeline Filters & Aggregations
     if (groupingMode === "single") {
         let targetAges = ageRanges.map(Number);
         let sliced = structuredRows.filter(r => targetAges.includes(r.age));

@@ -33,17 +33,25 @@ Input element parameters must precisely match the raw strings expected by the ba
 | Global Method Utility | Operational Responsibility |
 | :--- | :--- |
 | `formatSDO(val, type)` | Formats outputs cleanly as numbers (`num`), decimals (`dec`), or percentages (`pct`). |
-| `sdoPopulateGeographies(ddId, tier)` | Renders standard multi-select layouts dynamically for `county` or `region` views. |
+| `sdoPopulateGeographies(ddId, tier)` | Renders standard multi-select layouts dynamically, generating nested HTML `<optgroup>` wrappers for regional tiers. |
 | `sdoResolveTiersToFips(tier, codes)` | Explodes regions/counties into a clean, unified FIPS array and map tracking index. |
 | `sdoAggregateAgeData(...)` | Unified client-side D3 engine processing data into structured category buckets. |
 
-### D. Form Layouts & Tabular Anti-Patterns
-* **Do not use HTML `<table>` elements for input layout alignment.** Global CMS styles and DataTables style sheets aggressively target generic tabular tags, causing layout degradation and style bleeding.
-* **Dynamic Drawer Pattern:** Any input options generated dynamically by form actions (e.g., custom range text boxes) must be built inside standard block dividers (`<div>`) styled via CSS Flexbox or Grid utilities.
-* **Container Boundaries:** All dynamic form fields must be encased in a `.sdo-drawer-enclosure` container and restricted to a maximum width (`max-width: 460px`) to prevent input controls from stretching across the entire width of the page viewport.
+### D. Region Naming & HTML Grouping Hierarchy
+* **Do not flatten or hardcode region options lists locally.** The system query engine enforces exact padded string parameters (e.g., `"000"`, `"01"`, `"15"`).
+* All regional view options must inherit from the central `SDO_REGIONS_STRUCTURE` array map via `sdoPopulateGeographies()` to guarantee consistent grouping hierarchies across tools.
 
-### E. Typography & Theme Coexistence
-* **Never declare hardcoded `font-family` parameters or absolute font sizes within tool assets.** * Components must rely completely on native font inheritance to cleanly match the overarching typography and styling of the active Drupal subtheme automatically.
+### E. Form Layouts & Fluid Responsive Grids
+* **Do not use HTML `<table>` elements for input layout alignment.** Global CMS styles and DataTables style sheets aggressively target generic tabular tags, causing layout degradation and style bleeding.
+* **Responsive Breakpoint Matrix:** All lookup layout systems must leverage standard CSS Grid rules using a mobile-first approach:
+    * *Mobile:* 1-column layout stack.
+    * *Tablet:* 2-column layout stack.
+    * *Desktop (1024px+):* Strict 5-column layout grid to maintain application consistency.
+* **Text Truncation Defense:** To prevent long regional planning names from clipping, apply the `.sdo-col-span-2` rule to location selection boxes on desktop views.
+* **Dynamic Drawer Pattern:** Options generated dynamically by form actions (e.g., custom range text boxes) must be built inside standard block dividers (`<div>`) styled via CSS Flexbox or Grid utilities and limited to a `max-width: 480px` layout boundary.
+
+### F. Typography & Theme Coexistence
+* **Never declare hardcoded `font-family` parameters or absolute font sizes within tool assets.** Components must rely completely on native font inheritance to cleanly match the overarching typography and styling of the active Drupal subtheme automatically.
 
 ---
 
@@ -55,42 +63,46 @@ Input element parameters must precisely match the raw strings expected by the ba
     <h2>INSTRUCTIONS:</h2>
     <p class="lookup_p">Application summary instructions go here...</p>
     <hr class="sdo-hr">
-    <form class="sdo-form-grid" id="sdo-lookup-form" onsubmit="return false;">
-        <div class="form-group">
-            <label for="tier-dropdown"><strong>1. Select Tier:</strong></label>
-            <select class="form-control" id="tier-dropdown" size="2">
-                <option value="alpha" selected>Option A</option>
-                <option value="beta">Option B</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="location-dropdown">
-                <strong>2. Select Location(s):</strong>
-                <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
-            </label> 
-            <select class="form-control" id="location-dropdown" size="6" multiple role="listbox"></select>
-        </div>
-        
-        <div class="form-group">
-            <label for="year-dropdown">
-                <strong>3. Select Year(s):</strong>
-                <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
-            </label> 
-            <select class="form-control" id="year-dropdown" size="6" multiple role="listbox"></select>
-        </div>
-        
-        <fieldset class="form-group sdo-fieldset">
-            <legend><strong>4. Configuration Options:</strong></legend>
-            <div class="radio-wrap">
-                <input type="radio" id="opt_default" name="ui_grouping" value="5yr" checked> 
-                <label for="opt_default">Standard Filter Option</label>
+    <form id="sdo-lookup-form" onsubmit="return false;">
+        <div class="sdo-form-grid">
+            <div class="form-group">
+                <label for="tier-dropdown"><strong>1. Select Tier:</strong></label>
+                <select class="form-control" id="tier-dropdown" size="2">
+                    <option value="alpha" selected>Option A</option>
+                    <option value="beta">Option B</option>
+                </select>
             </div>
-        </fieldset>
-        
-        <div class="form-group sdo-drawer-fullwidth" id="ageselect" aria-live="polite"></div>
-        
-        <div class="form-group sdo-actions">
+            
+            <div class="form-group sdo-col-span-2">
+                <label for="location-dropdown">
+                    <strong>2. Select Location(s):</strong>
+                    <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+                </label> 
+                <select class="form-control" id="location-dropdown" size="6" multiple role="listbox"></select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year-dropdown">
+                    <strong>3. Select Year(s):</strong>
+                    <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+                </label> 
+                <select class="form-control" id="year-dropdown" size="6" multiple role="listbox"></select>
+            </div>
+            
+            <fieldset class="form-group sdo-fieldset">
+                <legend><strong>4. Configure Age Filters:</strong></legend>
+                <div class="radio-wrap">
+                    <input type="radio" id="opt_default" name="ui_grouping" value="5yr" checked> 
+                    <label for="opt_default">Standard Filter Option</label>
+                </div>
+            </fieldset>
+            
+            <div class="form-group sdo-drawer-fullwidth" id="ageselect" aria-live="polite"></div>
+        </div>
+
+        <hr class="sdo-hr">
+
+        <div class="sdo-actions-row">
             <button class="button button--primary" type="button" id="gentable">Generate Table</button> 
             <button class="button button--secondary" type="button" id="cleartable">Reset Selections</button>
         </div>
@@ -98,3 +110,42 @@ Input element parameters must precisely match the raw strings expected by the ba
     <hr class="sdo-hr">
     <div id="tbl_output" aria-live="polite">&nbsp;</div>
 </div>
+
+Standard JS Operational Script (app.js)
+
+JavaScript
+
+window.addEventListener("load", () => {
+    
+    // Attach Required DataTables Asset Styling
+    var dtCss = document.createElement("link");
+    dtCss.rel = "stylesheet";
+    dtCss.href = "[https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.css](https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.css)";
+    document.head.appendChild(dtCss);
+    
+    // Isolated Sandbox Asset Bootloader Chain
+    function loadScript(url, callback) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.onload = function() { if (callback) callback(); };
+        script.src = url;
+        document.head.appendChild(script);
+    }
+
+    // Sequence: Private jQuery -> DataTables Extensions Script -> D3 Core -> Execute Runtime
+    loadScript("[https://code.jquery.com/jquery-3.7.0.js](https://code.jquery.com/jquery-3.7.0.js)", function() {
+        loadScript("[https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.js](https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-html5-2.4.1/datatables.min.js)", function() {
+            loadScript("[https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js](https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js)", function() {
+                initSdoApplication(); 
+            });
+        });
+    });
+
+    function initSdoApplication() {
+        // 1. Establish button event bindings and target tier context hooks
+        
+        // 2. Formulate parameters, execute validations, and invoke global utility pipelines
+        
+        // 3. Render and initialize output DataTables structures using semantic class mappings
+    }
+});

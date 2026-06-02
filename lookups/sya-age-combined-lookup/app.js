@@ -43,6 +43,12 @@ window.addEventListener("load", () => {
                     document.getElementById('comp').checked = false;
                 }
                 sdoPopulateGeographies('location-dropdown', tier);
+                
+                // If a user swaps tiers while single age mode is active, refresh labels dynamically
+                const checkedAgeMode = document.querySelector('input[name="age_grouping"]:checked').value;
+                if (checkedAgeMode === "single") {
+                    renderAgeInterfaceStructure("single");
+                }
             });
 
             const ageRadios = document.querySelectorAll('input[name="age_grouping"]');
@@ -56,42 +62,13 @@ window.addEventListener("load", () => {
             document.getElementById('cleartable').addEventListener("click", clearInterfaceSelections);
         });
 
-        function popTierLocations(tier) {
-            const dropdown = document.getElementById('location-dropdown');
-            dropdown.innerHTML = "";
-            
-            if (tier === "county") {
-                const counties = sdoGetRegionCounties(0); 
-                counties.forEach(fips => {
-                    if (fips !== '000') {
-                        let opt = document.createElement("option");
-                        opt.value = fips;
-                        opt.textContent = sdoGetCountyName(fips);
-                        dropdown.appendChild(opt);
-                    }
-                });
-            } else if (tier === "region") {
-                let stateOpt = document.createElement("option");
-                stateOpt.value = "0";
-                stateOpt.textContent = sdoGetRegionName(0);
-                dropdown.appendChild(stateOpt);
-                
-                for (let i = 1; i <= 40; i++) {
-                    let opt = document.createElement("option");
-                    opt.value = i.toString();
-                    opt.textContent = sdoGetRegionName(i);
-                    dropdown.appendChild(opt);
-                }
-            }
-        }
-
         // --- MODERNIZED DRAWER RENDERING FACTORY ---
         function renderAgeInterfaceStructure(mode) {
             const container = document.getElementById('ageselect');
             container.innerHTML = "";
+            const tier = document.getElementById('geo-dropdown').value;
             
             if (mode === "custom") {
-                // Wrapper shell box
                 let wrapper = document.createElement('div');
                 wrapper.className = "sdo-drawer-enclosure";
 
@@ -99,7 +76,6 @@ window.addEventListener("load", () => {
                 txt.innerHTML = "<strong>Designate up to 5 custom age intervals (0 - 100):</strong>";
                 wrapper.appendChild(txt);
 
-                // Semantic container replacing legacy layout tables
                 let flexContainer = document.createElement("div");
                 flexContainer.className = "sdo-custom-intervals-container";
 
@@ -145,12 +121,16 @@ window.addEventListener("load", () => {
                 
                 let grpDiv = document.createElement("div");
                 grpDiv.style.marginTop = "12px";
+                
+                // Match the legacy verbiage layout strings exactly
+                const locationLabelText = (tier === "region") ? "Group by Region and Year" : "Group by County and Year";
                 const filters = [
-                    {id: 'NoGrp', txt: 'No Summary Grouping', val: 'opt0'},
-                    {id: 'yrGrp', txt: 'Group across Years', val: 'opt1'},
-                    {id: 'ctyGrp', txt: 'Group across Profiles', val: 'opt2'},
-                    {id: 'ageGrp', txt: 'Group across Ages', val: 'opt3'}
+                    {id: 'NoGrp', txt: 'No Grouping', val: 'opt0'},
+                    {id: 'yrGrp', txt: 'Group by Year', val: 'opt1'},
+                    {id: 'ctyGrp', txt: locationLabelText, val: 'opt2'},
+                    {id: 'ageGrp', txt: 'Group by Age and Year', val: 'opt3'}
                 ];
+                
                 grpDiv.innerHTML += "<strong style='display:block; margin-bottom:6px;'>Single Year Grouping Rule:</strong>";
                 filters.forEach(f => {
                     grpDiv.innerHTML += `<div class="radio-wrap"><input type="radio" name="age_summary" id="${f.id}" value="${f.val}" ${f.id==='NoGrp'?'checked':''}><label for="${f.id}">${f.txt}</label></div>`;
@@ -222,42 +202,61 @@ window.addEventListener("load", () => {
 
             d3.json(endpointUrl).then(function(apiPayload) {
                 let processedRows = sdoAggregateAgeData(apiPayload, tier, ageGroupMode, finalAgeParameters, aggregateGroupingStrategy, resolution.mapReference);
-                compileAndRenderTargetDataTable(tier, processedRows, showComponentToggled);
+                compileAndRenderTargetDataTable(tier, processedRows, showComponentToggled, ageGroupMode, aggregateGroupingStrategy);
             });
         }
 
-        function compileAndRenderTargetDataTable(tier, rows, componentsToggle) {
+        // Optimized datatable compiler to output exact matching data schemas dynamically
+        function compileAndRenderTargetDataTable(tier, rows, componentsToggle, groupingMode, summaryStrategy) {
             let columnsConfiguration = [];
             let processedTableRows = [];
 
-            if (tier === "region") {
-                if (componentsToggle === "comp") {
-                    columnsConfiguration = ["Region Code", "Region Name", "County FIPS", "County Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
-                    rows.forEach(r => {
-                        processedTableRows.push([r.regionCode, r.regionName, r.countyFips, r.countyName, r.year, r.ageLabel, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]);
-                    });
+            // Execute schema validation routing branches against specific transformation strategies
+            if (groupingMode === "single" && summaryStrategy === "opt1") {
+                columnsConfiguration = ["Year", "Male Population", "Female Population", "Total Population", "Data Type"];
+                rows.forEach(r => { processedTableRows.push([r.year, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]); });
+            } else if (groupingMode === "single" && summaryStrategy === "opt2") {
+                if (tier === "region") {
+                    columnsConfiguration = ["Region Code", "Region Name", "Year", "Male Population", "Female Population", "Total Population", "Data Type"];
+                    rows.forEach(r => { processedTableRows.push([r.regionCode, r.regionName, r.year, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]); });
                 } else {
-                    columnsConfiguration = ["Region Code", "Region Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
-                    let regionRollups = d3.rollup(rows, v => ({
-                        male: d3.sum(v, d => d.male),
-                        female: d3.sum(v, d => d.female),
-                        total: d3.sum(v, d => d.total),
-                        dataType: v[0].dataType
-                    }), d => d.regionCode, d => d.year, d => d.ageLabel);
+                    columnsConfiguration = ["County FIPS", "County Name", "Year", "Male Population", "Female Population", "Total Population", "Data Type"];
+                    rows.forEach(r => { processedTableRows.push([r.countyFips, r.countyName, r.year, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]); });
+                }
+            } else if (groupingMode === "single" && summaryStrategy === "opt3") {
+                columnsConfiguration = ["Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
+                rows.forEach(r => { processedTableRows.push([r.year, r.ageLabel, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]); });
+            } else {
+                // Default Standardized lifespan grouping configurations
+                if (tier === "region") {
+                    if (componentsToggle === "comp") {
+                        columnsConfiguration = ["Region Code", "Region Name", "County FIPS", "County Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
+                        rows.forEach(r => {
+                            processedTableRows.push([r.regionCode, r.regionName, r.countyFips, r.countyName, r.year, r.ageLabel, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]);
+                        });
+                    } else {
+                        columnsConfiguration = ["Region Code", "Region Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
+                        let regionRollups = d3.rollup(rows, v => ({
+                            male: d3.sum(v, d => d.male),
+                            female: d3.sum(v, d => d.female),
+                            total: d3.sum(v, d => d.total),
+                            dataType: v[0].dataType
+                        }), d => d.regionCode, d => d.year, d => d.ageLabel);
 
-                    for (let [regKey, regVal] of regionRollups) {
-                        for (let [yrKey, yrVal] of regVal) {
-                            for (let [ageKey, ageVal] of yrVal) {
-                                processedTableRows.push([regKey, sdoGetRegionName(regKey), yrKey, ageKey, formatSDO(ageVal.male), formatSDO(ageVal.female), formatSDO(ageVal.total), ageVal.dataType]);
+                        for (let [regKey, regVal] of regionRollups) {
+                            for (let [yrKey, yrVal] of regVal) {
+                                for (let [ageKey, ageVal] of yrVal) {
+                                    processedTableRows.push([regKey, sdoGetRegionName(regKey), yrKey, ageKey, formatSDO(ageVal.male), formatSDO(ageVal.female), formatSDO(ageVal.total), ageVal.dataType]);
+                                }
                             }
                         }
                     }
+                } else {
+                    columnsConfiguration = ["County FIPS", "County Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
+                    rows.forEach(r => {
+                        processedTableRows.push([r.countyFips, r.countyName, r.year, r.ageLabel, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]);
+                    });
                 }
-            } else {
-                columnsConfiguration = ["County FIPS", "County Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];
-                rows.forEach(r => {
-                    processedTableRows.push([r.countyFips, r.countyName, r.year, r.ageLabel, formatSDO(r.male), formatSDO(r.female), formatSDO(r.total), r.dataType]);
-                });
             }
 
             let generatedHtml = "<thead><tr>";
@@ -267,7 +266,9 @@ window.addEventListener("load", () => {
             processedTableRows.forEach(row => {
                 generatedHtml += "<tr>";
                 row.forEach((cell, idx) => {
-                    let alignment = (idx >= columnsConfiguration.length - 4 && idx <= columnsConfiguration.length - 2) ? "style='text-align:right;'" : "";
+                    // Lock math metrics fields to exact right-aligned layout parameters dynamically
+                    let isMetaString = (columnsConfiguration[idx].includes("Name") || columnsConfiguration[idx].includes("Type") || columnsConfiguration[idx].includes("Age"));
+                    let alignment = (!isMetaString && idx >= columnsConfiguration.length - 4) ? "style='text-align:right;'" : "";
                     generatedHtml += `<td ${alignment}>${cell || ""}</td>`;
                 });
                 generatedHtml += "</tr>";
