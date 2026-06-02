@@ -1,73 +1,72 @@
 <div class="sdo-lookup-container">
-    <h2>INSTRUCTIONS:</h2>
-    <p class="lookup_p">This application creates custom tables for SDO population estimates and forecasts by age.</p>
-    <p class="lookup_p">Note: Values may not sum to state totals due to rounding variables.</p>
-    <hr>
-    
-    <form class="sdo-form-grid" id="sya-combined-lookup-form" onsubmit="return false;">
-        <table class="lookup_tab" id="input_tab" cellspacing="0" cellpadding="0" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th style="width: 25%; text-align: left;"><label class="entry_text" for="geo-dropdown" id="geo-lbl">Select a Geography Type:</label></th>
-                    <th style="width: 30%; text-align: left;"><label class="entry_text" for="location-dropdown" id="location-lbl">Select one or more locations:</label></th>
-                    <th style="width: 15%; text-align: left;"><label class="entry_text" for="year-dropdown" id="year-lbl">Select one or more years:</label></th>
-                    <th style="width: 30%; text-align: left;"><label class="entry_text" id="group-lbl">Select Age Groups:</label></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="look_cll" style="vertical-align: top;">
-                        <select class="form-control geo-dropdown" id="geo-dropdown" size="2" style="width: 95%;">
-                            <option value="region" selected>Region</option>
-                            <option value="county">County</option>
-                        </select>
-                    </td>
+    <div class="sdo-card">
+        <h2 class="h2_style">INSTRUCTIONS:</h2>
+        <p class="lookup_p">This application creates custom data tables for SDO population estimates and forecasts by single year of age across states, regional planning groups, or individual counties.</p>
+        <p class="lookup_p"><em>Note: Values may not sum to state totals due to system rounding logic variations.</em></p>
+        <hr class="sdo-hr">
+        
+        <form class="sdo-form-grid" id="sya-combined-lookup-form" onsubmit="return false;">
+            
+            <div class="form-group">
+                <label for="geo-dropdown"><strong>1. Select Geography Tier:</strong></label>
+                <select class="form-control geo-dropdown" id="geo-dropdown" size="2">
+                    <option value="region" selected>State / Region Rollup</option>
+                    <option value="county">Individual County</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location-dropdown">
+                    <strong id="location-lbl">2. Select Target Location(s):</strong>
+                    <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+                </label>
+                <select class="form-control location-dropdown" id="location-dropdown" size="6" multiple role="listbox"></select>
+            </div>
+            
+            <div class="form-group">
+                <label for="year-dropdown">
+                    <strong id="year-lbl">3. Select Target Year(s):</strong>
+                    <span class="sdo-input-helper">(Hold Ctrl / ⌘ to select multiple)</span>
+                </label>
+                <select class="form-control year-dropdown" id="year-dropdown" size="6" multiple role="listbox"></select>
+            </div>
+            
+            <div class="form-group">
+                <label><strong id="group-lbl">4. Configure Age Filters:</strong></label>
+                <div id="age-filter-group" class="sdo-filter-box">
+                    <div class="radio-wrap">
+                        <input type="radio" id="age5" name="age_grouping" value="5yr" checked>
+                        <label id="age5_lbl" for="age5">Five Year Intervals (0-4, 5-9, etc.)</label>
+                    </div>
+                    <div class="radio-wrap">
+                        <input type="radio" id="census" name="age_grouping" value="census">
+                        <label id="census_lbl" for="census">Census Age Categories</label>
+                    </div>
+                    <div class="radio-wrap">
+                        <input type="radio" id="customage" name="age_grouping" value="custom">
+                        <label id="customage_lbl" for="customage">Custom Age Intervals</label>
+                    </div>
+                    <div class="radio-wrap">
+                        <input type="radio" id="sya" name="age_grouping" value="single">
+                        <label id="sya_lbl" for="sya">Custom Single Year Selections</label>
+                    </div>
                     
-                    <td class="look_cll" style="vertical-align: top;">
-                        <select class="form-control location-dropdown" id="location-dropdown" style="width: 95%;" size="6" multiple role="listbox"></select>
-                    </td>
-                    
-                    <td class="look_cll" style="vertical-align: top;">
-                        <select class="form-control year-dropdown" id="year-dropdown" style="width: 95%;" size="6" multiple role="listbox"></select>
-                    </td>
-                    
-                    <td class="look_cll" style="vertical-align: top;">
-                        <div id="age-filter-group">
-                            <div class="radio-wrap" style="margin-bottom: 4px;">
-                                <input type="radio" id="age5" name="age_grouping" value="5yr" checked>
-                                <label for="age5">Five Year Intervals (0-4, 5-9, etc.)</label>
-                            </div>
-                            <div class="radio-wrap" style="margin-bottom: 4px;">
-                                <input type="radio" id="census" name="age_grouping" value="census">
-                                <label for="census">Census Age Categories</label>
-                            </div>
-                            <div class="radio-wrap" style="margin-bottom: 4px;">
-                                <input type="radio" id="customage" name="age_grouping" value="custom">
-                                <label for="customage">Custom Age Intervals</label>
-                            </div>
-                            <div class="radio-wrap" style="margin-bottom: 8px;">
-                                <input type="radio" id="sya" name="age_grouping" value="single">
-                                <label for="sya">Custom Single Year Selections</label>
-                            </div>
-                            
-                            <div id="comp-wrapper" style="padding-top: 6px; border-top: 1px dotted #ccc;">
-                                <input type="checkbox" id="comp" name="county_comp" value="comp">
-                                <label for="comp" style="font-weight: bold; color: #A51C30;">Show Component Counties</label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="look_cll" id="ageselect" aria-live="polite" style="padding-top: 10px;"></td>
-                    <td class="look_cll" style="text-align: right; padding-top: 10px; vertical-align: bottom;">
-                        <button class="databutton button button--primary" type="button" id="gentable" style="margin-right: 8px;">Generate Table</button>
-                        <button class="databutton button button--secondary" type="button" id="cleartable">Reset Selections</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-    <hr>
+                    <div id="comp-wrapper" class="sdo-component-toggle">
+                        <input type="checkbox" id="comp" name="county_comp" value="comp">
+                        <label id="comp_lbl" for="comp">Show Component Counties</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group sdo-drawer-fullwidth" id="ageselect" aria-live="polite"></div>
+            
+            <div class="form-group sdo-actions">
+                <button class="button button--primary" type="button" id="gentable">Generate Table</button> 
+                <button class="button button--secondary" type="button" id="cleartable">Reset Selections</button>
+            </div>
+            
+        </form>
+    </div>
     
     <div id="tbl_output" aria-live="polite">&nbsp;</div>
 </div>

@@ -29,7 +29,6 @@ window.addEventListener("load", () => {
         d3.json(urlstr).then(function(yeardata) {
             localYearData = yeardata.filter(i => i.year >= 1990);
             
-            // Invoke universal geography populator directly out from central global utility asset
             sdoPopulateGeographies('location-dropdown', 'region');
             sdoPopulateYears("year-dropdown", localYearData);
 
@@ -57,26 +56,80 @@ window.addEventListener("load", () => {
             document.getElementById('cleartable').addEventListener("click", clearInterfaceSelections);
         });
 
+        function popTierLocations(tier) {
+            const dropdown = document.getElementById('location-dropdown');
+            dropdown.innerHTML = "";
+            
+            if (tier === "county") {
+                const counties = sdoGetRegionCounties(0); 
+                counties.forEach(fips => {
+                    if (fips !== '000') {
+                        let opt = document.createElement("option");
+                        opt.value = fips;
+                        opt.textContent = sdoGetCountyName(fips);
+                        dropdown.appendChild(opt);
+                    }
+                });
+            } else if (tier === "region") {
+                let stateOpt = document.createElement("option");
+                stateOpt.value = "0";
+                stateOpt.textContent = sdoGetRegionName(0);
+                dropdown.appendChild(stateOpt);
+                
+                for (let i = 1; i <= 40; i++) {
+                    let opt = document.createElement("option");
+                    opt.value = i.toString();
+                    opt.textContent = sdoGetRegionName(i);
+                    dropdown.appendChild(opt);
+                }
+            }
+        }
+
+        // --- MODERNIZED DRAWER RENDERING FACTORY ---
         function renderAgeInterfaceStructure(mode) {
             const container = document.getElementById('ageselect');
             container.innerHTML = "";
             
             if (mode === "custom") {
+                // Wrapper shell box
+                let wrapper = document.createElement('div');
+                wrapper.className = "sdo-drawer-enclosure";
+
                 let txt = document.createElement('p');
-                txt.innerHTML = "<strong>Designate up to 5 custom layout intervals (0 - 100):</strong>";
-                let tbl = document.createElement("table");
-                tbl.style.width = "100%";
+                txt.innerHTML = "<strong>Designate up to 5 custom age intervals (0 - 100):</strong>";
+                wrapper.appendChild(txt);
+
+                // Semantic container replacing legacy layout tables
+                let flexContainer = document.createElement("div");
+                flexContainer.className = "sdo-custom-intervals-container";
+
                 for (let i = 0; i < 5; i++) {
-                    let tr = document.createElement("tr");
-                    tr.innerHTML = `<td><label for="agestart${i}">From: </label><input type="text" id="agestart${i}" size="5" class="form-control" style="display:inline; width:60px;"></td>
-                                    <td><label for="ageend${i}">To: </label><input type="text" id="ageend${i}" size="5" class="form-control" style="display:inline; width:60px;"></td>`;
-                    tbl.appendChild(tr);
+                    let row = document.createElement("div");
+                    row.className = "sdo-custom-interval-row";
+                    row.innerHTML = `
+                        <span class="sdo-row-index">${i + 1}.</span>
+                        <div class="sdo-input-pair">
+                            <label for="agestart${i}">From:</label>
+                            <input type="text" id="agestart${i}" maxlength="3" autocomplete="off">
+                        </div>
+                        <div class="sdo-input-pair">
+                            <label for="ageend${i}">To:</label>
+                            <input type="text" id="ageend${i}" maxlength="3" autocomplete="off">
+                        </div>
+                    `;
+                    flexContainer.appendChild(row);
                 }
-                container.appendChild(txt);
-                container.appendChild(tbl);
+                wrapper.appendChild(flexContainer);
+                container.appendChild(wrapper);
+
             } else if (mode === "single") {
+                let wrapper = document.createElement('div');
+                wrapper.className = "sdo-drawer-enclosure";
+
                 let txt = document.createElement('p');
-                txt.innerHTML = "<strong>Hold Ctrl/Cmd to select targeted custom ages:</strong>";
+                txt.innerHTML = "<strong>Hold Ctrl / ⌘ to select targeted custom ages:</strong>";
+                wrapper.appendChild(txt);
+
                 let select = document.createElement("select");
                 select.id = "agesel";
                 select.multiple = true;
@@ -88,22 +141,22 @@ window.addEventListener("load", () => {
                     opt.textContent = (i === 100) ? "100+" : i;
                     select.appendChild(opt);
                 }
-                container.appendChild(txt);
-                container.appendChild(select);
+                wrapper.appendChild(select);
                 
                 let grpDiv = document.createElement("div");
-                grpDiv.style.marginTop = "10px";
+                grpDiv.style.marginTop = "12px";
                 const filters = [
                     {id: 'NoGrp', txt: 'No Summary Grouping', val: 'opt0'},
                     {id: 'yrGrp', txt: 'Group across Years', val: 'opt1'},
-                    {id: 'ctyGrp', txt: 'Group across Location Profiles', val: 'opt2'},
-                    {id: 'ageGrp', txt: 'Group across Custom Ages', val: 'opt3'}
+                    {id: 'ctyGrp', txt: 'Group across Profiles', val: 'opt2'},
+                    {id: 'ageGrp', txt: 'Group across Ages', val: 'opt3'}
                 ];
-                grpDiv.innerHTML += "<strong>Single Year Grouping Rule:</strong><br>";
+                grpDiv.innerHTML += "<strong style='display:block; margin-bottom:6px;'>Single Year Grouping Rule:</strong>";
                 filters.forEach(f => {
-                    grpDiv.innerHTML += `<label style="margin-right:15px;"><input type="radio" name="age_summary" value="${f.val}" ${f.id==='NoGrp'?'checked':''}>${f.txt}</label>`;
+                    grpDiv.innerHTML += `<div class="radio-wrap"><input type="radio" name="age_summary" id="${f.id}" value="${f.val}" ${f.id==='NoGrp'?'checked':''}><label for="${f.id}">${f.txt}</label></div>`;
                 });
-                container.appendChild(grpDiv);
+                wrapper.appendChild(grpDiv);
+                container.appendChild(wrapper);
             }
         }
 
@@ -145,14 +198,12 @@ window.addEventListener("load", () => {
 
             if (!passed) { alert(log); return; }
 
-            document.getElementById('tbl_output').innerHTML = '<div style="padding:40px; text-align:center;"><strong>Processing SDO Database Matrix...</strong></div>';
-            
-            // Invoke Universal Cross-Tier Resolver directly out from Global Utilities library
-            const resolution = sdoResolveTiersToFips(tier, targetLocations);
-            const targetYearsList = targetYears.join(",");
+            document.getElementById('tbl_output').innerHTML = '<div class="sdo-loader"></div><div class="sdo-loading-text">Processing SDO Database Matrix...</div>';
             const showComponentToggled = document.getElementById("comp").checked ? "comp" : "";
             
-            // Build absolute comma-separated sub-lists as explicitly required by system database boundaries
+            const resolution = sdoResolveTiersToFips(tier, targetLocations);
+            const targetYearsList = targetYears.join(",");
+            
             let ageQueryArr = [];
             if (ageGroupMode === "5yr" || ageGroupMode === "census") {
                 for (let i = 0; i <= 100; i++) { ageQueryArr.push(i); }
@@ -170,9 +221,7 @@ window.addEventListener("load", () => {
             let endpointUrl = `https://gis.dola.colorado.gov/lookups/sya?age=${ageQueryParameter}&county=${resolution.cleanUniqueFipsString}&year=${targetYearsList}&choice=single`;
 
             d3.json(endpointUrl).then(function(apiPayload) {
-                // Offload entire aggregation rollback loop and binned array calculations safely to Global Utility
                 let processedRows = sdoAggregateAgeData(apiPayload, tier, ageGroupMode, finalAgeParameters, aggregateGroupingStrategy, resolution.mapReference);
-                
                 compileAndRenderTargetDataTable(tier, processedRows, showComponentToggled);
             });
         }
@@ -181,7 +230,6 @@ window.addEventListener("load", () => {
             let columnsConfiguration = [];
             let processedTableRows = [];
 
-            // Production exact layout string matrices map [Legacy Match Engine]
             if (tier === "region") {
                 if (componentsToggle === "comp") {
                     columnsConfiguration = ["Region Code", "Region Name", "County FIPS", "County Name", "Year", "Age", "Male Population", "Female Population", "Total Population", "Data Type"];

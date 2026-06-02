@@ -1,75 +1,87 @@
 /* =====================================================================
    State Demography Office - Master Lookup Tools Stylesheet
-   Production Build - Optimized for Drupal Asset Isolation
+   Production Build - Optimized for Drupal Theme Font Inheritance
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   1. MAIN CONTAINER & TYPOGRAPHY
+   1. MAIN CONTAINER, CARD HOOKS, & TYPOGRAPHY
    --------------------------------------------------------------------- */
 .sdo-lookup-container {
     width: 100%;
     margin-bottom: 2rem;
-    font-family: Arial, sans-serif;
+}
+
+.sdo-lookup-container .sdo-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .sdo-lookup-container .h2_style {
     color: #004b79;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 .sdo-lookup-container .lookup_p {
-    font-size: 1rem;
+    font-size: 0.92rem;
     line-height: 1.5;
-    margin-bottom: 15px;
-    color: #333;
+    margin-bottom: 10px;
 }
 
 /* ---------------------------------------------------------------------
-   2. FORM LAYOUT (CSS GRID)
+   2. FORM GRID ARCHITECTURE
    --------------------------------------------------------------------- */
 .sdo-form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.25rem;
     align-items: flex-start;
-    margin: 1.5rem 0;
+    margin: 1.25rem 0 0 0;
 }
 
 .sdo-form-grid .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0 !important; /* Strip Drupal base theme margins */
+    margin-bottom: 0 !important; /* Drupal base block reset override */
     padding-bottom: 0 !important;
 }
 
 /* ---------------------------------------------------------------------
-   3. UNIFIED FORM TYPOGRAPHY
+   3. LABELS & METADATA HELPERS
    --------------------------------------------------------------------- */
-/* Main Column Headings */
 .sdo-lookup-container .form-group > label,
 .sdo-lookup-container .sdo-fieldset legend,
 .sdo-lookup-container #ageselect strong {
     font-size: 0.875rem !important;
-    font-weight: bold;
-    color: #333;
+    font-weight: 700;
     margin-bottom: 0.5rem;
     display: block;
-    border-bottom: none !important; /* Strip Drupal legend borders */
+    border-bottom: none !important;
 }
 
-/* Sub-options (Radio buttons, Custom inputs) */
+.sdo-lookup-container .sdo-input-helper {
+    display: block;
+    font-size: 0.75rem !important;
+    font-weight: 400;
+    font-style: italic;
+    color: #666;
+    margin-top: 1px;
+}
+
 .sdo-lookup-container .radio-wrap label,
 .sdo-lookup-container #ageselect label {
-    font-size: 0.875rem !important;
-    font-weight: normal;
-    color: #333;
+    font-size: 0.85rem !important;
+    font-weight: 400;
+    cursor: pointer;
 }
 
 /* ---------------------------------------------------------------------
-   4. FORM INPUT STYLING
+   4. CONTROL SELECTORS & REGIONAL TOGGLES
    --------------------------------------------------------------------- */
 .sdo-fieldset {
     border: none;
@@ -78,77 +90,178 @@
 }
 
 .radio-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     margin-bottom: 0.5rem;
 }
 
-/* Multi-Select Boxes & Scrollbar Fixes */
-.sdo-form-grid select[multiple] {
+.sdo-form-grid select.form-control {
     width: 100%;
-    min-height: 140px;
-    border: 1px solid #ccc;
+    min-height: 130px;
+    border: 1px solid #cbd5e0;
     border-radius: 4px;
-    border-top-right-radius: 0 !important; /* Flush scrollbars */
+    border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     padding: 0 !important; 
     margin-bottom: 0 !important;
     overflow-y: auto !important;
+    background-color: #fff;
 }
 
-.sdo-form-grid select[multiple] option {
-    padding: 6px 10px;
-    font-size: 0.95rem;
+.sdo-form-grid select.form-control:focus {
+    border-color: #004b79;
+    outline: none;
 }
 
-/* Dynamic Custom Age Inputs */
-.sdo-lookup-container #ageselect p { margin: 0 0 0.5rem 0; }
-.sdo-lookup-container #ageselect p br { display: none; } /* Hide hardcoded breaks */
-.sdo-lookup-container #ageselect table { margin-top: 0 !important; }
+.sdo-form-grid select.form-control option {
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
 
-.sdo-lookup-container #ageselect input[type="text"] {
-    width: 60px;
-    padding: 4px;
-    margin-bottom: 0.5rem;
-    border: 1px solid #ccc !important;
-    border-radius: 3px;
-    box-shadow: none !important;
+.sdo-component-toggle {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dotted #cbd5e0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sdo-component-toggle label {
+    font-weight: 700 !important;
+    color: #A51C30 !important;
 }
 
 /* ---------------------------------------------------------------------
-   5. ACTION BUTTONS
+   5. CONDENSED FLEXBOX DRAWER ENCLOSURE [TABLE ANTI-PATTERN REPLACEMENT]
    --------------------------------------------------------------------- */
-.sdo-form-grid .sdo-actions {
-    grid-column: 1 / -1; /* Span entire bottom row */
+.sdo-form-grid .sdo-drawer-fullwidth {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+/* Clean background shell for context isolation */
+.sdo-lookup-container .sdo-drawer-enclosure {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+    max-width: 460px; /* FIX: Strict maximum-width boundary control policy */
+    box-sizing: border-box;
+}
+
+/* Condensed vertical layout container */
+.sdo-custom-intervals-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sdo-custom-interval-row {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.sdo-custom-interval-row .sdo-row-index {
+    width: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.sdo-custom-interval-row .sdo-input-pair {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 15px;
+}
+
+.sdo-custom-interval-row .sdo-input-pair label {
+    font-size: 0.85rem !important;
+    margin-bottom: 0 !important;
+    white-space: nowrap;
+}
+
+/* Legacy-matching tight manual textbox inputs layout override */
+.sdo-custom-interval-row .sdo-input-pair input[type="text"] {
+    width: 44px !important;
+    height: 26px !important;
+    padding: 2px 4px !important;
+    margin: 0 !important;
+    border: 1px solid #cbd5e0 !important;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: none !important;
+    font-size: 0.875rem !important;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.sdo-custom-interval-row .sdo-input-pair input[type="text"]:focus {
+    border-color: #004b79 !important;
+    box-shadow: 0 0 0 2px rgba(0, 75, 121, 0.1) !important;
+    outline: none;
+}
+
+/* Adjust single select layouts under enclosure boundaries */
+.sdo-drawer-enclosure select.form-control[multiple] {
+    max-width: 100%;
+    min-height: 110px;
+}
+
+/* ---------------------------------------------------------------------
+   6. ACTIONS PANEL REGION
+   --------------------------------------------------------------------- */
+.sdo-form-grid .sdo-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
     margin-top: 0 !important;
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
 }
 
 .sdo-form-grid .sdo-actions button {
     width: auto;
-    padding: 8px 24px;
+    padding: 6px 20px;
     margin-bottom: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 3px;
+    border: none;
     cursor: pointer;
 }
 
+.sdo-form-grid .sdo-actions .button--primary {
+    background-color: #004b79;
+    color: #fff;
+}
+
+.sdo-form-grid .sdo-actions .button--primary:hover { background-color: #003657; }
+.sdo-form-grid .sdo-actions .button--secondary { background-color: #e2e8f0; color: #4a5568; }
+.sdo-form-grid .sdo-actions .button--secondary:hover { background-color: #cbd5e0; }
+
 @media (max-width: 600px) {
-    .sdo-form-grid .sdo-actions {
-        flex-direction: column;
-    }
-    .sdo-form-grid .sdo-actions button {
-        width: 100%;
-    }
+    .sdo-form-grid .sdo-actions { flex-direction: column; }
+    .sdo-form-grid .sdo-actions button { width: 100%; }
 }
 
 /* ---------------------------------------------------------------------
-   6. DATATABLES & OUTPUT STYLING (Isolated Layout Fixes)
+   7. DATATABLES MATRIX OUTPUT OVERRIDES
    --------------------------------------------------------------------- */
-.sdo-lookup-container hr {
+.sdo-lookup-container .sdo-hr {
     border: 0;
     height: 1px;
-    background: #ccc;
-    margin: 20px 0;
+    background: #e2e8f0;
+    margin: 1.25rem 0;
 }
 
 #tbl_output {
@@ -158,7 +271,6 @@
     clear: both;
 }
 
-/* Enforce float clearing across wrapper containers */
 .dataTables_wrapper::after {
     content: "";
     clear: both;
@@ -177,23 +289,25 @@
 
 table.dataTable {
     clear: both;
-    margin-top: 10px !important;
-    margin-bottom: 15px !important;
+    margin-top: 12px !important;
+    margin-bottom: 16px !important;
+    border-collapse: collapse !important;
 }
 
 table.dataTable.display tbody td {
-    border: 1px solid #e0e0e0;
-    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    font-size: 0.9rem;
 }
 
 table.dataTable.display thead th {
-    border: 1px solid #e0e0e0;
-    background-color: #f4f6f8;
-    padding: 10px;
-    font-weight: bold;
+    border: 1px solid #cbd5e0;
+    background-color: #f8fafc;
+    padding: 12px;
+    font-weight: 700;
+    color: #2d3748;
 }
 
-/* Structural Overrides to Repair Broken Pagination Buttons */
 .dataTables_wrapper .dataTables_paginate {
     float: right;
     text-align: right;
@@ -204,16 +318,16 @@ table.dataTable.display thead th {
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     box-sizing: border-box;
     display: inline-block;
-    min-width: 1.5em;
-    padding: 0.5em 1em;
+    min-width: 1.75em;
+    padding: 0.4em 0.8em;
     margin-left: 4px;
     text-align: center;
     text-decoration: none !important;
     cursor: pointer;
-    color: #333 !important;
-    border: 1px solid #ccc;
+    color: #4a5568 !important;
+    border: 1px solid #cbd5e0;
     border-radius: 4px;
-    background: #f9f9f9;
+    background: #f8fafc;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
@@ -227,35 +341,37 @@ table.dataTable.display thead th {
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, 
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
     cursor: default;
-    color: #999 !important;
-    border: 1px solid #e5e5e5;
-    background: #f5f5f5;
+    color: #a0aec0 !important;
+    border: 1px solid #edf2f7;
+    background: #f7fafc;
     box-shadow: none;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
     color: #fff !important;
     border: 1px solid #004b79;
-    background: #005c94;
+    background: #003657;
 }
 
 .dataTables_wrapper .dataTables_info {
     clear: both;
     float: left;
     padding-top: 1.5rem;
+    font-size: 0.875rem;
+    color: #718096;
 }
 
 /* ---------------------------------------------------------------------
-   7. LOADING SPINNER
+   8. SYSTEM ANIMATED DATA TRANSMISSION LOADERS
    --------------------------------------------------------------------- */
 .sdo-loader {
-    border: 6px solid #f3f3f3; 
-    border-top: 6px solid #004b79; 
+    border: 5px solid #edf2f7; 
+    border-top: 5px solid #004b79; 
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: sdo-spin 1s linear infinite;
-    margin: 40px auto 10px auto; 
+    width: 40px;
+    height: 40px;
+    animation: sdo-spin 0.8s linear infinite;
+    margin: 40px auto 12px auto; 
 }
 
 @keyframes sdo-spin {
@@ -265,7 +381,7 @@ table.dataTable.display thead th {
 
 .sdo-loading-text {
     text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: #004b79;
 }
