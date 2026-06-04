@@ -9,6 +9,13 @@ const SDO_CONFIG = {
     CENSUS_API_KEY: "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce"
 };
 
+// --- GLOBAL APPLICATION STATE (RUNTIME) ---
+let SDO_STATE = {
+    latestEstimateYear: null,
+    activeFips: null,
+    activeYear: null
+};
+
 // --- SYSTEM GEOGRAPHY MASTER DICTIONARIES ---
 const SDO_COUNTY_NAMES = {
     0: "Colorado", 1: "Adams County", 3: "Alamosa County", 5: "Arapahoe County", 
@@ -278,11 +285,27 @@ function sdoGetSelectValues(selectElement) {
     return result;
 }
 
+/**
+ * Finds the latest year in the dataset marked as an 'Estimate'.
+ * This defines the breaking point between history and forecast.
+ */
+function sdoGetLatestEstimateYear(yeardata) {
+    if (!yeardata || yeardata.length === 0) return null;
+    const estimates = yeardata.filter(d => d.datatype === "Estimate");
+    if (estimates.length === 0) return null;
+    return Math.max(...estimates.map(d => parseInt(d.year, 10)));
+}
+
 function sdoPopulateYears(dropdownId, yeardata) {
     var sel = document.getElementById(dropdownId);
     if (!sel) return;
     sel.innerHTML = "";
     
+    // Auto-update global state if not already set
+    if(!SDO_STATE.latestEstimateYear) {
+        SDO_STATE.latestEstimateYear = sdoGetLatestEstimateYear(yeardata);
+    }
+
     yeardata.forEach(j => {
         var el = document.createElement("option");
         el.value = j.year;
@@ -410,4 +433,4 @@ function sdoAggregateAgeData(rawPayload, tier, groupingMode, ageRanges, summaryS
     }
     
     return structuredRows;
-}
+    }
