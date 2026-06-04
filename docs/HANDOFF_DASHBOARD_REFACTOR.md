@@ -24,4 +24,5 @@ We have completed the **Compatibility Scan** for \`SDO_Web_Migration/charts/drup
 ## 4. Technical Notes
 *   **Charting Library:** Confirmed as **Apache ECharts (v5.5.0)**.
 *   **Dependencies:** D3.js (v7.8.5) and Global Utilities.
-*   **Breaking Point:** The dashboard should eventually use the new dynamic year logic documented in \`docs/YEAR_AND_FORECAST_LOGIC.md\`.
+*   **Breaking Point:** The dashboard should now consume the dynamic breaking point from `SDO_STATE.latestEstimateYear` (initialized by `sdoPopulateYears`).
+

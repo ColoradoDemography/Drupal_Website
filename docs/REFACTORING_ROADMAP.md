@@ -2,24 +2,24 @@
 
 This document outlines the phased plan for transitioning 40+ SDO data applications from legacy monolithic files to a modern, decoupled **Core + Module** architecture.
 
-## Phase 1: Solidify the Global Core (The Foundation)
+## Phase 1: Solidify the Global Core (The Foundation) - ✅ COMPLETED
 **Goal:** Lock in the shared functions and data dictionaries to ensure all 40 applications pull from a single source of truth.
 
-1.  **Dynamic breaking point:** Update Global_SDO_Utilities_v2_combined.js with a function to dynamically identify the "Latest Estimate Year" from the API.
-2.  **Standardize Geographies:** Ensure all region and county dictionaries are exhaustive and include the new combined geography logic used in the SYA prototype.
-3.  **UI Utility Migration:** Move redundant UI helpers (like fixNUMFMT and popDropdown) from prototypes into the global file.
+1.  **Dynamic breaking point:** ✅ Updated Global_SDO_Utilities_v2_combined.js with `sdoGetLatestEstimateYear` and `SDO_STATE`.
+2.  **Standardize Geographies:** ✅ Dictionaries are centralized and "Steamboat Springs" syntax fixed.
+3.  **UI Utility Migration:** ✅ Centralized `formatSDO`, `sdoPopulateYears`, and `sdoPopulateGeographies`.
 
 ## Phase 2: The "Lookup Table" Batch (20 Applications)
 **Goal:** Modularize and combine the lookup tools into unified Regional + County interfaces.
 
-1.  **Pattern Lockdown:** Use lookups/sya-age-combined-lookup as the "Gold Standard" template.
+1.  **Pattern Lockdown:** ✅ lookups/sya-age-combined-lookup is refactored as the "Gold Standard" template (using `SDO_STATE`).
 2.  **Feature Parity:** Identify the ~20 legacy lookup types (e.g., Race, Ethnicity, Jobs, Households).
 3.  **The "Surgical Extraction" (Agent-Led):** 
     *   For each legacy tool, use a Gemini Sub-Agent to extract the specific D3 processing and API URL logic.
     *   Discard legacy UI and Geography hardcoding.
     *   Wrap extracted logic into a lean app.js using the global template.
 
-## Phase 3: The "Chart Dashboard" Batch (20 Applications)
+## Phase 3: The "Chart Dashboard" Batch (20 Applications) - 🚀 NEXT UP
 **Goal:** Transition dashboards to the modular model and migrate visualizations from Plotly to Apache ECharts.
 
 1.  **Decouple Population Prototype:** Refactor charts/drupal-population-prototype as the first dashboard blueprint.

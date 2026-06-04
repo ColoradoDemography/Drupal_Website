@@ -32,6 +32,9 @@ window.addEventListener("load", () => {
             sdoPopulateGeographies('location-dropdown', 'region');
             sdoPopulateYears("year-dropdown", localYearData);
 
+            // Access global state to confirm initialization (Gold Standard Pattern)
+            console.log("SDO_STATE initialized. Latest Estimate Year:", SDO_STATE.latestEstimateYear);
+
             document.getElementById('geo-dropdown').addEventListener('change', function(e) {
                 const tier = e.target.value;
                 if (tier === "region") {
@@ -177,6 +180,10 @@ window.addEventListener("load", () => {
             }
 
             if (!passed) { alert(log); return; }
+
+            // Update SDO_STATE to stay in sync with other potential components
+            SDO_STATE.activeFips = targetLocations;
+            SDO_STATE.activeYear = targetYears;
 
             document.getElementById('tbl_output').innerHTML = '<div class="sdo-loader"></div><div class="sdo-loading-text">Processing SDO Database Matrix...</div>';
             const showComponentToggled = document.getElementById("comp").checked ? "comp" : "";
