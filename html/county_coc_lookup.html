@@ -1,0 +1,181 @@
+<!-- County COC Lookup Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> County Births, Deaths & Migration Lookup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="content-type" content="text/html; charset=utf-8">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.css" rel="stylesheet"/>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.js"></script>
+
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<!--<div>
+<a href='https://cdola.colorado.gov/'><img class="logoSDO" src="../img/SDO-1600x400.jpg"  alt='Department of Local Affairs Homepage' aria-label='Department of Local Affairs Homepage'></a>
+</div>
+<div w3-include-html="../html/navheader.html"></div>-->
+
+<!-- First Grid, linked images -->
+<div class="grid-container2">
+  <!--<div class="grid-item panel2_1_1">
+	<div w3-include-html="../html/sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="../html/left_hand_index.html"></div>-->
+  </div> <!-- Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='County Births, Deaths & Migration Lookup' aria-label='County Births, Deaths & Migration Lookup'>County Births, Deaths & Migration Lookup</h1>
+  <p>
+  <a href="../lookups/region_coc_lookup.html" target='_blank'>Need State/Regional Data?</a>
+  </p>
+   <h2 class='h2_style' title='INSTRUCTIONS:' aria-label='INSTRUCTIONS:'>INSTRUCTIONS:</h2>
+   <p class="lookup_p">
+   This application creates custom tables for SDO County estimates for births, deaths and net migration.
+   </p>
+  <p class="lookup_p">
+   A spreadsheet with detailed information for births, deaths, and net migration is available on the 
+   <a href='https://demography.dola.colorado.gov/assets/html/coc.html' target='_blank'>SDO Births, Deaths, and Migration Spreadsheets</a> page.
+  </p>
+   <table class='lookup_tab' cellspacing="0" cellpadding="0">
+   <tr>
+	<td class="look_cll">
+		<label class="entry_text" for="county-dropdown" id="county-lbl"  alt='Select one or more Counties' aria-label='Select one or more Counties'>Select one or more Counties:</label> 
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="year-dropdown" id="year-lbl"  alt='Select one or more years' aria-label='Select one or more years'>Select one or more years:</label>
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="sum_grouping" id="group-lbl"  alt='Select Summary Groups' aria-label='Select Summary Groups'>Select Summary Groups:</label>
+	</td>
+	<td class="look_cll">
+	</td>
+	<td class="look_cll">
+	</td>
+	</tr>
+	<tr>
+	<td class="look_cll"> 
+	<select class="county-dropdown" id="county-dropdown" size="6" multiple role='listbox'>
+		<option></option>
+	</select>
+	 </td>
+	<td class="look_cll">
+	<select class="year-dropdown" id="year-dropdown" style='width:100px;' size="5" multiple role='listbox'>
+		<option></option>
+	</select>
+    </td>
+		<td class="look_cll">
+		<input type="radio" id="noGrp" name="sum_grouping" value="opt0" checked />
+		<label for="noGrp">No Grouping</label><br>
+		<input type="radio" id="yrgrp" name="sum_grouping" value="opt1"/>
+		<label for="yrgrp">Group by Year</label><br>
+		<input type="radio" id="ctygrp" name="sum_grouping" value="opt2"/>
+		<label for="ctygrp">Group by County</label><br>
+    </td>
+	<td class="look_cll">
+	</td>
+	<td class="look_cll">
+		<button class='databutton' id='gentable' aria-label='Generate Table'>Generate Table</button><br><br>
+		<button class='databutton' id='cleartable' aria-label='Reset Selections'>Reset Selections</button><br>
+	</td>
+	</tr>
+	</table>
+	<hr>
+   </div>
+  <div class="grid-item app-panel_3_2">
+	 <div id="tbl_output"></div>
+  </div> 
+ <!-- <div class="grid-item app-panel_4_2_b">
+			<div w3-include-html="../html/bodycontent1.html"></div>
+	 </div>
+	<div class="grid-item app-panel_4_4_b">
+			<div w3-include-html="../html/bodycontent2.html"></div>
+    </div>
+	<div class="grid-item app-panel_4_6_b">
+			<div w3-include-html="../html/bodycontent3.html"></div>
+	</div>
+  </div>  End of Grid Container -->
+ <script> 
+
+ includeHTML();
+// Extract Yange or years
+
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+ var outType = "COC";
+ popDropdown('county','county-dropdown','');
+ popYrdd("year-dropdown",yeardata);  //Change this range to match data
+ 
+//Button Event
+ document.getElementById('gentable').addEventListener("click", chkInputs)
+ document.getElementById('cleartable').addEventListener("click", clearInputs)
+ 
+ function chkInputs(){
+
+ var complete = true;
+ var outputmsg = "";
+ document.getElementById('tbl_output').innerHTML = "";
+
+	    var fipsdd = document.getElementById('county-dropdown');
+		var selectedfips = getSelectValues(fipsdd);
+
+		if(selectedfips.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more counties.\n";
+			complete = false;
+		}
+		
+		var yrdd = document.getElementById('year-dropdown');
+		var selectedyr = getSelectValues(yrdd);
+
+		if(selectedyr.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more years.\n";
+			complete = false;
+		}
+
+	selectedgroup = document.querySelector('input[name="sum_grouping"]:checked').value;
+
+		if(complete){
+		     genCOCCty(selectedfips,selectedyr,selectedgroup,yeardata,outType);
+			 } else {
+			 window.alert(outputmsg);
+			 }
+	 };  //chkInputs
+})  //D3_json
+
+function clearInputs() {
+   document.getElementById('tbl_output').innerHTML = "";
+   var elements = document.getElementsByTagName('select');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].selectedIndex = -1;
+	}
+}; //clearInputs
+
+
+ 
+ </script>
+</body>
+</html> 
