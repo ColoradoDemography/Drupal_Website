@@ -1,0 +1,337 @@
+<!-- Race by Age Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SDO Race by Age Visualization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script type="text/javascript" src="../js/funct.js"></script>
+<script type="text/javascript" src="../js/profile.js"></script>
+<script type="text/javascript" src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<!--<div>
+<a href="https://demography.dola.colorado.gov/"><img class="logoSDO" src="../img/SDO-1600x400.jpg" alt='State Demography Office Homepage'></a>
+</div>
+<div w3-include-html="./navheader.html"></div>
+
+ First Grid, linked images 
+<div class="grid-container2">
+  <div class="grid-item panel2_1_1">
+	<div w3-include-html="./sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="./left_hand_index.html"></div>
+  </div>  Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='SDO Race by Age Visualization' aria-label='SDO Race by Age Visualization'>SDO Race by Age Visualization</h1>
+  <h2 class='h2_style' title='Race by Age Visualization' aria-label='Race by Age Visualization'>Race by Age Visualization</h2>
+   <br><br>INSTRUCTIONS:
+   <p class="lookup_p">
+   The following page provides charts showing single year estimates of age by racial and ethnic groups for multi-county regions, and counties from 2010 to the current year.
+   For your convenience, you are able to download the graphs by clicking on the camera icon in the upper right of the graph while hovering over the chart. 
+   This will download an exact copy, including zooming, of the chart on the page.
+   </p >
+   <p class="lookup_p">
+   Click on the download icon on the left of each chart to download the chart, the underlying data, and links to the data source.
+   </p>
+   <b><i>This data visualization can only be viewed on a tablet or desktop.</i></b>
+   <br><br>
+   <table style="border-collapse: collapse; border : none;">
+   <tr>
+ 	<td style="border : none; width: 25%;">
+	<label class="entry_text" id='geo-lbl' for='geo-dropdown'>Select Geography Type:</label>
+	</td>
+	<td style="border : none; width: 25%;">
+		<label class="entry_text" id="location-lbl" for='location-dropdown'>Select Geography:</label> 
+	</td>
+	<td style="border : none; width: 25%;">
+		<label class="entry_text" id="county-lbl" for='county-dropdown'>Select County in Region:</label>
+	</td>
+	<td style="border : none; width: 25%;">
+		<label class="entry_text" id="year-lbl" for='year-dropdown'>Select Year:</label>
+	</td>
+
+	</tr>
+	<tr>
+	<td style="border : none; width: 25%;">
+	<select class="geo-dropdown" id="geo-dropdown">
+		<option value="county">County</option>
+		<option value = "region">Region</option>
+	 </select>
+	</td>
+	<td style="border : none; width: 25%;"> 
+	<select class="location-dropdown" id="location-dropdown">
+		<option></option>
+	</select>
+	 </td>
+	<td style="border : none; width: 25%;">
+	<select class="county-dropdown" id="county-dropdown">
+		<option></option>
+	</select>
+    </td>
+		<td style="border : none; width: 25%;">
+	<select class="year-dropdown" id="year-dropdown">
+		<option></option>
+	</select>
+    </td>
+	</tr>
+	</table>
+  </div>
+  <div class="grid-item app-panel_3_2">
+      <div class="dropdown AClass">
+		  <button class="dropbtn"  id="line" text="Race and Ethnicity Download Button" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+		  <div class="dropdown-content">
+		    <ul class='dd-list'>
+			<li style='color:black;'><a href="#" id='line_csv'>Download Data (CSV)</a></li>
+			<li style='color:black;'><a href="#" id='line_png'>Download Image (PNG)</a></li>
+			<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='line_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+			</ul>
+		  </div>
+	  </div>
+	 <div id="line_output"></div>
+  </div>
+  <div class="grid-item app-panel_4_2">
+	<div class="dropdown AClass">
+		<button class="dropbtn" id="white" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='white_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='white_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='white_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="white_output"></div>
+  </div>
+  <div class="grid-item app-panel_5_2">
+  	<div class="dropdown AClass">
+		<button class="dropbtn" id="hisp" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='hisp_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='hisp_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='hisp_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="hisp_output"></div>
+  </div>
+  <div class="grid-item app-panel_6_2">
+    <div class="dropdown AClass">
+		<button class="dropbtn" id="black" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='black_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='black_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='black_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+	<div id="black_output"></div>
+  </div>
+   <div class="grid-item app-panel_7_2">
+      <div class="dropdown AClass">
+		<button class="dropbtn" id="amind" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	  <div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='amind_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='amind_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='amind_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="amind_output"></div> 
+ </div>
+  <div class="grid-item app-panel_8_2">
+    <div class="dropdown AClass">
+		<button class="dropbtn" id="asian" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='asian_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='asian_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='asian_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="asian_output"></div>
+  </div>  
+  <div class="grid-item app-panel_9_2">
+      <div class="dropdown AClass">
+		<button class="dropbtn" id="nhpi" aria-label="Race and Ethnicity Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	  <div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='nhpi_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='nhpi_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='nhpi_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="nhpi_output"></div> 
+ </div>
+
+ <div class="grid-item app-panel_10_2">
+      <div class="dropdown AClass">
+		<button class="dropbtn" id="multi" text="Download Button" aria-label="Download Button"><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	  <div class="dropdown-content">
+	    <ul class='dd-list'>
+		<li style='color:black;'><a href="#" id='multi_csv'>Download Data (CSV)</a></li>
+		<li style='color:black;'><a href="#" id='multi_png'>Download Image (PNG)</a></li>
+		<li style='color:black;'><a href='../lookups/county_sya_race_lookup.html' id='multi_src' target='_blank'>Race and Ethnicity by Age Lookup</a></li>
+		</ul>
+	 </div>
+	</div>
+    <div id="multi_output"></div> 
+ </div>
+</div>  <!-- End of Grid -->
+
+
+<script>
+
+//Setting HTML include and Accordion
+includeHTML(); 
+//hide Buttons
+hideButtons();
+
+
+
+//generating maximum year value for estimates
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+/* Populate County Dropdown */
+var ctyDrop = document.getElementById("county-dropdown");
+var ctyDroplbl = document.getElementById("county-lbl");
+ctyDroplbl.style.display = 'none';
+ctyDrop.style.display = 'none';
+popDropdown('county','location-dropdown','')
+var yrList = yeardata.filter(d => ((d.year >= 2020) && (d.datatype == "Estimate")))
+popYrdd("year-dropdown",yrList);  //Change this range to match data
+var yrvalue = 2020;
+
+//Extracting vintage Year
+	var estyrs = yeardata.filter(function(d){return d.datatype == 'Estimate'});
+	var vintYr = Math.max(...estyrs.map(o => o.year))
+	
+//Generate Initial Tables
+var selectedGeo = d3.select("#geo-dropdown").property('value');
+genRACEVIS(selectedGeo,"000","Colorado", vintYr,yrvalue);
+showButtons();
+d3.select("#geo-dropdown").on("change", function(d,i) {
+      var selectedGeo = d3.select("#geo-dropdown").property('value');
+	  popDropdown(selectedGeo,'location-dropdown','');
+	  var selectedfips = d3.select("#location-dropdown").property('value');
+	  var selectedregion = d3.select("#location-dropdown option:checked").text();
+	  var yrvalue = d3.select("#year-dropdown").property('value');
+	  genRACEVIS(selectedGeo,selectedfips,selectedregion,vintYr,yrvalue);
+//Display drilldown boxes
+	  if(selectedGeo == 'region') {
+	    if (ctyDrop.style.display === "none") {
+		    ctyDroplbl.style.display = "block";
+			ctyDrop.style.display = "block";
+			popCtyDrop(selectedfips,'county-dropdown');
+		} else {
+		    ctyDroplbl.style.display = "none";
+			ctyDrop.style.display = "none";
+		}
+	  } else {
+	  	 ctyDroplbl.style.display = "none";
+	     ctyDrop.style.display = "none";
+		}
+	  });
+d3.select("#location-dropdown").on("change", function(d,i) {
+	    var selectedGeo = d3.select("#geo-dropdown").property('value');
+		
+			  // update link
+			var linelink = document.getElementById('line_src');
+			var whitelink = document.getElementById('white_src');
+			var hisplink = document.getElementById('hisp_src');
+			var blacklink = document.getElementById('black_src');
+			var amindlink = document.getElementById('amind_src');
+			var asianlink = document.getElementById('asian_src');
+			var nhpilink = document.getElementById('nhpi_src');
+			var multilink = document.getElementById('multi_src');
+
+	  
+	  switch(selectedGeo){
+	  case "region" :
+		linelink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		whitelink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		hisplink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		blacklink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		amindlink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		asianlink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		nhpilink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		multilink.setAttribute("href", "../lookups/region_sya_race_lookup.html");
+		break;
+	  case "county" :
+		linelink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		whitelink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		hisplink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		blacklink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		amindlink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		asianlink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		nhpilink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		multilink.setAttribute("href", "../lookups/county_sya_race_lookup.html");
+		break;
+	}
+
+        var selectedfips = d3.select("#location-dropdown").property('value');
+			selectedfips = selectedfips.padStart(3, '0');
+		var selectedcounty = d3.select('#location-dropdown option:checked').text();
+		var yrvalue = d3.select("#year-dropdown").property('value');
+        genRACEVIS(selectedGeo,selectedfips,selectedcounty,vintYr,yrvalue);
+		if(selectedGeo == 'region') {
+		   popCtyDrop(selectedfips,'county-dropdown');
+		}
+    });
+//Drill down for region...
+d3.select("#county-dropdown").on("change", function(d,i) {
+	    var selectedGeo = d3.select("#geo-dropdown").property('value');
+        var selectedfips = d3.select("#county-dropdown").property('value');
+			selectedfips = selectedfips.padStart(3, '0');
+		var selectedcounty = d3.select('#county-dropdown option:checked').text();
+		var yrvalue = d3.select("#year-dropdown").property('value');
+        genRACEVIS('county',selectedfips,selectedcounty,vintYr,yrvalue); 
+		});
+	
+d3.select("#year-dropdown").on("change", function(d,i) {
+      var selectedGeo = d3.select("#geo-dropdown").property('value');
+		 if(selectedGeo == 'region') {
+             var selectedfips = d3.select('#county-dropdown').property('value');
+		     var selectedcounty = d3.select('#county-dropdown option:checked').text();
+		  } else {
+		     var selectedfips = d3.select('#location-dropdown').property('value');
+		     var selectedcounty = d3.select('#location-dropdown option:checked').text();
+		  }
+		var yrvalue = d3.select("#year-dropdown").property('value');
+        genRACEVIS(selectedGeo,selectedfips,selectedcounty,vintYr,yrvalue); 
+	
+    });
+}); //end of maximum year value
+
+</script>
+
+</body>
+</html> 
