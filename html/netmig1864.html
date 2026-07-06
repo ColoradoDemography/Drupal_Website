@@ -1,0 +1,143 @@
+<!-- Net Migration Working Age Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SDO Net Migration Working Age</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script type="text/javascript" src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<!--<div>
+<a href="https://demography.dola.colorado.gov/"><img class="logoSDO" src="../img/SDO-1600x400.jpg" alt='State Demography Office Homepage'></a>
+</div>
+	<div w3-include-html="./navheader.html"></div>
+<!-- First Grid, linked images -->
+<!--<div class="grid-container2">
+  <div class="grid-item panel2_1_1">
+	<div w3-include-html="./sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="./left_hand_index.html"></div>
+  </div> <!-- Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='SDO Net Migration Working Age' aria-label='SDO Net Migration Working Age'>SDO Net Migration Working Age</h1>
+  <h2 class='h2_style' title='Net Migration for Working Age Adults' aria-label='Net Migration for Working Age Adults'>Net Migration for Working Age Adults</h2>
+   <br><br>INSTRUCTIONS:
+   <p>
+   The following page shows net migration patterns for the total population and for the working age population, persons abe 18 to 64. Select one or more counties from the list below to view the graphs for the selected counties. 
+   You can hover over specific data points on each graph to view the data for that specific point.
+   </p>
+   Click on the download icon on the left of each chart to download the chart and the underlying data.
+   <br><br>
+   <b><i>This data visualization can only be viewed on a tablet or desktop.</i></b>
+   <br>
+   	 <label for="county-dropdown"><b>Select County:</b></label>
+	 <select class="county-dropdown" id="county-dropdown" multiple></select>
+	 <label for="age-dropdown"><b>Select Age Group:</b></label>
+	 <select class="age-dropdown" id="age-dropdown">
+		<option value="ageall" selected>Total Population</option>
+		<option value="age1864">Working Age Population</option>
+	 </select>
+	 <label for="chart-dropdown"><b>Select Chart Type:</b></label>
+	 <select class="chart-dropdown" id="chart-dropdown">
+		<option value="bar" selected>Bar Chart</option>
+		<option value="lines">Line Chart</option>
+	 </select>
+    <button class='databutton' id='genchart'>Generate Chart</button>
+  </div>
+  <div class="grid-item app-panel_3_2">
+      <div class="dropdown AClass">
+		  <button class="dropbtn"  id="totals" aria-label='Net Migration Download Button' ><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+		  <div class="dropdown-content">
+			<a href="#" id='netmigwa_csv'>Download Data (CSV)</a>
+			<a href='#' id='netmigwa_png'>Download Image (PNG)</a>
+		  </div>
+	  </div>
+	 <div id="netmigtot_output"></div>
+  </div>
+  <div class="grid-item app-panel_4_2">
+	<div class="dropdown AClass">
+		<button class="dropbtn" id="rates" aria-label='Net Migration Rate Download Button'><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+		<a href="#" id='netmigrwa_csv'>Download Data (CSV)</a>
+		<a href='#' id='netmigrwa_png'>Download Image (PNG)</a>
+	 </div>
+	</div>
+    <div id="netmigrrate_output"></div>
+  </div>
+  <div class="grid-item app-panel_5_2">
+  <p></p>
+  </div>
+ </div>  <!-- End of Grid -->
+
+
+<script>
+
+//Setting HTML include and Accordion
+includeHTML(); 
+//Button Hide
+hideButtons();
+
+/* Populate County Dropdown */
+popDropdown('county','county-dropdown','')
+
+//generating maximum year value for estimates
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+    var maxest = yeardata.filter(function(d){return d.datatype == 'Estimate'});
+	var yrsList = maxest.map(function(d){return d.year;});
+    var yrvalue = d3.max(yrsList);
+	
+
+document.getElementById('genchart').onclick = function changeContent() {
+
+	var selectedcounty = [];
+	var selectedfips = [];
+    for (var option of document.getElementById('county-dropdown').options)  {
+        if (option.selected) {
+		    selectedfips.push(option.value);
+            selectedcounty.push(option.text);
+        }
+    };
+	    var selectedage = d3.select("#age-dropdown").property('value');
+        var selectedchart = d3.select("#chart-dropdown").property('value');
+		if(selectedfips.length == 0) {
+		  selectedcounty.push("Colorado");
+		  selectedfips.push("000");
+		  };
+       showButtons();
+
+        genNETMIG1864(selectedfips,selectedcounty,selectedage,selectedchart,yrvalue);
+    };
+
+}); //end of maximum year value
+
+
+</script>
+
+</body>
+</html> 
