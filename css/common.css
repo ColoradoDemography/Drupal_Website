@@ -464,7 +464,8 @@ details main {
 	  } 
 	  
  .AClass{
-    left : 0;
+    margin-left: auto;     /* Takes up all available left space */
+  	margin-right: 0;
     position: relative;
 }
 .dropbtn {
