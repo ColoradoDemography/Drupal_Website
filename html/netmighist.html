@@ -81,7 +81,7 @@
 	</tr>
 	<tr>
 		<td style="border : none; width: 20%; vertical-align:top">
-			<select class="county-dropdown" id="county-dropdown" size="6"></select>
+			<select class="county-dropdown" id="county-dropdown"></select>
 		</td>
 		<td style="border : none; width: 20%; vertical-align:top">
 		<label for="beg-year">Select Beginning Year: </label><br>
@@ -152,7 +152,7 @@ document.getElementById('barcoc').style.display = 'block';
 
 /* Populate County Dropdown */
 popDropdown('county','county-dropdown','')
-document.getElementById('county-dropdown').size = "3";
+document.getElementById('county-dropdown').size = "6";
 
 //generating maximum year value for estimates
 var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
