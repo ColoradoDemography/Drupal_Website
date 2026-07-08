@@ -8062,10 +8062,10 @@ var tit_str2 = "Occupied and Vacant Housing Units " + plName;
 			customdata : tr_vac_pct_lab,
 			hovertemplate : '%{customdata}',
 			hoverlabel : {namelength :0},
-			marker: {color: colors[11]},
+			marker: {color: 'orange', opacity : 0.8},
 			name : 'Vacant Housing Units',
 			type : 'bar',
-			color : colors[11]
+			color : 'orange'
 			};
  var ch_2 = [occ_bar, vac_bar];
  
