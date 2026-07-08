@@ -1,0 +1,223 @@
+<!-- Net Migration Historical Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SDO Long Term Net Migration Visualization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script type="text/javascript" src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<div>
+<a href="https://demography.dola.colorado.gov/"><img class="logoSDO" src="../img/SDO-1600x400.jpg" alt='State Demography Office Homepage'></a>
+</div>
+	<div w3-include-html="./navheader.html"></div>
+<!-- First Grid, linked images -->
+<div class="grid-container2">
+  <div class="grid-item panel2_1_1">
+	<div w3-include-html="./sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="./left_hand_index.html"></div>
+  </div> <!-- Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='SDO Long Term Net Migration Visualization' aria-label='SDO Long Term Net Migration Visualization'>SDO Long Term Net Migration Visualization</h1>
+  <h2 class='h2_style' title='Long Term Trends: Births, Deaths, and Net Migration by County' aria-label='Long Term Trends: Births, Deaths, and Net Migration by County'>Long Term Trends: Births, Deaths, and Net Migration by County</h2>
+   <br><br>INSTRUCTIONS:
+   <p>
+   The following page shows births, deaths, net migration, and natural increase estimates and forecasts for counties between from 1970 to 2050.
+   </p>
+   <p>
+   You can select a county, a range of years, and multiple data series.
+   </p>
+   <p>
+   Click on the download icon on the left of each chart to download the chart, the underlying data and links to the data source.
+   </p>
+   <p>
+   <b><i>This data visualization can only be viewed on a tablet or desktop.</i></b>
+   </p>
+   <hr>
+   <table style="border-collapse: collapse; border : none;">
+   <tr>
+		<td style="border : none; width: 20%;">
+		 <label for="county-dropdown" for='county-dropdown'><b>Select County:</b></label>
+		</td>
+		<td style="border : none; width: 20%;">
+		 <b>Select Year Series:</b>
+		</td>
+		<td style="border : none; width: 20%;">
+		</td>
+		<td style="border : none; width: 20%;">
+		 <label for="stat-dropdown" for='stat-dropdown'><b>Select Data Series:</b></label>
+		</td>
+		<td style="border : none; width: 20%;">
+		 <label for="axis-btn" for='stat-dropdown'><b>Select Year Units:</b></label>
+		</td>
+		<td style="border : none; width: 20%;">
+		</td>
+	</tr>
+	<tr>
+		<td style="border : none; width: 20%; vertical-align:top">
+			<select class="county-dropdown" id="county-dropdown"></select>
+		</td>
+		<td style="border : none; width: 20%; vertical-align:top">
+		<label for="beg-year">Select Beginning Year: </label><br>
+		<select class="year-dropdown" id="beg-year" style='width:100px;' size="3">
+		</td>
+		<td style="border : none; width: 20%; vertical-align:top">
+		<label for="end-year">Select Ending Year: </label><br>
+		<select class="year-dropdown" id="end-year" style='width:100px;' size="3">
+		</td>
+		<td style="border : none; width: 20%; vertical-align:top">
+		 <select class="stat-dropdown" id="stat-dropdown" size="4" multiple role='listbox'>
+		 <option value='births' selected="selected">Births</option>
+		 <option value='deaths' selected="selected">Deaths</option>
+		 <option value='netmig' selected="selected">Net Migration</option>
+		 <option value='natincr' >Natural Increase</option>
+		 </select>
+		</td>
+		<td style="border : none; width: 20%; vertical-align:top; font-size: 12px;">
+			<input type="radio" id="yr5" name="axis_type" value="yr5" checked/>
+			<label for="yr5">Five Year Increments (e.g., 2000, 2005, 2010)</label><br>
+			<input type="radio" id="yr2" name="axis_type" value="yr2"/>
+			<label for="yr2">Two Year Increments (e.g., 2000, 2002, 2004)</label><br>
+			<input type="radio" id="yr1" name="axis_type" value="yr1"/>
+			<label for="yr1">Single Year Increments</label><br>
+		</td>
+	   <td style="border : none; width: 20%; vertical-align:top">
+		<button class='databutton' id="submit">Generate Charts</button>
+		</td>
+	</tr>
+	</table>
+  </div>
+  <div class="grid-item app-panel_3_2">
+      <div class="dropdown AClass">
+		  <button class="dropbtn"  id="linecoc" aria-label='Births, Deaths, Net Migraton Download Button'><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+		  <div class="dropdown-content">
+			<a href="#" id='linecoc_csv'>Download Data (CSV)</a>
+			<a href='#' id='linecoc_png'>Download Image (PNG)</a>
+			<a href='../lookups/county_coc_lookup.html' id='linecoc_src' target='_blank'><u>Data Source:</u>County Births, Deaths, and Migration Lookup</a>
+		  </div>
+	  </div>
+	 <div id="linecoc_output"></div>
+  </div>
+  <div class="grid-item app-panel_4_2">
+	<div class="dropdown AClass">
+		<button class="dropbtn" id="barcoc" aria-label='Components of Change Download Button'><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+		<div class="dropdown-content">
+			<a href="#" id='barcoc_csv'>Download Data (CSV)</a>
+			<a href='#' id='barcoc_png'>Download Image (PNG)</a>
+			<a href='../lookups/county_coc_lookup.html' id='death_src' target='_blank'><u>Data Source:</u>County Births, Deaths, and Migration Lookup</a>
+		</div>
+	</div>
+    <div id="barcoc_output"></div>
+  </div>
+  <div class="grid-item app-panel_5_2">
+  </div>
+</div>  <!-- End of Grid -->
+
+
+<script>
+
+//Setting HTML include and Accordion
+includeHTML(); 
+
+hideButtons();
+
+document.getElementById('linecoc').style.display = 'block';
+document.getElementById('barcoc').style.display = 'block';
+
+/* Populate County Dropdown */
+popDropdown('county','county-dropdown','')
+document.getElementById('county-dropdown').size = "3";
+
+//generating maximum year value for estimates
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+
+    var yrsList = yeardata.filter(function(d){return d.year >= 1970});
+
+   
+    popYrdd("beg-year",yrsList);  //Change this range to match data
+    popYrdd("end-year",yrsList);  //Change this range to match data
+
+	var min_yr = Math.min(...yrsList.map(o => o.year))
+	document.getElementById('beg-year').value = min_yr;
+	var max_yr = Math.max(...yrsList.map(o => o.year))
+	document.getElementById('end-year').value = max_yr;
+//Extracting vintage Year
+	var estyrs = yeardata.filter(function(d){return d.datatype == 'Estimate'});
+	var vintYr = Math.max(...estyrs.map(o => o.year))
+
+var CHART0 = document.getElementById("linecoc_output");
+var CHART1 = document.getElementById("barcoc_output");
+
+
+document.getElementById('submit').addEventListener("click", chkInputs)
+
+//Check and Generate output
+function chkInputs(){
+    CHART0.innerHTML = ""
+    CHART1.innerHTML = ""
+	var complete = true;
+	var outputmsg = "";
+	var fipsdd = document.getElementById('county-dropdown');
+	var selectedfips = getSelectValues(fipsdd);
+	var selectedaxis = document.querySelector('input[name="axis_type"]:checked').value;
+	
+	
+	var statdd = document.getElementById('stat-dropdown');
+	var selectedstat = getSelectValues(statdd);
+
+	if((selectedfips.length == 0)){
+		    outputmsg = outputmsg +  " > Please select a County\n";
+			complete = false;
+	}
+
+
+    var stYr = document.getElementById('beg-year').value
+	var endYr = document.getElementById('end-year').value
+	if(endYr <= stYr){
+		outputmsg = outputmsg +  " > Please an Ending Year value later than the Beginning Year value.\n";
+		complete = false;
+	}
+	if((selectedstat.length == 0)){
+	    outputmsg = outputmsg +  " > Please select one or more data series\n";
+		complete = false;
+	}
+    if(complete){
+	      genCOCHIST('county',selectedfips, vintYr, stYr, endYr, selectedstat, selectedaxis, CHART0, CHART1)
+	} else {
+		 window.alert(outputmsg);
+	}
+} //chkinputs
+
+}); //end of maximum year value
+
+</script>
+
+</body>
+</html> 
