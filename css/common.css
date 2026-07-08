@@ -464,7 +464,7 @@ details main {
 	  } 
 	  
  .AClass{
-    margin-left: auto;     /* Takes up all available left space */
+    margin-left: auto;     
   	margin-right: 0;
     position: relative;
 }
@@ -473,7 +473,8 @@ details main {
   /*width: 40px; 
   height: 40px; */
   border: 2px solid black; 
-  right: 0px;
+  margin-left: auto;     
+  margin-right: 0;
 }
 
 .incbtn {
