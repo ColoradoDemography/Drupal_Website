@@ -8065,7 +8065,7 @@ var tit_str2 = "Occupied and Vacant Housing Units " + plName;
 			marker: {color: 'brown', opacity : 0.8},
 			name : 'Vacant Housing Units',
 			type : 'bar',
-			color : colors[4]
+			color : colors[11]
 			};
  var ch_2 = [occ_bar, vac_bar];
  
