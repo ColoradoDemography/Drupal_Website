@@ -4469,7 +4469,7 @@ if(fips == "000") {
  //Promise Structure
 var prom = [d3.json(povstr_prev),d3.json(povstr_cur),d3.json(educstr_prev),d3.json(educstr_cur),
             d3.json(incstr_prev),d3.json(incstr_cur),d3.json(homestr_prev),d3.json(homestr_cur),
-			d3.json(rentstr_prev),d3.json(rentstr_cur),d3.csv("data/r-cpi-u-rs-allitems.csv")];
+			d3.json(rentstr_prev),d3.json(rentstr_cur),d3.csv("../data/r-cpi-u-rs-allitems.csv")];
 
 Promise.all(prom).then(function(data){
 
