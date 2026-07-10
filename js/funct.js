@@ -2954,9 +2954,6 @@ hisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'population' : Math.round(+ob
      nonhisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'race' : obj.race, 'population' : Math.round(+obj.count)});
 });
 
-debugger
-console.log(hisp_est)
-console.log(nonhisp_est)
 /*
     data[2].forEach(function(obj) {
      raceeth_for.push({'year' : obj.year, 'race_eth' : obj.race, 'population' : parseInt(obj.count)});
