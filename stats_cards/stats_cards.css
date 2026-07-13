@@ -1,0 +1,125 @@
+/* sdo-stat-cards.css */
+
+.sdo-stat-card {
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  min-width: 0; /* Keeps flex children from blowing out the boundaries */
+}
+
+/* 1. TOP SECTION */
+.sdo-stat-value {
+  font-size: 2.25rem; 
+  font-weight: 700; 
+  color: #111827; 
+  margin-bottom: 8px; 
+  line-height: 1.1;
+  
+  /* Lock to one line and tighten spacing slightly for big numbers */
+  white-space: nowrap; 
+  letter-spacing: -0.02em; 
+}
+
+.sdo-stat-title {
+  font-size: 1rem; 
+  font-weight: 600; 
+  color: #374151; 
+  margin-bottom: 4px; 
+  line-height: 1.25; 
+  
+  /* Permanently reserves space for up to 3 lines of text */
+  min-height: 3.75rem; 
+  display: flex;
+  align-items: flex-start;
+}
+
+.sdo-stat-explanatory {
+  font-size: 0.875rem; 
+  font-style: italic; 
+  color: #4b5563; 
+  margin-bottom: 12px;
+  
+  /* Permanently reserves space for up to 2 lines of text */
+  min-height: 2.5rem; 
+}
+
+/* 2. CHART SECTION */
+.sdo-sparkline {
+  height: 76px; 
+  width: 100%; 
+  margin-bottom: 12px;
+  position: relative; 
+  cursor: crosshair;
+  margin-top: auto; 
+}
+
+/* Restored Animation to fix the invisible line! */
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+/* 3. BOTTOM SECTION */
+.sdo-stat-toggle {
+  font-size: 0.875rem; 
+  display: flex;
+  flex-wrap: wrap; 
+  align-items: center;
+  column-gap: 6px; 
+  min-height: 2rem; 
+}
+
+.sdo-toggle-btn,
+.sdo-toggle-divider {
+  color: #9ca3af; 
+  white-space: nowrap; 
+}
+
+.sdo-toggle-btn {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sdo-toggle-btn:hover {
+  color: #6b7280; 
+}
+
+.sdo-toggle-btn.active {
+  color: #4b5563; 
+  font-weight: 600; 
+  cursor: default;
+}
+
+.sdo-stat-source {
+  font-size: 0.75rem; 
+  color: #6b7280; 
+  margin-top: 8px;
+  min-height: 2rem; 
+}
+
+/* 4. SQUISH PHASE & MOBILE SCALING */
+
+/* Target the squish phase right before Drupal stacks columns */
+@media screen and (max-width: 1300px) {
+  .sdo-stat-value {
+    font-size: 1.4rem; /* Shrink aggressively so the long numbers fit */
+  }
+  .sdo-stat-title {
+    font-size: 0.85rem;
+  }
+  .sdo-stat-explanatory, .sdo-stat-toggle {
+    font-size: 0.8rem;
+  }
+}
+
+/* When Drupal stacks cards to 2 or 1 per row (approx 1024px), they have room again */
+@media screen and (max-width: 1024px) {
+  .sdo-stat-value {
+    font-size: 2rem; /* Enlarge the numbers again */
+  }
+  .sdo-stat-title {
+    font-size: 1rem;
+  }
+}
