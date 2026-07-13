@@ -588,7 +588,7 @@ details main {
 }
 /* Top Row */
 .panel_1_1 {  
-  grid-column: 1 / span 3; 
+  grid-column: 1; 
   grid-row: 1 ;
   }
   
