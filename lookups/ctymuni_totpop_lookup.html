@@ -1,0 +1,516 @@
+<!-- Municipal Population Profile Lookup Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>County and Municipal Population Timeseries Lookup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="content-type" content="text/html; charset=utf-8">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.css" rel="stylesheet"/>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.js"></script>
+
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<!--<div>
+<a href='https://cdola.colorado.gov/'><img class="logoSDO" src="../img/SDO-1600x400.jpg"  alt='Department of Local Affairs Homepage' aria-label='Department of Local Affairs Homepage'></a>
+</div>
+<div w3-include-html="../html/navheader.html"></div>
+
+<!-- First Grid, linked images -->
+<!--<div class="grid-container2">
+  <div class="grid-item panel2_1_1">
+	<div w3-include-html="../html/sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="../html/left_hand_index.html"></div>
+  </div> <!-- Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='County and Municipal Population Timeseries Lookup' aria-label='County and Municipal Population Timeseries Lookup'>County and Municipal Population Timeseries Lookup</h1>
+   <h2 class='h2_style' title='INSTRUCTIONS:' aria-label='INSTRUCTIONS:'>INSTRUCTIONS:</h2>
+   <p class="lookup_p">
+   This application creates custom population tables for SDO Counties and Munipalities, Unincoprporated areas, and Municipalities within Counties.
+   </p>
+  <p class="lookup_p">
+   A spreadsheet with detailed information for counties is available on the 
+   <a href='https://demography.dola.colorado.gov/assets/html/muni.html' target='_blank'>SDO Municipal Spreadsheets</a> page.
+  </p>
+      <table class='lookup_tab' cellspacing="0" cellpadding="0">
+   <tr>
+	<td class="look_cll">
+		<label class="entry_text" for="county-dropdown" id="county-lbl"  alt='Select 0 or more Counties' aria-label='Select 0 or more Counties'>Select 0 or more Counties:</label> 
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="muni-dropdown" id="muni-lbl"  alt='Select 0 or more Municipalities' aria-label='Select 0 or more Municipalities'>Select 0 or more Areas:</label>
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="year-dropdown" id="year-lbl"  alt='Select one or more years' aria-label='Select one or more years'>Select one or more years:</label>
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="sum_grouping" id="group-lbl"  alt='Select Summary Groups' aria-label='Select Summary Groups'>Select Summary Groups:</label>
+	</td>
+	<td class="look_cll">
+	</td>
+	</tr>
+	<tr>
+	<td class="look_cll"> 
+	<select class="county-dropdown" id="county-dropdown" size="6" multiple role='listbox'>
+		<option></option>
+	</select>
+	 </td>
+	<td class="look_cll">
+    <select class="muni-dropdown" id="muni-dropdown" style='width:250px;' size="6" multiple role='listbox'>
+		<option value='00199990'>Adams County Unincorp. Area</option>
+		<option value='00760'>Aguilar</option>
+		<option value='00925'>Akron</option>
+		<option value='01090'>Alamosa</option>
+		<option value='00399990'>Alamosa County Unincorp. Area</option>
+		<option value='01530'>Alma</option>
+		<option value='02355'>Antonito</option>
+		<option value='00599990'>Arapahoe County Unincorp. Area</option>
+		<option value='00799990'>Archuleta County Unincorp. Area</option>
+		<option value='03235'>Arriba</option>
+		<option value='03455'>Arvada</option>
+		<option value='03620'>Aspen</option>
+		<option value='03950'>Ault</option>
+		<option value='04000'>Aurora</option>
+		<option value='04110'>Avon</option>
+		<option value='00999990'>Baca County Unincorp. Area</option>
+		<option value='04935'>Basalt</option>
+		<option value='05265'>Bayfield</option>
+		<option value='06090'>Bennett</option>
+		<option value='01199990'>Bent County Unincorp. Area</option>
+		<option value='06255'>Berthoud</option>
+		<option value='06530'>Bethune</option>
+		<option value='07025'>Black Hawk</option>
+		<option value='07190'>Blanca</option>
+		<option value='07410'>Blue River</option>
+		<option value='07571'>Bonanza City</option>
+		<option value='07795'>Boone</option>
+		<option value='07850'>Boulder</option>
+		<option value='01399990'>Boulder County Unincorp. Area</option>
+		<option value='08070'>Bow Mar</option>
+		<option value='08345'>Branson</option>
+		<option value='08400'>Breckenridge</option>
+		<option value='08675'>Brighton</option>
+		<option value='09115'>Brookside</option>
+		<option value='09280'>Broomfield</option>
+		<option value='09555'>Brush</option>
+		<option value='10105'>Buena Vista</option>
+		<option value='10600'>Burlington</option>
+		<option value='11260'>Calhan</option>
+		<option value='11645'>Campo</option>
+		<option value='11810'>Canon City</option>
+		<option value='12030'>Carbonate</option>
+		<option value='12045'>Carbondale</option>
+		<option value='12387'>Castle Pines</option>
+		<option value='12415'>Castle Rock</option>
+		<option value='12635'>Cedaredge</option>
+		<option value='12815'>Centennial</option>
+		<option value='12855'>Center</option>
+		<option value='12910'>Central City</option>
+		<option value='01599990'>Chaffee County Unincorp. Area</option>
+		<option value='13460'>Cheraw</option>
+		<option value='13845'>Cherry Hills Village</option>
+		<option value='01799990'>Cheyenne County Unincorp. Area</option>
+		<option value='14175'>Cheyenne Wells</option>
+		<option value='14765'>City of Creede</option>
+		<option value='01999990'>Clear Creek County Unincorp. Area</option>
+		<option value='15330'>Coal Creek</option>
+		<option value='15550'>Cokedale</option>
+		<option value='15605'>Collbran</option>
+		<option value='16000'>Colorado Springs</option>
+		<option value='16385'>Columbine Valley</option>
+		<option value='16495'>Commerce City</option>
+		<option value='02199990'>ConeJos County Unincorp. Area</option>
+		<option value='17375'>Cortez</option>
+		<option value='02399990'>Costilla County Unincorp. Area</option>
+		<option value='17760'>Craig</option>
+		<option value='17925'>Crawford</option>
+		<option value='18310'>Crested Butte</option>
+		<option value='18420'>Crestone</option>
+		<option value='18530'>Cripple Creek</option>
+		<option value='18640'>Crook</option>
+		<option value='18750'>Crowley</option>
+		<option value='02599990'>Crowley County Unincorp. Area</option>
+		<option value='02799990'>Custer County Unincorp. Area</option>
+		<option value='19080'>Dacono</option>
+		<option value='19355'>De Beque</option>
+		<option value='19630'>Deer Trail</option>
+		<option value='19795'>Del Norte</option>
+		<option value='19850'>Delta</option>
+		<option value='02999990'>Delta County Unincorp. Area</option>
+		<option value='20000'>Denver</option>
+		<option value='20440'>Dillon</option>
+		<option value='20495'>Dinosaur</option>
+		<option value='20770'>Dolores</option>
+		<option value='03399990'>Dolores County Unincorp. Area</option>
+		<option value='03599990'>Douglas County Unincorp. Area</option>
+		<option value='21265'>Dove Creek</option>
+		<option value='22035'>Durango</option>
+		<option value='22145'>Eads</option>
+		<option value='22200'>Eagle</option>
+		<option value='03799990'>Eagle County Unincorp. Area</option>
+		<option value='22860'>Eaton</option>
+		<option value='23025'>Eckley</option>
+		<option value='23135'>Edgewater</option>
+		<option value='04199990'>El Paso County Unincorp. Area</option>
+		<option value='03999990'>Elbert County Unincorp. Area</option>
+		<option value='23740'>Elizabeth</option>
+		<option value='24620'>Empire</option>
+		<option value='24785'>Englewood</option>
+		<option value='24950'>Erie</option>
+		<option value='25115'>Estes Park</option>
+		<option value='25280'>Evans</option>
+		<option value='25610'>Fairplay</option>
+		<option value='26270'>Federal Heights</option>
+		<option value='26600'>Firestone</option>
+		<option value='26765'>Flagler</option>
+		<option value='26875'>Fleming</option>
+		<option value='27040'>Florence</option>
+		<option value='27425'>Fort Collins</option>
+		<option value='27700'>Fort Lupton</option>
+		<option value='27810'>Fort Morgan</option>
+		<option value='27865'>Fountain</option>
+		<option value='27975'>Fowler</option>
+		<option value='28105'>Foxfield</option>
+		<option value='28305'>Fraser</option>
+		<option value='28360'>Frederick</option>
+		<option value='04399990'>Fremont County Unincorp. Area</option>
+		<option value='28690'>Frisco</option>
+		<option value='28745'>Fruita</option>
+		<option value='29185'>Garden City</option>
+		<option value='04599990'>Garfield County Unincorp. Area</option>
+		<option value='29680'>Genoa</option>
+		<option value='29735'>Georgetown</option>
+		<option value='29955'>Gilcrest</option>
+		<option value='04799990'>Gilpin County Unincorp. Area</option>
+		<option value='30340'>Glendale</option>
+		<option value='30780'>Glenwood Springs</option>
+		<option value='30835'>Golden</option>
+		<option value='31550'>Granada</option>
+		<option value='31605'>Granby</option>
+		<option value='04999990'>Grand County Unincorp. Area</option>
+		<option value='31660'>Grand Junction</option>
+		<option value='31715'>Grand Lake</option>
+		<option value='32155'>Greeley</option>
+		<option value='32650'>Green Mtn. Falls</option>
+		<option value='33035'>Greenwood Village</option>
+		<option value='33310'>Grover</option>
+		<option value='33640'>Gunnison</option>
+		<option value='05199990'>Gunnison County Unincorp. Area</option>
+		<option value='33695'>Gypsum</option>
+		<option value='34520'>Hartman</option>
+		<option value='34740'>Haswell</option>
+		<option value='34960'>Haxtun</option>
+		<option value='35070'>Hayden</option>
+		<option value='36610'>Hillrose</option>
+		<option value='05399990'>Hinsdale County Unincorp. Area</option>
+		<option value='37215'>Holly</option>
+		<option value='37270'>Holyoke</option>
+		<option value='37380'>Hooper</option>
+		<option value='37600'>Hot Sulphur Springs</option>
+		<option value='37545'>Hotchkiss</option>
+		<option value='37820'>Hudson</option>
+		<option value='05599990'>Huerfano County Unincorp. Area</option>
+		<option value='37875'>Hugo</option>
+		<option value='38370'>Idaho Sprgs</option>
+		<option value='38535'>Ignacio</option>
+		<option value='38590'>Iliff</option>
+		<option value='05799990'>Jackson County Unincorp. Area</option>
+		<option value='39195'>Jamestown</option>
+		<option value='05999990'>Jefferson County Unincorp. Area</option>
+		<option value='39855'>Johnstown</option>
+		<option value='39965'>Julesburg</option>
+		<option value='40185'>Keenesburg</option>
+		<option value='40515'>Kersey</option>
+		<option value='40570'>Kim</option>
+		<option value='40790'>Kiowa</option>
+		<option value='06199990'>Kiowa County Unincorp. Area</option>
+		<option value='41010'>Kit Carson</option>
+		<option value='06399990'>Kit Carson County Unincorp. Area</option>
+		<option value='41560'>Kremmling</option>
+		<option value='42055'>La Jara</option>
+		<option value='42110'>La Junta</option>
+		<option value='06799990'>La Plata County Unincorp. Area</option>
+		<option value='43605'>La Salle</option>
+		<option value='44100'>La Veta</option>
+		<option value='41835'>Lafayette</option>
+		<option value='42330'>Lake City</option>
+		<option value='06599990'>Lake County Unincorp. Area</option>
+		<option value='42495'>Lakeside</option>
+		<option value='43000'>Lakewood</option>
+		<option value='43110'>Lamar</option>
+		<option value='06999990'>Larimer County Unincorp. Area</option>
+		<option value='43550'>Larkspur</option>
+		<option value='43660'>Las Animas</option>
+		<option value='07199990'>Las Animas County Unincorp. Area</option>
+		<option value='44320'>Leadville</option>
+		<option value='44980'>Limon</option>
+		<option value='07399990'>Lincoln County Unincorp. Area</option>
+		<option value='45255'>Littleton</option>
+		<option value='45530'>Lochbuie</option>
+		<option value='45695'>Log Lane Village</option>
+		<option value='07599990'>Logan County Unincorp. Area</option>
+		<option value='45955'>Lone Tree</option>
+		<option value='45970'>Longmont</option>
+		<option value='46355'>Louisville</option>
+		<option value='46465'>Loveland</option>
+		<option value='47070'>Lyons</option>
+		<option value='48060'>Manassa</option>
+		<option value='48115'>Mancos</option>
+		<option value='48445'>Manitou Springs</option>
+		<option value='48500'>Manzanola</option>
+		<option value='48555'>Marble</option>
+		<option value='49600'>Mead</option>
+		<option value='49875'>Meeker</option>
+		<option value='50040'>Merino</option>
+		<option value='07799990'>Mesa County Unincorp. Area</option>
+		<option value='50480'>Milliken</option>
+		<option value='07999990'>Mineral County Unincorp. Area</option>
+		<option value='50920'>Minturn</option>
+		<option value='51250'>Moffat</option>
+		<option value='08199990'>Moffat County Unincorp. Area</option>
+		<option value='51635'>Monte Vista</option>
+		<option value='51690'>Montezuma</option>
+		<option value='08399990'>Montezuma County Unincorp. Area</option>
+		<option value='51745'>Montrose</option>
+		<option value='08599990'>Montrose County Unincorp. Area</option>
+		<option value='51800'>Monument</option>
+		<option value='08799990'>Morgan County Unincorp. Area</option>
+		<option value='52075'>Morrison</option>
+		<option value='52570'>Mount Crested Butte</option>
+		<option value='52350'>Mountain View</option>
+		<option value='52550'>Mountain Village</option>
+		<option value='53120'>Naturita</option>
+		<option value='53175'>Nederland</option>
+		<option value='53395'>New Castle</option>
+		<option value='54330'>Northglenn</option>
+		<option value='54880'>Norwood</option>
+		<option value='54935'>Nucla</option>
+		<option value='55045'>Nunn</option>
+		<option value='55155'>Oak Creek</option>
+		<option value='55540'>Olathe</option>
+		<option value='55705'>Olney Springs</option>
+		<option value='55870'>Ophir</option>
+		<option value='55980'>Orchard City</option>
+		<option value='56145'>Ordway</option>
+		<option value='08999990'>Otero County Unincorp. Area</option>
+		<option value='56365'>Otis</option>
+		<option value='56420'>Ouray</option>
+		<option value='09199990'>Ouray County Unincorp. Area</option>
+		<option value='56475'>Ovid</option>
+		<option value='56860'>Pagosa Springs</option>
+		<option value='56970'>Palisade</option>
+		<option value='57025'>Palmer Lake</option>
+		<option value='57245'>Paoli</option>
+		<option value='57300'>Paonia</option>
+		<option value='57400'>Parachute</option>
+		<option value='09399990'>Park County Unincorp. Area</option>
+		<option value='57630'>Parker</option>
+		<option value='58235'>Peetz</option>
+		<option value='09599990'>Phillips County Unincorp. Area</option>
+		<option value='59005'>Pierce</option>
+		<option value='59830'>Pitkin</option>
+		<option value='09799990'>Pitkin County Unincorp. Area</option>
+		<option value='60160'>Platteville</option>
+		<option value='60600'>Poncha Springs</option>
+		<option value='61315'>Pritchett</option>
+		<option value='09999990'>Prowers County Unincorp. Area</option>
+		<option value='62000'>Pueblo</option>
+		<option value='10199990'>Pueblo County Unincorp. Area</option>
+		<option value='62660'>Ramah</option>
+		<option value='62880'>Rangely</option>
+		<option value='63045'>Raymer</option>
+		<option value='63265'>Red Cliff</option>
+		<option value='64090'>Rico</option>
+		<option value='64200'>Ridgway</option>
+		<option value='64255'>Rifle</option>
+		<option value='10399990'>Rio Blanco County Unincorp. Area</option>
+		<option value='10599990'>Rio Grande Unincorp. Area</option>
+		<option value='64970'>Rockvale</option>
+		<option value='65190'>Rocky Ford</option>
+		<option value='65740'>Romeo</option>
+		<option value='10799990'>Routt County Unincorp. Area</option>
+		<option value='66895'>Rye</option>
+		<option value='67005'>Saguache</option>
+		<option value='10999990'>Saguache County Unincorp. Area</option>
+		<option value='67280'>Salida</option>
+		<option value='11199990'>San Juan Unincorp. Area</option>
+		<option value='68105'>San Luis</option>
+		<option value='11399990'>San Miguel Unincorp. Area</option>
+		<option value='67830'>Sanford</option>
+		<option value='68655'>Sawpit</option>
+		<option value='68930'>Sedgwick</option>
+		<option value='11599990'>Sedgwick County Unincorp. Area</option>
+		<option value='69040'>Seibert</option>
+		<option value='69150'>Severance</option>
+		<option value='69645'>Sheridan</option>
+		<option value='69700'>Sheridan Lake</option>
+		<option value='70195'>Silt</option>
+		<option value='70250'>Silver Cliff</option>
+		<option value='70360'>Silver Plume</option>
+		<option value='70525'>Silverthorne</option>
+		<option value='70580'>Silverton</option>
+		<option value='70635'>Simla</option>
+		<option value='71755'>Snowmass Village</option>
+		<option value='72395'>South Fork</option>
+		<option value='73330'>Springfield</option>
+		<option value='73715'>Starkville</option>
+		<option value='73825'>Steamboat Springs</option>
+		<option value='73935'>Sterling</option>
+		<option value='74485'>Stratton</option>
+		<option value='74815'>Sugar City</option>
+		<option value='11799990'>Summit County Unincorp. Area</option>
+		<option value='75640'>Superior</option>
+		<option value='75970'>Swink</option>
+		<option value='11999990'>Teller County Unincorp. Area</option>
+		<option value='76795'>Telluride</option>
+		<option value='77290'>Thornton</option>
+		<option value='77510'>Timnath</option>
+		<option value='78610'>Trinidad</option>
+		<option value='79270'>Two Buttes</option>
+		<option value='80040'>Vail</option>
+		<option value='80865'>Victor</option>
+		<option value='81030'>Vilas</option>
+		<option value='81690'>Vona</option>
+		<option value='82130'>Walden</option>
+		<option value='82350'>Walsenburg</option>
+		<option value='82460'>Walsh</option>
+		<option value='82735'>Ward</option>
+		<option value='12199990'>Washington County Unincorp. Area</option>
+		<option value='12399990'>Weld County Unincorp. Area</option>
+		<option value='83230'>Wellington</option>
+		<option value='83450'>Westcliffe</option>
+		<option value='83835'>Westminster</option>
+		<option value='84440'>Wheat Ridge</option>
+		<option value='84770'>Wiggins</option>
+		<option value='85045'>Wiley</option>
+		<option value='85155'>Williamsburg</option>
+		<option value='85485'>Windsor</option>
+		<option value='85705'>Winter Park</option>
+		<option value='86090'>Woodland Park</option>
+		<option value='86310'>Wray</option>
+		<option value='86475'>Yampa</option>
+		<option value='86750'>Yuma</option>
+		<option value='12599990'>Yuma County Unincorp. Area</option>
+	</select>
+    </td>
+	<td class="look_cll">
+	<select class="year-dropdown" id="year-dropdown" style='width:100px;' size="6" multiple role='listbox'>
+		<option></option>
+	</select>
+    </td>
+	<td class="look_cll">
+ 		<input type="radio" id="nogrp" name="sum_grouping" value="opt0" checked/>
+		<label for="nogrp">Show Components</label><br>
+		<input type="radio" id="sumgrp" name="sum_grouping" value="opt1" checked/>
+		<label for="sumgrp">Sum Results</label><br>
+    </td>
+	<td class="look_cll">
+		<button class='databutton' id='gentable' aria-label='Generate Table'>Generate Table</button><br><br>
+		<button class='databutton' id='cleartable' aria-label='Reset Selections'>Reset Selections</button><br>
+	</td>
+	</tr>
+	</table>
+	<hr>
+   </div>
+  <div class="grid-item app-panel_3_2">
+	 <div id="tbl_output"></div>
+  </div> 
+  <!--<div class="grid-item app-panel_4_2_b">
+			<div w3-include-html="../html/bodycontent1.html"></div>
+	 </div>
+	<div class="grid-item app-panel_4_4_b">
+			<div w3-include-html="../html/bodycontent2.html"></div>
+    </div>
+	<div class="grid-item app-panel_4_6_b">
+			<div w3-include-html="../html/bodycontent3.html"></div>
+	</div>
+  </div>  <!-- End of Grid Container -->
+ <script> 
+
+ includeHTML();
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+ var yeardata2 = yeardata.filter(d => d.year >= 1980 && d.datatype =='Estimate');
+ popDropdown('county','county-dropdown','');
+
+ popYrdd("year-dropdown",yeardata2);  //Change this range to match data
+ 
+//Button Event
+ document.getElementById('gentable').addEventListener("click", chkInputs)
+ document.getElementById('cleartable').addEventListener("click", clearInputs)
+ 
+ function chkInputs(){
+
+ var complete = true;
+ var outputmsg = "";
+ document.getElementById('tbl_output').innerHTML = "";
+
+	    var fipsdd = document.getElementById('county-dropdown');
+		var selectedfips = getSelectValues(fipsdd);
+
+        var munidd = document.getElementById('muni-dropdown');
+		var selectedmuni = getSelectValues(munidd);
+		
+
+		if((selectedfips.length == 0) && (selectedmuni.length == 0)){
+		    outputmsg = outputmsg +  " > Please select one or more Counties or Municipalities.\n";
+			complete = false;
+		}
+		
+		var yrdd = document.getElementById('year-dropdown');
+		var selectedyr = getSelectValues(yrdd);
+
+		if(selectedyr.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more years.\n";
+			complete = false;
+		}
+
+		 selectedgroup = document.querySelector('input[name="sum_grouping"]:checked').value;
+
+		if(complete){
+		     genCtyMuni(selectedfips,selectedmuni,selectedyr,selectedgroup);
+			 } else {
+			 window.alert(outputmsg);
+			 }
+	 };  //chkInputs
+	 
+	 }); //d3.json
+function clearInputs() {
+   document.getElementById('tbl_output').innerHTML = "";
+   var elements = document.getElementsByTagName('select');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].selectedIndex = -1;
+	}
+}; //clearInputs
+
+
+ 
+ </script>
+</body>
+</html> 

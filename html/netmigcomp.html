@@ -1,0 +1,242 @@
+<!-- Net Migration by Age Comparison Page A Bickford 6/2021 -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>SDO Net Migration by Age Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.5/b-2.4.1/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script type="text/javascript" src="../js/lookup.js"></script>
+ <!-- GoogleAnalytics Script-->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<!--<div>
+<a href="https://demography.dola.colorado.gov/"><img class="logoSDO" src="../img/SDO-1600x400.jpg" alt='State Demography Office Homepage'></a>
+</div>
+<div w3-include-html="./navheader.html"></div>
+ First Grid, linked images 
+<div class="grid-container2">
+  <div class="grid-item panel2_1_1">
+	<div w3-include-html="./sdotitle.html"></div>
+  </div>
+   <div class="grid-item app-panel_2_1" id="leftHand">
+	<div w3-include-html="./left_hand_index.html"></div>
+  </div> <!-- Grid  panel2_2_1 -->
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='SDO Net Migration by Age Dashboard' aria-label='SDO Net Migration by Age Dashboard'>SDO Net Migration by Age Dashboard</h1>
+  <h2 class='h2_style' title='INSTRUCTIONS:' aria-label='INSTRUCTIONS:'>INSTRUCTIONS:</h2>
+
+   <p>
+   The following page shows net migration totals and rates by age. Select the county from the list below to view the graphs for a specific county or region. 
+   Data is based on Census-year comparisons. Migration estimates for intercensal years can be found in the <a href="./migflow.html" target='_blank'>ACS Migration Flows</a> application.
+   </p>
+   <p>
+   Select up to 4 geographies and up to 4 time periods.
+   </p>
+   <p>
+   You can hover over specific data points on each graph to view the data for that specific point. <br>
+   Click on the download icon on the left of each chart to download the chart and the underlying data.
+   </p>
+   <p>
+   Information describing a typology of counties by net migration patterns is available here:  
+   <a href='https://docs.google.com/uc?export=download&id=1RYQ4Pt9Qww90YQaQpwThelJKsCta7_j2'
+	title='Net Migration Typology 2023' aria-label='Net Migration Typology 2023'>Net Migration Typology 2023 <i class='fas fa-file-pdf' alt='PDF' style='color:red;'></i></a>
+	</p>
+   <p>
+   <b><i>This data visualization can only be viewed on a tablet or desktop.</i></b>
+   </p>
+  <hr>
+	<table class='lookup_tab' cellspacing="0" cellpadding="0">
+    <tr>
+	<td class="lookup_cll">
+		<label class="entry_text" for="geo-dropdown" id="geo-lbl"  alt='Select Geography Type' aria-label='Select Geography Type'>Select Geography Type:</label> 
+	</td>
+	<td class="lookup_cll">
+		<label class="entry_text" for="geography-dropdown" id="geography-lbl"  alt='Select one or more Geographies' aria-label='Select one or more Geographies'>Select one or more Geographies:</label> 
+	</td>
+	<td class="lookup_cll">
+			<label class="entry_text" for="year-dropdown" id="year-lbl"  alt='Select one or more Time Periods' aria-label='Select one or more Time Periods'>Select one or more Time Periods:</label> 
+	</td>
+	<td class="lookup_cll">
+		<label class="entry_text" for="chart-dropdown" id="chart-lbl"  alt='Specify the Chart Type' aria-label='Specify the Chart Type'>Specify the Chart Type:</label> 
+	</td>
+	<td class="lookup_cll">
+	</td>
+	</tr>
+	<tr>
+	<td class="lookup_cll">
+	<select class="geo-dropdown" id="geo-dropdown">
+		<option value = "region">Region</option>
+		<option value="county" selected>County</option>
+	 </select>
+	</td>
+	<td class="lookup_cll"> 
+	 <select class="geography-dropdown" id="geography-dropdown" size="5" multiple role='listbox'></select>
+	 </td>
+	<td class="lookup_cll">
+	<select class="year-dropdown" id="year-dropdown" size="5" multiple role='listbox'>
+		<option value = "1970">1970-1980</option>
+		<option value = "1980">1980-1990</option>
+		<option value = "1990">1990-2000</option>
+		<option value = "2000">2000-2010</option>
+		<option value = "2010">2010-2020</option>
+	 </select>
+	</td>
+	<td class="lookup_cll">
+	<select class="chart-dropdown" id="chart-dropdown" size="2" role='listbox'>
+		<option value = "bar">Bar Chart</option>
+		<option value = "line">Line Chart</option>
+	 </select>
+	</td>
+	<td class="lookup_cll">
+		<button class='databutton' id='gentable'>Generate Chart</button><br><br>
+		<button class='databutton' id='cleartable'>Reset Selections</button><br>
+	</td>
+	</tr>
+	</table>
+  </div>
+  <div class="grid-item app-panel_3_2">
+      <div class="dropdown AClass">
+		  <button class="dropbtn"  id="netmig" aria-label='Net Migration by Age Download Button'><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+		  <div class="dropdown-content">
+			<a href="#" id='netmign_csv'>Download Data (CSV)</a>
+			<a href='#' id='netmign_png'>Download Image (PNG)</a>
+		    <a href= '../lookups/county_netmig_lookup.html' id='mig_number' target='_blank'>Net Migration by Age</a>
+		  </div>
+	  </div>
+	 <div id="netmign_output"></div>
+  </div>
+  <div class="grid-item app-panel_4_2">
+	<div class="dropdown AClass">
+		<button class="dropbtn" id="netmigrate" aria-label='Net Migration Rate by Age Download Button'><i class="fas fas fa-download fa-2x" style='color: black;'></i></button>
+	<div class="dropdown-content">
+		<a href="#" id='netmigrrate_csv'>Download Data (CSV)</a>
+		<a href='#' id='netmigrrate_png'>Download Image (PNG)</a>
+	    <a href= '../lookups/county_netmig_lookup.html' id='mig_rate' target='_blank'>Net Migration by Age</a>
+
+	 </div>
+	</div>
+    <div id="netmigrrate_output"></div>
+  </div>
+ </div>  <!-- End of Grid -->
+
+
+<script>
+
+//Setting HTML include and Accordion
+includeHTML(); 
+
+/* Populate Initial Dropdown */
+popDropdown('county','geography-dropdown','')
+var selectedChart = d3.select("#chart-dropdown").property('value');
+
+d3.select("#geo-dropdown").on("change", d => {
+       var geodd = document.getElementById('geo-dropdown');
+       document.getElementById('geography-dropdown').innerHTML = "";
+	   popDropdown(geodd.value,'geography-dropdown','')
+	});
+
+
+
+//Button Event
+ document.getElementById('gentable').addEventListener("click", chkInputs)
+ document.getElementById('cleartable').addEventListener("click", clearInputs)
+ 
+ 			  // update link
+	  var mignlink = document.getElementById('mig_number');
+	  var migratelink = document.getElementById('mig_rate');
+ 
+ function chkInputs(){
+ var complete = true;
+ var outputmsg = "";
+ document.getElementById('netmign_output').innerHTML = "";
+ document.getElementById('netmigrrate_output').innerHTML = "";
+		var selectedGEO = document.getElementById('geo-dropdown');
+	    var fipsdd = document.getElementById('geography-dropdown');
+		var selectedfips = getSelectValues(fipsdd);
+		
+	 switch(selectedGeo){
+	  case "region" :
+	       mignlink.setAttribute("href", "../lookups/region_netmig_lookup.html");
+	       migratelink.setAttribute("href", "../lookups/region_netmig_lookup.html");
+		   break;
+	  case "county" :
+	       mignlink.setAttribute("href", "../lookups/county_netmig_lookup.html");
+	       migratelink.setAttribute("href", "../lookups/county_netmig_lookup.html");
+		   break;
+	}
+
+    var selectedChart = d3.select("#chart-dropdown").property('value');
+		if(selectedChart == ""){
+		    outputmsg = outputmsg +  "  >Please select a Chart Type.\n";
+			complete = false;
+		} 
+		
+
+		if(selectedfips.length == 0){
+		    outputmsg = outputmsg +  "  >Please select one or more Geographies.\n";
+			complete = false;
+		}
+
+		if(selectedfips.length > 4){
+		    outputmsg = outputmsg +  "  >Please select one to four Geographies.\n";
+			complete = false;
+		}
+		
+        var selectedGeo = document.getElementById('geo-dropdown');
+		var yrdd = document.getElementById('year-dropdown');
+		var selectedyr = getSelectValues(yrdd);
+		
+
+		if(selectedyr.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more Time Periods.\n";
+			complete = false;
+		}
+		if(selectedyr.length > 4){
+		    outputmsg = outputmsg +  " > Please select one to four Time Periods.\n";
+			complete = false;
+		}
+
+		if(complete){
+		  genNETMIGCOMP(selectedGeo.value,selectedfips,selectedyr,selectedChart);
+			 } else {
+			 window.alert(outputmsg);
+			 }
+	 };  //chkInputs
+
+
+function clearInputs() {
+ document.getElementById('netmign_output').innerHTML = "";
+ document.getElementById('netmigrrate_output').innerHTML = "";
+   var elements = document.getElementsByTagName('select');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].selectedIndex = -1;
+	}
+	document.getElementById('geo-dropdown').selectedIndex = 1;
+}; //clearInputs
+
+</script>
+
+</body>
+</html> 
