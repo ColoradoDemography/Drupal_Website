@@ -627,6 +627,16 @@ details main {
    grid-column: 1;
    grid-row: 5 ;
   }
+	 .panel_3_1 {  
+   grid-column: 1;
+   grid-row: 3;
+  } .panel_3_2 {  
+   grid-column: 1;
+   grid-row: 4;
+  } .panel_3_3 {  
+   grid-column: 1;
+   grid-row: 5;
+  }
  .panel_3_4 {  
    grid-column: 1;
    grid-row: 6;
