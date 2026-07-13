@@ -41,18 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const linePath = `M ${pathCoords.map(c => `${c.x},${c.y}`).join(' L ')}`;
         const fillPath = `${linePath} L ${width},${height} L 0,${height} Z`;
 
-        // Force container to relative positioning so the absolute HTML tooltip aligns to it
         container.style.position = 'relative';
 
-        // Note the removal of the <text> node and the addition of the HTML div tooltip
+        // Note: <circle> has been removed from SVG, replaced by scrubber-dot-html div
         container.innerHTML = `
             <svg viewBox="0 0 ${width} ${height}" width="100%" height="100%" preserveAspectRatio="none" style="display: block; overflow: visible;">
                 <path d="${fillPath}" fill="${color.fill}" stroke="none"></path>
                 <path class="animated-line" d="${linePath}" fill="none" stroke="${color.line}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 <line class="scrubber" y1="${paddingTop}" y2="${height}" stroke="#9ca3af" stroke-width="1" stroke-dasharray="2,2" opacity="0"></line>
-                <circle class="scrubber-dot" r="4" fill="${color.line}" opacity="0"></circle>
             </svg>
-            <div class="hover-text-html" style="position: absolute; top: 0; left: 0; font-family: inherit; font-size: 12px; font-weight: 400; color: #4b5563; opacity: 0; pointer-events: none; white-space: nowrap;"></div>
+            <div class="scrubber-dot-html" style="position: absolute; width: 8px; height: 8px; border-radius: 50%; background-color: ${color.line}; opacity: 0; pointer-events: none; transform: translate(-50%, -50%); z-index: 10;"></div>
+            <div class="hover-text-html" style="position: absolute; top: 0; left: 0; font-family: inherit; font-size: 12px; font-weight: 400; color: #4b5563; opacity: 0; pointer-events: none; white-space: nowrap; z-index: 10;"></div>
         `;
 
         const animatedLine = container.querySelector('.animated-line');
@@ -65,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const svg = container.querySelector('svg');
         const scrubber = container.querySelector('.scrubber');
-        const dot = container.querySelector('.scrubber-dot');
-        const hoverText = container.querySelector('.hover-text-html'); // Targeting the HTML div
+        const dot = container.querySelector('.scrubber-dot-html');
+        const hoverText = container.querySelector('.hover-text-html'); 
         
         const card = container.closest('.sdo-stat-card');
 
@@ -78,13 +77,18 @@ document.addEventListener('DOMContentLoaded', () => {
             closestIndex = Math.max(0, Math.min(closestIndex, points.length - 1));
             const point = pathCoords[closestIndex];
 
+            // 1. Move the vertical scrubber line (still in SVG coordinates)
             scrubber.setAttribute('opacity', '1');
             scrubber.setAttribute('x1', point.x);
             scrubber.setAttribute('x2', point.x);
             
-            dot.setAttribute('opacity', '1');
-            dot.setAttribute('cx', point.x);
-            dot.setAttribute('cy', point.y);
+            // 2. Position the HTML dot using precise percentages
+            const leftPct = (point.x / width) * 100;
+            const topPct = (point.y / height) * 100;
+            
+            dot.style.opacity = '1';
+            dot.style.left = `${leftPct}%`;
+            dot.style.top = `${topPct}%`;
 
             hoverText.style.opacity = '1';
             
@@ -99,22 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 hoverText.textContent = `${point.year}: ${point.val}%`;
             }
             
-            // Positioning logic for standard HTML using percentages
-            const leftPct = (point.x / width) * 100;
+            // Position the HTML text tooltip
             hoverText.style.left = `${leftPct}%`;
             
             if (leftPct < 20) {
-                hoverText.style.transform = 'translateX(0)'; // Anchor start
+                hoverText.style.transform = 'translateX(0)'; 
             } else if (leftPct > 80) {
-                hoverText.style.transform = 'translateX(-100%)'; // Anchor end
+                hoverText.style.transform = 'translateX(-100%)'; 
             } else {
-                hoverText.style.transform = 'translateX(-50%)'; // Anchor middle
+                hoverText.style.transform = 'translateX(-50%)'; 
             }
         });
 
         container.addEventListener('mouseleave', () => {
             scrubber.setAttribute('opacity', '0');
-            dot.setAttribute('opacity', '0');
+            dot.style.opacity = '0';
             hoverText.style.opacity = '0';
         });
     }
