@@ -604,7 +604,7 @@ details main {
 /* Left Hand Panel */  
 .panel_2_1 { 
    background : white; 
-   grid-column: 1 / span 3;
+   grid-column: 3;
    grid-row: 1;
   }
  /* Table Panel on Homepage*/ 
@@ -619,8 +619,8 @@ details main {
   }
 
 .panel_2_4 {  
-   grid-column: 2;
-   grid-row: 3 ;
+   grid-column: 3;
+   grid-row: 2 ;
   }
 
 .panel_2_5 {  
