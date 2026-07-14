@@ -464,7 +464,7 @@ details main {
 	  } 
 	  
  .AClass{
-    margin-left: 0;     
+    left : 0;
     position: relative;
 }
 .dropbtn {
@@ -504,11 +504,7 @@ details main {
 .dropdown-content a {font-size : 100%;}
 .dropdown-content a:hover {background-color: #ddd;}
 
-.dropdown:hover .dropdown-content {
-	display: block;
-	position: absolute;
-	left: 100%;
-}
+.dropdown:hover .dropdown-content {display: block;}
 
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
@@ -586,6 +582,24 @@ details main {
   padding: 20px;
   font-size: 100%;
 }
+
+.paneltab_1_1{  
+  grid-column: 1; 
+  grid-row: 1 ;
+  }
+
+.paneltab_2_1{
+	grid-column: 1;
+	grid-row: 2;
+	
+.paneltab_2_2{
+	grid-column: 2;
+	grid-row: 2;
+
+.paneltab_2_3{
+	grid-column: 3;
+	grid-row: 2;
+	
 /* Top Row */
 .panel_1_1 {  
   grid-column: 1; 
@@ -605,7 +619,7 @@ details main {
 .panel_2_1 { 
    background : white; 
    grid-column: 1;
-   grid-row: 1;
+   grid-row: 7;
   }
  /* Table Panel on Homepage*/ 
 .panel_2_2 {  
@@ -614,31 +628,19 @@ details main {
   }
 
 .panel_2_3 {  
-   grid-column: 2;
-   grid-row: 2 ;
+   grid-column: 1;
+   grid-row: 3 ;
   }
 
 .panel_2_4 {  
-   grid-column: 3;
-   grid-row: 2 ;
+   grid-column: 1;
+   grid-row: 4 ;
   }
 
 .panel_2_5 {  
    grid-column: 1;
    grid-row: 5 ;
   }
-	
-	 .panel_3_1 {  
-   grid-column: 1;
-   grid-row: 2;
-  } .panel_3_2 {  
-   grid-column: 2;
-   grid-row: 2;
-  } .panel_3_3 {  
-   grid-column: 3;
-   grid-row: 2;
-  }
-	
  .panel_3_4 {  
    grid-column: 1;
    grid-row: 6;
@@ -798,17 +800,17 @@ details main {
   grid-row: 1 ;
 }
 /* Left Hand Panel */  
-/* .panel_2_1 {  
+.panel_2_1 {  
    background : white;
    grid-column: 1;
    grid-row: 2/ span 3;
   }
- Table Panel on Homepage*/ 
+ /* Table Panel on Homepage*/ 
 .panel_2_2 {  
    grid-column: 2/span 3;
    grid-row: 2;
   }
-/*
+
 .panel_3_2 {  
    grid-column: 2;
    grid-row: 3;
@@ -823,7 +825,7 @@ details main {
    grid-column: 4;
    grid-row: 3;
   }
-  Bottom panels */ 
+ /* Bottom panels */ 
 .panel_4_2 {
    grid-column: 2;
    grid-row: 4;
