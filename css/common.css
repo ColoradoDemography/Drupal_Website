@@ -584,21 +584,22 @@ details main {
 }
 
 .paneltab_1_1{  
+	grid-row-start: 1;
   grid-column: 1 / span 3;
   
   }
 
 .paneltab_2_1{
 	
-	grid-row: 2;
+	grid-row-start: 2;
 }	
 .paneltab_2_2{
 	
-	grid-row: 2;
+	grid-row-start: 2;
 }
 .paneltab_2_3{
 	
-	grid-row: 2;
+	grid-row-start: 2;
 }	
 /* Top Row */
 .panel_1_1 {  
