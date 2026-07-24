@@ -1,0 +1,57 @@
+<div class="sdo-lookup-container">
+    <p>
+        The following page provides charts showing single year estimates of age by racial and ethnic groups for Colorado, multi-county regions, and counties.
+    </p>
+    <p>
+        <em>Click on the download icon next to each chart to download the image, the underlying data, or view the data table.</em>
+    </p>
+    <hr class="sdo-hr">
+    <form class="sdo-form-grid" id="dashboard-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="geo-dropdown"><strong>Select Geography Type:</strong></label>
+            <select class="form-control" id="geo-dropdown">
+                <option value="region" selected>Region</option>
+                <option value="county">County</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="location-dropdown"><strong>Select Geography:</strong></label>
+            <select class="form-control" id="location-dropdown"></select>
+        </div>
+        <div class="form-group">
+            <label for="year-dropdown"><strong>Select Year:</strong></label>
+            <select class="form-control" id="year-dropdown"></select>
+        </div>
+    </form>
+    <hr class="sdo-hr">
+    
+    <!-- Main Composite Chart -->
+    <div class="sdo-chart-section">
+        <div style="height:550px;width:100%;" id="composite_line_output" aria-live="polite"></div>
+    </div>
+    
+    <!-- Small Multiples Grid (Titles now rendered natively by ECharts) -->
+    <div class="sdo-3col-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="white_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="hisp_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="black_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="asian_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="amind_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section">
+            <div style="height:350px;width:100%;" id="nhpi_bar_output"></div>
+        </div>
+        <div class="sdo-chart-section sdo-col-span-2" style="grid-column: span auto;">
+            <div style="height:350px;width:100%;" id="multi_bar_output"></div>
+        </div>
+    </div>
+</div>
