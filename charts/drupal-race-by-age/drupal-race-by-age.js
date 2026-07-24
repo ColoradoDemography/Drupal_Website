@@ -142,7 +142,6 @@ window.addEventListener("load", () => {
                         query: { maxWidth: 768 },
                         option: {
                             title: { 
-                                // Adds a line break so the title doesn't bleed off the edges of phones
                                 text: `Single Year of Age by Race/Ethnicity:\n${ctyName}, ${year}`,
                                 textStyle: { fontSize: 14, lineHeight: 20 }
                             },
@@ -150,12 +149,12 @@ window.addEventListener("load", () => {
                                 orient: 'horizontal',
                                 right: 'center',
                                 top: 'auto',
-                                bottom: 15,
-                                type: 'plain', // Removes the `< 1/7 >` pagination
+                                bottom: 25, // Bumped slightly up to avoid source text collision
+                                type: 'plain', 
                                 textStyle: { fontSize: 11 }
                             },
-                            // Expands bottom grid space drastically to allow legend wrapping
-                            grid: { left: '5%', right: '5%', bottom: 120, top: 70, containLabel: true }
+                            // Expanded bottom space massively (to 200) to clear the multi-line wrapped legend
+                            grid: { left: '5%', right: '5%', bottom: 200, top: 70, containLabel: true }
                         }
                     },
                     {
@@ -197,7 +196,6 @@ window.addEventListener("load", () => {
                 });
 
                 let option = {
-                    // Injecting ECharts Title to replace the HTML <h3> tags for clean PNG exports
                     title: {
                         text: rm.display,
                         subtext: `${ctyName}, ${year}`,
@@ -210,7 +208,6 @@ window.addEventListener("load", () => {
                         top: 0, 
                         feature: { 
                             saveAsImage: { 
-                                // Clean dynamic filename generation
                                 name: `${ctyName.replace(/ /g, "_")}_${rm.display.replace(/,/g, '').replace(/ /g, "_")}_${year}`,
                                 title: 'Download PNG' 
                             } 
