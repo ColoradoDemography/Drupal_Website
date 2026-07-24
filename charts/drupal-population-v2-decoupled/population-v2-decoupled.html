@@ -1,0 +1,50 @@
+<div class="sdo-lookup-container">
+    <p>
+        The following page shows graphs and charts for various datasets for Colorado, multi-county regions, and counties. Select the geography type and geography from the list below.
+    </p>
+    <p>
+        <em>Click on the download icon next to each chart to download the image or underlying data.</em>
+    </p>
+    <hr class="sdo-hr">
+    <form class="sdo-form-grid" id="dashboard-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="geo-dropdown"><strong>Select Geography Type:</strong></label> 
+            <select class="form-control" id="geo-dropdown">
+    <option value="region" selected="">Region</option>
+    <option value="county">County</option>
+</select>
+        </div>
+        <div class="form-group">
+            <label for="location-dropdown"><strong>Select Geography:</strong></label> 
+            <select class="form-control" id="location-dropdown"></select>
+        </div>
+    </form>
+    <hr class="sdo-hr">
+    
+    <div class="sdo-chart-section">
+        <h3 class="h3_style">Population Estimates and Forecasts</h3>
+        <div style="height:400px;width:100%;" id="est_output" aria-live="polite">&nbsp;</div>
+    </div>
+
+    <div class="sdo-chart-section" style="margin-top: 2rem;">
+        <h3 class="h3_style">Population Growth & Absolute Change</h3>
+        <div style="height:400px;width:100%;" id="growth_story_output" aria-live="polite">&nbsp;</div>
+    </div>
+
+    <!-- Small Multiples Grid Target -->
+    <div class="sdo-chart-section" style="margin-top: 2rem;">
+        <h3 class="h3_style">Regional Growth Comparisons</h3>
+        <div class="sdo-actions-row" style="margin-bottom: 1rem;">
+            <button class="button button--primary active" id="btn_sm_pop">Total Population</button>
+            <button class="button button--secondary" id="btn_sm_growth">Growth Rate</button>
+        </div>
+        <div class="sdo-3col-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div id="sm_region_0" style="height:250px;"></div>
+            <div id="sm_region_17" style="height:250px;"></div>
+            <div id="sm_region_19" style="height:250px;"></div>
+            <div id="sm_region_15" style="height:250px;"></div>
+            <div id="sm_region_16" style="height:250px;"></div>
+            <div id="sm_region_18" style="height:250px;"></div>
+        </div>
+    </div>
+</div>

@@ -48,32 +48,37 @@
 .sdo-form-grid .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0 !important; /* Drupal platform margin reset override */
+    margin-bottom: 0 !important; /* Baseline platform margin resets override */
     padding-bottom: 0 !important;
-    grid-column: span 1 !important; /* Force full width on mobile viewports */
 }
 
-/* Tablet / Medium Screens: Balanced 2-Column Split Layout */
+/* Tablet Viewports: Balanced 2-Column Split Layout */
 @media (min-width: 600px) and (max-width: 1023px) {
     .sdo-form-grid {
         grid-template-columns: repeat(2, 1fr);
     }
     
-    /* Allow the location box to span full width on tablets so text doesn't clip */
     .sdo-form-grid .sdo-col-span-2 {
         grid-column: span 2 !important;
     }
+    
+    .sdo-form-grid .sdo-drawer-fullwidth {
+        grid-column: 1 / -1 !important;
+    }
 }
 
-/* Desktop Viewports: Stable 5-Column Structural Grid */
+/* Desktop Viewports: Stable 5-Column Structural Grid Base Rules */
 @media (min-width: 1024px) {
     .sdo-form-grid {
         grid-template-columns: repeat(5, 1fr) !important;
     }
     
-    /* Dynamically expand location column to resolve text truncation errors safely */
     .sdo-form-grid .sdo-col-span-2 {
         grid-column: span 2 !important;
+    }
+    
+    .sdo-form-grid .sdo-drawer-fullwidth {
+        grid-column: 1 / -1 !important;
     }
 }
 
@@ -122,17 +127,14 @@
     margin-bottom: 0.5rem;
 }
 
+/* Base styling for ALL standard dropdowns */
 .sdo-form-grid select.form-control {
     width: 100%;
-    min-height: 130px;
     border: 1px solid #cbd5e0;
     border-radius: 4px;
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    padding: 0 !important; 
-    margin-bottom: 0 !important;
-    overflow-y: auto !important;
     background-color: #fff;
+    padding: 8px 12px; /* Normal padding for a standard single-line dropdown */
+    margin-bottom: 0 !important;
 }
 
 .sdo-form-grid select.form-control:focus {
@@ -140,6 +142,16 @@
     outline: none;
 }
 
+/* Specific overrides strictly for MULTI-SELECT listboxes (used in Lookups) */
+.sdo-form-grid select.form-control[multiple] {
+    min-height: 130px; /* Only tall if it allows multiple selections */
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    padding: 0 !important; 
+    overflow-y: auto !important;
+}
+
+/* Keeps the rows inside the multi-select boxes readable and clickable */
 .sdo-form-grid select.form-control option {
     padding: 5px 10px;
     font-size: 0.875rem;
@@ -248,41 +260,60 @@
 }
 
 /* ---------------------------------------------------------------------
-   6. ACTIONS PANEL REGION
+   6. ACTIONS PANEL REGION (Isolated Full-Width Form Row)
    --------------------------------------------------------------------- */
-.sdo-form-grid .sdo-actions {
-    grid-column: 1 / -1;
+.sdo-actions-row {
     display: flex;
     flex-direction: row;
     gap: 0.75rem;
-    margin-top: 0 !important;
-    padding-top: 0.75rem;
-    border-top: 1px solid #e2e8f0;
+    margin-top: 1rem;
+    padding: 0;
+    width: 100%;
 }
 
-.sdo-form-grid .sdo-actions button {
+.sdo-actions-row button {
     width: auto;
-    padding: 6px 20px;
+    padding: 8px 22px;
     margin-bottom: 0;
     font-size: 0.85rem;
     font-weight: 700;
     border-radius: 3px;
     border: none;
     cursor: pointer;
+    transition: background-color 0.15s, transform 0.1s;
 }
 
-.sdo-form-grid .sdo-actions .button--primary {
+.sdo-actions-row button:active {
+    transform: scale(0.98);
+}
+
+.sdo-actions-row .button--primary {
     background-color: #004b79;
     color: #fff;
 }
 
-.sdo-form-grid .sdo-actions .button--primary:hover { background-color: #003657; }
-.sdo-form-grid .sdo-actions .button--secondary { background-color: #e2e8f0; color: #4a5568; }
-.sdo-form-grid .sdo-actions .button--secondary:hover { background-color: #cbd5e0; }
+.sdo-actions-row .button--primary:hover {
+    background-color: #003657;
+}
 
+.sdo-actions-row .button--secondary {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
+
+.sdo-actions-row .button--secondary:hover {
+    background-color: #cbd5e0;
+}
+
+/* Responsive Mobile Viewport Refactor rules for Action Row Buttons */
 @media (max-width: 600px) {
-    .sdo-form-grid .sdo-actions { flex-direction: column; }
-    .sdo-form-grid .sdo-actions button { width: 100%; }
+    .sdo-actions-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .sdo-actions-row button {
+        width: 100%;
+    }
 }
 
 /* ---------------------------------------------------------------------
