@@ -1,0 +1,55 @@
+<div class="sdo-lookup-container">
+    <p>
+        The following page provides plots showing Total Housing Units, Occupied Housing Units, and Vacant Housing Units from 2010 to the present. Select the geography type and location from the list below.
+    </p>
+    <p>
+        <em>Click on the download icon next to each chart to download the image, the underlying data, or view the data table.</em>
+    </p>
+    <hr class="sdo-hr">
+    <form class="sdo-form-grid" id="dashboard-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="geo-dropdown"><strong>Select Geography Type:</strong></label>
+            <select class="form-control" id="geo-dropdown">
+                <option value="region" selected>Region</option>
+                <option value="county">County</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="location-dropdown"><strong>Select Geography:</strong></label>
+            <select class="form-control" id="location-dropdown"></select>
+        </div>
+    </form>
+    <hr class="sdo-hr">
+    
+    <div class="sdo-chart-section">
+        <h3 class="h3_style">Total and Occupied Housing Units</h3>
+        <div style="height:400px;width:100%;" id="hu_line_output" aria-live="polite"></div>
+    </div>
+    
+    <div class="sdo-chart-section" style="margin-top: 2rem;">
+        <h3 class="h3_style">Year-over-Year Housing Unit Difference</h3>
+        <div style="height:400px;width:100%;" id="yoy_line_output" aria-live="polite"></div>
+    </div>
+
+    <div class="sdo-chart-section" style="margin-top: 2rem;">
+        <h3 class="h3_style">Occupied vs. Vacant Housing Units</h3>
+        <div style="height:400px;width:100%;" id="vacant_bar_output" aria-live="polite"></div>
+    </div>
+
+    <!-- Small Multiples Grid Target -->
+    <div class="sdo-chart-section" style="margin-top: 3rem;">
+        <h3 class="h3_style">Regional Housing Comparisons</h3>
+        <div class="sdo-actions-row" style="margin-bottom: 1rem;">
+            <button class="button button--primary active" id="btn_sm_hu">Total Housing Units</button>
+            <button class="button button--secondary" id="btn_sm_vac">Vacancy Rate</button>
+        </div>
+        <div class="sdo-3col-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div id="sm_region_0" style="height:250px;"></div>
+            <div id="sm_region_17" style="height:250px;"></div>
+            <div id="sm_region_19" style="height:250px;"></div>
+            <div id="sm_region_15" style="height:250px;"></div>
+            <div id="sm_region_16" style="height:250px;"></div>
+            <div id="sm_region_18" style="height:250px;"></div>
+        </div>
+    </div>
+</div>
