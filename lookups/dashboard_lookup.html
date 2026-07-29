@@ -252,8 +252,9 @@ function dwnBundle() {
 	}
 	if(selectedprg == "HNA") {
 	 var selectedgeo = document.getElementById("geo-dropdown").value;
+	 var dropdown = document.getElementById('loc-dropdown');
 	 if(selectedgeo == "CCD"){
-	   var dropdown = document.getElementById('ccd-dropdown');	
+	   var dropdown = document.getElementById('ccd-dropdown');	 
 	 }
 	 var select_ids = getSelectValues(dropdown);
 	} 
