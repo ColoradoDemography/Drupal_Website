@@ -195,31 +195,38 @@ d3.select("#program-dropdown").on("change", function(d,i) {
  });  //D3 Program Selection
  //Selection of Location
  //geo drop down only for non CSBG bundles
-d3.select("#geo-dropdown").on("change", function(d, i) {
-    // Get current selections from both dropdowns
-    var selectedprg = document.getElementById("program-dropdown").value;
-    var selectedgeo = document.getElementById("geo-dropdown").value;
+d3.select("#geo-dropdown").on("change", function(d,i) {
+	document.getElementById('ccd-dropdown').hidden = true;
+	document.getElementById('ccd-lbl').innerHTML = ""
+    document.getElementById('genBundle').style.display = 'block'
+	var selectedprg = document.getElementById("program-dropdown").value;
+	var selectedgeo = document.getElementById("geo-dropdown").value;
+     if(selectedprg != "CSBG"){
+		if(selectedgeo == "municipality") {
+			 document.getElementById('loc-lbl').innerHTML = "Select Location"
+		     document.getElementById('loc-dropdown').hidden = false;	
+		     popDropdown(selectedgeo,'loc-dropdown','dashboard'); 
+	     } 	 
+		if(selectedgeo == "region"){
+		     document.getElementById('loc-lbl').innerHTML = "Select Location"
+			 document.getElementById('loc-dropdown').hidden = false;	
+			 document.getElementById('loc-dropdown').multiple = false;
+			 popDropdown('region','loc-dropdown','dashboard'); 
+			 }
+		if(selectedgeo == "county"){
+		     document.getElementById('loc-lbl').innerHTML = "Select Location"
+			 document.getElementById('loc-dropdown').hidden = false;	
+			 document.getElementById('loc-dropdown').multiple = true;
+			 popDropdown('county','loc-dropdown','dashboard'); 
+			 }
+		if(selectedgeo == "CCD"){
+		     document.getElementById('loc-lbl').innerHTML = "Select Location"
+			 document.getElementById('loc-dropdown').hidden = false;	
+			 document.getElementById('loc-dropdown').multiple = true;
+			 popDropdown('county','loc-dropdown','dashboard'); 
+			 }
+     } 
 
-    // Update location label based on selected geography
-    var locLabel = document.getElementById('loc-lbl');
-    if (selectedgeo === "region") {
-        locLabel.innerHTML = "Select Region(s)";
-    } else if (selectedgeo === "county") {
-        locLabel.innerHTML = "Select County(ies)";
-    } else if (selectedgeo === "municipality") {
-        locLabel.innerHTML = "Select Municipality(ies)";
-    } else if (selectedgeo === "CCD") {
-        locLabel.innerHTML = "Select Census County Division(s)";
-    } else {
-        locLabel.innerHTML = "Select Location(s)";
-    }
-
-    // Reveal the location dropdown and download button
-    document.getElementById('loc-dropdown').hidden = false;
-    document.getElementById('genBundle').style.display = 'block';
-
-    // Populate location options for the program and geography combination
-    popDropdown(selectedprg, 'loc-dropdown', selectedgeo);
 }); //D3 Location Selection	 
 
  //Selection of CCD
