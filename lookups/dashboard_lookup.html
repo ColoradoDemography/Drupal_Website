@@ -247,20 +247,20 @@ d3.select("#loc-dropdown").on("change", function(d,i) {
 function dwnBundle() {
     var selectedprg = document.getElementById("program-dropdown").value;
     if(selectedprg == "CSBG") {
-	var dropdown = document.getElementById('loc-dropdown');
-    var select_ids = getSelectValues(dropdown);
+		var dropdown = document.getElementById('loc-dropdown');
+    	var select_ids = getSelectValues(dropdown);
 	}
 	if(selectedprg == "HNA") {
 	 var selectedgeo = document.getElementById("geo-dropdown").value;
 	 if(selectedgeo == "CCD"){
 	   var dropdown = document.getElementById('ccd-dropdown');
+	   var select_ids = getSelectValues(dropdown);	
 	 } 
-	 var select_ids = getSelectValues(dropdown);	
 	} 
 	if(selectedprg == "PROFILE"){
-	var dropdown = document.getElementById('loc-dropdown');
-    var select_ids = getSelectValues(dropdown);
-		}
+		var dropdown = document.getElementById('loc-dropdown');
+    	var select_ids = getSelectValues(dropdown);
+	}
 
 	
 	if(select_ids.length == 0){
