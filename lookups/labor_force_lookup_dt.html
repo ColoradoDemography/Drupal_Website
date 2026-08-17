@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorado County Labor Force Participation Lookup</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Select2 CSS & Bootstrap 5 Select2 Theme -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- DataTables CSS with Bootstrap 5 Integration -->
+    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" rel="stylesheet">
+	<!--<link rel="stylesheet" href="css/app.css">-->
+	
+    <style>
+        body {
+        background-color: #f8f9fa;
+        }
+        .filter-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .table-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        .select2-container--bootstrap-5 .select2-selection {
+            font-size: 0.9rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<!-- DataTables & Extensions JS -->
+	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+	<!--<script type="text/javascript" src="js/app.js"></script>-->
+</head>
+
+<body>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="p-3 bg-primary text-white rounded-3 shadow-sm d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="h3 mb-1"><i class="fa-solid fa-chart-line me-2"></i>Colorado Labor Force Participation</h1>
+                    <p class="mb-0 text-white">State Demography Office (SDO) projections & estimates up to 2060</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar Controls -->
+        <div class="col-xl-4 col-lg-5 col-12 mb-4">
+            <div class="filter-card p-4">
+                <h4 class="h5 mb-3 pb-2 border-bottom"><i class="fa-solid fa-sliders text-primary me-2"></i>Query Controls</h4>
+                <form id="queryForm">
+                    
+                    <!-- County Selector -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="counties" class="form-label mb-0">Select Counties</label>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none" id="selectAllCounties">Select All</button>
+                                <span class="text-muted mx-1">|</span>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none text-danger" id="clearAllCounties">Clear</button>
+                            </div>
+                        </div>
+                        <select id="counties" class="form-select" multiple="multiple" style="width: 100%;" required>
+                            <!--<option value="0">Colorado (Statewide)</option>-->
+                            <option value="1">Adams County</option>
+                            <option value="3">Alamosa County</option>
+                            <option value="5">Arapahoe County</option>
+                            <option value="7">Archuleta County</option>
+                            <option value="9">Baca County</option>
+                            <option value="11">Bent County</option>
+                            <option value="13">Boulder County</option>
+                            <option value="14">Broomfield City and County</option>
+                            <option value="15">Chaffee County</option>
+                            <option value="17">Cheyenne County</option>
+                            <option value="19">Clear Creek County</option>
+                            <option value="21">Conejos County</option>
+                            <option value="23">Costilla County</option>
+                            <option value="25">Crowley County</option>
+                            <option value="27">Custer County</option>
+                            <option value="29">Delta County</option>
+                            <option value="31">Denver City and County</option>
+                            <option value="33">Dolores County</option>
+                            <option value="35">Douglas County</option>
+                            <option value="37">Eagle County</option>
+                            <option value="39">Elbert County</option>
+                            <option value="41">El Paso County</option>
+                            <option value="43">Fremont County</option>
+                            <option value="45">Garfield County</option>
+                            <option value="47">Gilpin County</option>
+                            <option value="49">Grand County</option>
+                            <option value="51">Gunnison County</option>
+                            <option value="53">Hinsdale County</option>
+                            <option value="55">Huerfano County</option>
+                            <option value="57">Jackson County</option>
+                            <option value="59">Jefferson County</option>
+                            <option value="61">Kiowa County</option>
+                            <option value="63">Kit Carson County</option>
+                            <option value="65">Lake County</option>
+                            <option value="67">La Plata County</option>
+                            <option value="69">Larimer County</option>
+                            <option value="71">Las Animas County</option>
+                            <option value="73">Lincoln County</option>
+                            <option value="75">Logan County</option>
+                            <option value="77">Mesa County</option>
+                            <option value="79">Mineral County</option>
+                            <option value="81">Moffat County</option>
+                            <option value="83">Montezuma County</option>
+                            <option value="85">Montrose County</option>
+                            <option value="87">Morgan County</option>
+                            <option value="89">Otero County</option>
+                            <option value="91">Ouray County</option>
+                            <option value="93">Park County</option>
+                            <option value="95">Phillips County</option>
+                            <option value="97">Pitkin County</option>
+                            <option value="99">Prowers County</option>
+                            <option value="101">Pueblo County</option>
+                            <option value="103">Rio Blanco County</option>
+                            <option value="105">Rio Grande County</option>
+                            <option value="107">Routt County</option>
+                            <option value="109">Saguache County</option>
+                            <option value="111">San Juan County</option>
+                            <option value="113">San Miguel County</option>
+                            <option value="115">Sedgwick County</option>
+                            <option value="117">Summit County</option>
+                            <option value="119">Teller County</option>
+                            <option value="121">Washington County</option>
+                            <option value="123">Weld County</option>
+                            <option value="125">Yuma County</option>
+                        </select>
+                    </div>
+
+                    <!-- Year Selector -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="years" class="form-label mb-0">Select Years</label>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none" id="selectAllYears">Select All</button>
+                                <span class="text-muted mx-1">|</span>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none text-danger" id="clearAllYears">Clear</button>
+                            </div>
+                        </div>
+                        <select id="years" class="form-select" multiple="multiple" style="width: 100%;" required></select>
+                    </div>
+
+                    <!-- Age Group Selector -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label mb-0">Select Age Groups</label>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none" id="selectAllAges">All Ages</button>
+                            </div>
+                        </div>
+                        <div class="row g-2 p-2 bg-light rounded border border-1">
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="a" id="age_a" checked><label class="form-check-label text-truncate w-100" for="age_a">16 to 19</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="b" id="age_b" checked><label class="form-check-label text-truncate w-100" for="age_b">20 to 24</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="c" id="age_c" checked><label class="form-check-label text-truncate w-100" for="age_c">25 to 34</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="d" id="age_d" checked><label class="form-check-label text-truncate w-100" for="age_d">35 to 44</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="e" id="age_e" checked><label class="form-check-label text-truncate w-100" for="age_e">45 to 54</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="f" id="age_f" checked><label class="form-check-label text-truncate w-100" for="age_f">55 to 64</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="g" id="age_g" checked><label class="form-check-label text-truncate w-100" for="age_g">65 to 74</label></div></div>
+                            <div class="col-6"><div class="form-check"><input class="form-check-input age-checkbox" type="checkbox" value="h" id="age_h" checked><label class="form-check-label text-truncate w-100" for="age_h">75 & Older</label></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Summarization / Grouping Controls -->
+                    <div class="mb-3">
+                        <label class="form-label mb-1">Summarize Data By</label>
+                        <div class="p-2 bg-light rounded border border-1">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input group-checkbox" type="checkbox" value="year" id="groupByYear">
+                                <label class="form-check-label" for="groupByYear">Year</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input group-checkbox" type="checkbox" value="county" id="groupByCounty">
+                                <label class="form-check-label" for="groupByCounty">County</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input group-checkbox" type="checkbox" value="age" id="groupByAge">
+                                <label class="form-check-label" for="groupByAge">Age Group</label>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">Checking variables keeps them in your table, aggregating other dimensions out.</small>
+                    </div>
+
+                    <!-- Gender Controls -->
+                    <div class="mb-4">
+                        <label class="form-label mb-1">Grouping By Sex</label>
+                        <div class="p-2 bg-light rounded border border-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="sum" id="genderSum" checked>
+                                <label class="form-check-label" for="genderSum">Sum Male and Female (Combined)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="m" id="genderMale">
+                                <label class="form-check-label" for="genderMale">Male Only</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="f" id="genderFemale">
+                                <label class="form-check-label" for="genderFemale">Female Only</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="b" id="genderSeparated">
+                                <label class="form-check-label" for="genderSeparated">List Male and Female Separately</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit">
+                            <i class="fa-solid fa-arrows-rotate me-2"></i>Generate Table
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="btnReset">
+                            Reset Selections
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table Display Area -->
+        <div class="col-xl-8 col-lg-7 col-12">
+            <div class="table-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0"><i class="fa-solid fa-table text-primary me-2"></i>Data Output</h5>
+                    <div id="exportButtonsContainer"></div>
+                </div>
+                
+                <div id="tableAlert" class="alert alert-info mb-0">
+                    <i class="fa-solid fa-info-circle me-2"></i>Configure your filters on the left panel and click <strong>Generate Table</strong> to view projections.
+                </div>
+
+                <div class="table-responsive d-none" id="tableContainer">
+                    <table id="lfpTable" class="table table-striped table-bordered w-100">
+                        <!-- Dynamic columns will populate here -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const countyNames = {
+        "1": "Adams County", "3": "Alamosa County", "5": "Arapahoe County",
+        "7": "Archuleta County", "9": "Baca County", "11": "Bent County", "13": "Boulder County",
+        "14": "Broomfield City and County", "15": "Chaffee County", "17": "Cheyenne County",
+        "19": "Clear Creek County", "21": "Conejos County", "23": "Costilla County", "25": "Crowley County",
+        "27": "Custer County", "29": "Delta County", "31": "Denver City and County", "33": "Dolores County",
+        "35": "Douglas County", "37": "Eagle County", "39": "Elbert County", "41": "El Paso County",
+        "43": "Fremont County", "45": "Garfield County", "47": "Gilpin County", "49": "Grand County",
+        "51": "Gunnison County", "53": "Hinsdale County", "55": "Huerfano County", "57": "Jackson County",
+        "59": "Jefferson County", "61": "Kiowa County", "63": "Kit Carson County", "65": "Lake County",
+        "67": "La Plata County", "69": "Larimer County", "71": "Las Animas County", "73": "Lincoln County",
+        "75": "Logan County", "77": "Mesa County", "79": "Mineral County", "81": "Moffat County",
+        "83": "Montezuma County", "85": "Montrose County", "87": "Morgan County", "89": "Otero County",
+        "91": "Ouray County", "93": "Park County", "95": "Phillips County", "97": "Pitkin County",
+        "99": "Prowers County", "101": "Pueblo County", "103": "Rio Blanco County", "105": "Rio Grande County",
+        "107": "Routt County", "109": "Saguache County", "111": "San Juan County", "113": "San Miguel County",
+        "115": "Sedgwick County", "117": "Summit County", "119": "Teller County", "121": "Washington County",
+        "123": "Weld County", "125": "Yuma County"
+    };
+
+    let dataTableInstance = null;
+
+    $(document).ready(function() {
+        // Initialize dynamic years select options from 2010 to 2060
+        const yearsSelect = $('#years');
+        for (let year = 2010; year <= 2060; year++) {
+            const selectedAttr = (year === 2024) ? 'selected' : ''; // Default selection to current context
+            yearsSelect.append(`<option value="${year}" ${selectedAttr}>${year}</option>`);
+        }
+
+        // Initialize Select2 dropdown elements
+        $('#counties').select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Select counties',
+            closeOnSelect: false
+        });
+
+        $('#years').select2({
+            theme: 'bootstrap-5',
+            placeholder: 'Select years',
+            closeOnSelect: false
+        });
+
+        // Pre-select Adams County and Statewide as examples
+        $('#counties').val(['0', '1']).trigger('change');
+
+        // Form selection helpers
+        $('#selectAllCounties').click(() => {
+            const allKeys = Object.keys(countyNames);
+            $('#counties').val(allKeys).trigger('change');
+        });
+
+        $('#clearAllCounties').click(() => {
+            $('#counties').val(null).trigger('change');
+        });
+
+        $('#selectAllYears').click(() => {
+            const allYears = [];
+            for (let y = 2010; y <= 2060; y++) allYears.push(y.toString());
+            $('#years').val(allYears).trigger('change');
+        });
+
+        $('#clearAllYears').click(() => {
+            $('#years').val(null).trigger('change');
+        });
+
+        $('#selectAllAges').click(() => {
+            const allChecked = $('.age-checkbox').filter(':checked').length === $('.age-checkbox').length;
+            $('.age-checkbox').prop('checked', !allChecked);
+        });
+
+        // Form Submit Action
+        $('#queryForm').on('submit', function(e) {
+            e.preventDefault();
+            fetchLaborForceData();
+        });
+
+        // Reset Action
+        $('#btnReset').click(() => {
+            //$('#queryForm').reset();
+            $('#counties').val(['1']).trigger('change');
+            $('#years').val(['2024']).trigger('change');
+            
+            if (dataTableInstance) {
+                dataTableInstance.destroy();
+                $('#lfpTable').empty();
+                dataTableInstance = null;
+            }
+            $('#tableContainer').addClass('d-none');
+            $('#exportButtonsContainer').empty();
+            $('#tableAlert').removeClass('d-none').html(
+                `<i class="fa-solid fa-info-circle me-2"></i>Selections reset. Configure your filters and click <strong>Generate Table</strong>.`
+            );
+        });
+    });
+
+    // Main API retrieval function
+    function fetchLaborForceData() {
+        const counties = $('#counties').val();
+        const years = $('#years').val();
+        
+        // Collect checked age values
+        const ages = [];
+        $('.age-checkbox:checked').each(function() {
+            ages.push($(this).val());
+        });
+
+        // Validations
+        if (!counties || counties.length === 0) {
+            showAlert('danger', 'Please select at least one County.');
+            return;
+        }
+        if (!years || years.length === 0) {
+            showAlert('danger', 'Please select at least one Year.');
+            return;
+        }
+        if (ages.length === 0) {
+            showAlert('danger', 'Please select at least one Age Group.');
+            return;
+        }
+
+        // Calculate grouping opt parameter
+        const yrChecked = $('#groupByYear').is(':checked');
+        const coChecked = $('#groupByCounty').is(':checked');
+        const ageChecked = $('#groupByAge').is(':checked');
+
+        let groupParam = null;
+        if (yrChecked && !coChecked && !ageChecked) groupParam = 'opt1';
+        else if (!yrChecked && coChecked && !ageChecked) groupParam = 'opt2';
+        else if (!yrChecked && !coChecked && ageChecked) groupParam = 'opt3';
+        else if (yrChecked && coChecked && !ageChecked) groupParam = 'opt4';
+        else if (yrChecked && !coChecked && ageChecked) groupParam = 'opt5';
+        else if (!yrChecked && coChecked && ageChecked) groupParam = 'opt6';
+
+        // Get gender radio value
+        const genderVal = $('input[name="gender"]:checked').val();
+
+        // Build Query URL
+        // In local setups, update '/labor-force' to match your development domain (e.g. 'http://localhost:3000/labor-force')
+        let apiUrl = `https://gis.dola.colorado.gov/lookups/labor-force?county=${counties.join(',')}&year=${years.join(',')}&age=${ages.join(',')}`;
+        
+        if (groupParam) {
+            apiUrl += `&group=${groupParam}`;
+        }
+        if (genderVal !== 'sum') {
+            apiUrl += `&gender=${genderVal}`;
+        }
+
+        // Show fetching spinner in alert status
+        $('#tableContainer').addClass('d-none');
+        $('#tableAlert').removeClass('d-none alert-danger alert-info').addClass('alert-warning').html(
+            `<div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div> Querying SDO Database...`
+        );
+        $('#exportButtonsContainer').empty();
+console.log(apiUrl);
+var data;
+        /* fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error('API server returned an error response.');
+                return response.json();
+            })
+            .then(data => {
+                if (!data || data.length === 0) {
+                    showAlert('warning', 'No records found matching those exact parameter selections.');
+                    return;
+                }
+                
+                $('#tableAlert').addClass('d-none');
+                $('#tableContainer').removeClass('d-none');
+                initializeDataTable(data);
+            })
+            .catch(error => {
+                console.error(error);
+                showAlert('danger', `<strong>Fetch Failed:</strong> Could not connect to the labor force service. Ensure the Node backend route is active.`);
+            }); */
+
+       $.getJSON(apiUrl, function(json){
+        data = json;
+        if (!data || data.length === 0) {
+            showAlert('warning', 'No records found matching those exact parameter selections.');
+            return;
+        }
+        
+        $('#tableAlert').addClass('d-none');
+        $('#tableContainer').removeClass('d-none');
+        initializeDataTable(data);
+       })     
+    }
+
+    // Dynamic DataTable setup
+    function initializeDataTable(dataSet) {
+        // 1. Destroy any existing instance to free memory
+        if (dataTableInstance) {
+            dataTableInstance.destroy();
+            dataTableInstance = null;
+        }
+
+        // 2. Clear out the previous buttons and recreate the table element
+        $('#exportButtonsContainer').empty();
+        $('#tableContainer').html('<table id="lfpTable" class="table table-striped table-bordered w-100"></table>');
+
+        // 3. Extract columns dynamically from the keys in the first row
+        const sampleRow = dataSet[0]; 
+        const recordKeys = Object.keys(sampleRow);
+        
+        const columnDefinitions = recordKeys.map(key => {
+            let columnTitle = key;
+            let renderer = null;
+
+            if (key === 'area_code') {
+                columnTitle = 'County';
+                renderer = (val) => countyNames[val] || `FIPS ${val}`;
+            } else if (key === 'population_year') {
+                columnTitle = 'Year';
+            } else if (key === 'age_group') {
+                columnTitle = 'Age Group';
+            } else if (key === 'gender') {
+                columnTitle = 'Sex';
+            } else if (key === 'laborforce') {
+                columnTitle = 'Labor Force';
+                renderer = (val) => val ? Number(val).toLocaleString() : '0';
+            } else if (key === 'cni_pop_16pl') {
+                columnTitle = 'Civilian Pop. (16+)';
+                renderer = (val) => val ? Number(val).toLocaleString() : '0';
+            } else if (key === 'participationrate') {
+                columnTitle = 'Participation Rate';
+                renderer = (val) => val ? (Number(val) * 100).toFixed(1) + '%' : '-';
+            }
+
+            return {
+                data: key,
+                title: columnTitle,
+                render: renderer,
+                className: ['laborforce', 'cni_pop_16pl', 'participationrate'].includes(key) ? 'text-end' : 'text-start'
+            };
+        });
+
+        // 4. Initialize DataTables with native button configurations
+        dataTableInstance = $('#lfpTable').DataTable({
+            data: dataSet,
+            columns: columnDefinitions,
+            pageLength: 25,
+            lengthMenu: [10, 25, 50, 100], // FIXED: Resolved previous syntax comma error
+            responsive: true,
+            // 'B' initializes the buttons, 'lfrtip' lays out the length, filter, processing, table, info, and paging elements
+            dom: 'Blfrtip', 
+            order: [], // Keeps SQL database sorting order
+            buttons: [
+                {
+                    extend: 'copy',
+                    className: 'btn btn-sm bg-white text-black border',
+                    text: '<i class="fa-solid fa-copy me-1 text-primary"></i> Copy'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-sm bg-white text-black border',
+                    text: '<i class="fa-solid fa-file-csv me-1 text-primary"></i> CSV'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm bg-white text-black border',
+                    text: '<i class="fa-solid fa-file-excel me-1 text-primary"></i> Excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-sm bg-white text-black border',
+                    text: '<i class="fa-solid fa-file-pdf me-1 text-primary"></i> PDF'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-sm bg-white text-black border',
+                    text: '<i class="fa-solid fa-print me-1 text-primary"></i> Print'
+                }
+            ],
+            initComplete: function() {
+                // Move the generated button container into our target div
+                dataTableInstance.buttons().container().appendTo('#exportButtonsContainer');
+                
+                // Add minor UI styling to spacing
+                $('#exportButtonsContainer .btn-group').addClass('shadow-sm');
+            }
+        });
+    }
+
+    function showAlert(type, message) {
+        $('#tableContainer').addClass('d-none');
+        $('#tableAlert').removeClass('d-none alert-info alert-warning alert-danger').addClass(`alert-${type}`).html(
+            `<i class="fa-solid fa-triangle-exclamation me-2"></i>${message}`
+        );
+    }
+</script>
+
+</body>
