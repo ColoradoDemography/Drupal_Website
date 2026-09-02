@@ -4547,7 +4547,6 @@ function genSYAReg(region,loc,year_arr,group,agespec, age_arr,yeardata) {
 
 	var fips_list  = fips_arr2.join(",")
 	var year_list = year_arr.join(",")
- console.log(fips_list);
 
 
 switch(agespec){
