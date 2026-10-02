@@ -1,0 +1,119 @@
+<!-- html snippet for Drupal Open Embed Card -->
+<!-- Load Alpine.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>
+
+<div id="sdo-gallery-app" x-data="sdoGalleryApp" class="sdo-gallery-container">
+
+  <!-- Lightweight Sticky Navigation Toolbar (ONLY Jump Nav & Search) -->
+  <nav class="sdo-gallery-nav" id="sticky-nav">
+    <div class="sdo-toolbar-flex">
+      
+      <!-- Standardized SDO Jump Navigation -->
+      <div class="sdo-jump-nav">
+        <div class="sdo-jump-nav__header">
+          <h2 class="sdo-jump-nav__title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#002868" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+            On this page
+          </h2>
+          <button @click="selectedCategory = 'all'; selectedTags = []; searchQuery = ''" style="cursor:pointer; background:#fff; border:1px solid #ccc; padding:2px 8px; border-radius:4px; font-size:12px; font-weight:600; color:#002868;">
+            Show All Apps
+          </button>
+        </div>
+        
+        <ul class="sdo-jump-nav__list" id="category-links">
+          <template x-for="cat in categories" :key="cat.id">
+            <li>
+              <a :href="'#' + cat.id" 
+                 @click.prevent="selectedCategory = cat.id" 
+                 :style="selectedCategory === cat.id ? 'font-weight:bold; color:#1d4ed8;' : ''"
+                 x-text="cat.name"></a>
+            </li>
+          </template>
+        </ul>
+      </div>
+
+      <!-- Real-Time Search Box -->
+      <div class="sdo-search-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label for="app-search" style="font-size:12px; font-weight:bold; text-transform:uppercase; color:#334155;">Search Inventory</label>
+          <button @click="refreshCache()" title="Force Refresh API Cache" style="font-size:11px; color:#64748b; background:none; border:none; text-decoration:underline; cursor:pointer;">
+            Refresh Data
+          </button>
+        </div>
+        <div class="sdo-search-input-wrapper">
+          <svg class="sdo-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="app-search" x-model="searchQuery" placeholder="Search title, tag, or region...">
+          <button x-show="searchQuery.length > 0" @click="searchQuery = ''" class="sdo-clear-btn">✕</button>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main>
+
+    <!-- Collapsible Tag Filter Box (Non-Sticky: Scrolls naturally) -->
+    <div x-show="availableTags.length > 0" class="sdo-tag-section">
+      <div class="sdo-tag-header">
+        <button @click="showTags = !showTags" class="sdo-tag-toggle-btn">
+          <span x-text="showTags ? '▲ Hide Tag Filters' : '▼ Filter by Tags (' + availableTags.length + ' available)'"></span>
+          <span x-show="selectedTags.length > 0" class="sdo-tag-badge" x-text="selectedTags.length + ' active'"></span>
+        </button>
+        <button x-show="selectedTags.length > 0" @click="selectedTags = []" class="sdo-clear-tags-btn">
+          Clear Active Tags
+        </button>
+      </div>
+
+      <div x-show="showTags" class="sdo-tag-pills">
+        <template x-for="tag in availableTags" :key="tag">
+          <button @click="toggleTag(tag)" 
+                  :class="selectedTags.includes(tag) ? 'sdo-tag-btn active' : 'sdo-tag-btn'" 
+                  x-text="'#' + tag">
+          </button>
+        </template>
+      </div>
+    </div>
+    
+    <!-- Active Counter Status Bar -->
+    <div class="sdo-counter-banner">
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#64748b;">Live Inventory State</span>
+        <h3 style="margin:2px 0 0 0; font-size:14px; font-weight:bold; color:#002868;" x-text="'Showing ' + filteredApps.length + ' of ' + apps.length + ' applications'"></h3>
+      </div>
+      <div x-show="loading" style="font-size:12px; font-weight:600; color:#002868;">
+        Loading API Data...
+      </div>
+    </div>
+
+    <!-- Reactive Card Grid -->
+    <div x-show="!loading && filteredApps.length > 0" class="app-card-grid">
+      <template x-for="app in filteredApps" :key="app.title">
+        <div class="app-card">
+          <div class="app-card-header">
+            <h3>
+              <a :href="app.url" target="_blank" rel="noopener" x-text="app.title"></a>
+            </h3>
+          </div>
+          <a :href="app.url" target="_blank" rel="noopener" class="app-card-img-wrapper">
+            <img :src="app.image_url" :alt="app.title + ' preview'" @error="$event.target.src='https://placehold.co/400x225/f1f5f9/002868?text=SDO+App'">
+          </a>
+          <div class="app-card-footer">
+            <span style="color:#64748b;" x-text="app.region || app.category"></span>
+            <a :href="app.url" target="_blank" rel="noopener">Launch ↗</a>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- Empty Results State -->
+    <div x-show="!loading && filteredApps.length === 0" style="text-align:center; padding:3rem 1rem; background:#fff; border:1px solid #e2e8f0; border-radius:12px; margin-top:1.5rem;">
+      <h3 style="font-size:16px; font-weight:bold; color:#1e293b; margin-bottom:0.25rem;">No applications match your criteria</h3>
+      <p style="font-size:12px; color:#64748b; margin-bottom:1rem;">Try clearing tag selections or broadening your search terms.</p>
+      <button @click="selectedCategory = 'all'; selectedTags = []; searchQuery = ''" style="padding:0.5rem 1rem; background:#002868; color:#fff; font-weight:600; font-size:12px; border:none; border-radius:6px; cursor:pointer;">
+        Reset All Filters
+      </button>
+    </div>
+
+  </main>
+</div>
