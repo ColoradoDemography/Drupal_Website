@@ -1,0 +1,149 @@
+<!-- Load Alpine.js Micro-Framework -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>
+
+<div id="sdo-gallery-app" x-data="sdoGalleryApp" class="sdo-gallery-container">
+
+  <!-- Category & Search Navigation Toolbar -->
+  <nav class="sdo-gallery-nav" id="sticky-nav" aria-label="Application category filters and search">
+    <div class="sdo-toolbar-flex">
+      
+      <!-- Category Filter Bar (Replaces Jump Box) -->
+      <div class="sdo-cat-filter-wrapper" role="region" aria-label="Filter by category">
+        <span class="sdo-cat-filter-label">Filter Category:</span>
+        <div class="sdo-cat-btn-group" role="group">
+          <button type="button" 
+                  @click="selectedCategory = 'all'" 
+                  :class="selectedCategory === 'all' ? 'sdo-cat-btn active' : 'sdo-cat-btn'"
+                  :aria-pressed="(selectedCategory === 'all').toString()">
+            All Applications
+          </button>
+          <template x-for="cat in categories" :key="cat.id">
+            <button type="button" 
+                    @click="selectedCategory = cat.id" 
+                    :class="selectedCategory === cat.id ? 'sdo-cat-btn active' : 'sdo-cat-btn'"
+                    :aria-pressed="(selectedCategory === cat.id).toString()"
+                    x-text="cat.name">
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Real-Time Search Controls -->
+      <div class="sdo-search-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label for="app-search" style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#334155;">Search Inventory</label>
+          <button type="button" @click="refreshCache()" title="Force Refresh API Cache" style="font-size:11px; color:#64748b; background:none; border:none; text-decoration:underline; cursor:pointer;">
+            Refresh Data
+          </button>
+        </div>
+        <div class="sdo-search-input-wrapper">
+          <svg class="sdo-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input type="text" id="app-search" x-model="searchQuery" placeholder="Search title, tag, or region..." aria-label="Search applications by title, tag, or region">
+          <button type="button" x-show="searchQuery.length > 0" @click="searchQuery = ''" class="sdo-clear-btn" aria-label="Clear search input">✕</button>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main id="sdo-gallery-main">
+
+    <!-- Collapsible Tag Filter Drawer -->
+    <div x-show="availableTags.length > 0" class="sdo-tag-section">
+      <div class="sdo-tag-header">
+        <button type="button" @click="showTags = !showTags" class="sdo-tag-toggle-btn" :aria-expanded="showTags.toString()" aria-controls="sdo-tag-drawer">
+          <span x-text="showTags ? '▲ Hide Tag Filters' : '▼ Filter by Tags (' + availableTags.length + ' available)'"></span>
+          <span x-show="selectedTags.length > 0" class="sdo-tag-badge" x-text="selectedTags.length + ' active'"></span>
+        </button>
+        <button type="button" x-show="selectedTags.length > 0" @click="selectedTags = []" class="sdo-clear-tags-btn">
+          Clear Active Tags
+        </button>
+      </div>
+
+      <div x-show="showTags" id="sdo-tag-drawer" class="sdo-tag-pills" role="region" aria-label="Application tag filter pills">
+        <template x-for="tag in availableTags" :key="tag">
+          <button type="button" 
+                  @click="toggleTag(tag)" 
+                  :class="selectedTags.includes(tag) ? 'sdo-tag-btn active' : 'sdo-tag-btn'" 
+                  :aria-pressed="selectedTags.includes(tag).toString()"
+                  x-text="'#' + tag">
+          </button>
+        </template>
+      </div>
+    </div>
+    
+    <!-- Active Counter Status Bar (Polite ARIA Live Region) -->
+    <div class="sdo-counter-banner" aria-live="polite" aria-atomic="true">
+      <div>
+        <span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#64748b;">Live Inventory State</span>
+        <h3 style="margin:2px 0 0 0; font-size:14px; font-weight:bold; color:#002868;" x-text="'Showing ' + filteredApps.length + ' of ' + apps.length + ' applications'"></h3>
+      </div>
+      <div x-show="loading" style="font-size:12px; font-weight:600; color:#002868;">
+        Loading API Data...
+      </div>
+    </div>
+
+    <!-- Category Sections Flow (With Accessible H2 Headings) -->
+    <template x-for="cat in categories" :key="cat.id">
+      <section :id="cat.id" 
+               class="sdo-category-section" 
+               x-show="(selectedCategory === 'all' || selectedCategory === cat.id) && getVisibleAppsForCat(cat.id).length > 0">
+        
+        <!-- Section Header -->
+        <div class="sdo-category-header">
+          <div>
+            <h2 class="sdo-category-title" x-text="cat.name"></h2>
+            <p class="sdo-category-desc" x-text="cat.desc"></p>
+          </div>
+          <span class="sdo-category-count" x-text="getVisibleAppsForCat(cat.id).length + ' Apps'"></span>
+        </div>
+
+        <!-- Section Card Grid -->
+        <div class="app-card-grid">
+          <template x-for="app in getVisibleAppsForCat(cat.id)" :key="app.title">
+            <div class="app-card">
+              <div class="app-card-header">
+                <h3>
+                  <a :href="app.url" target="_blank" rel="noopener">
+                    <span x-text="app.title"></span>
+                    <span class="sr-only">(opens in a new window)</span>
+                  </a>
+                </h3>
+              </div>
+              <a :href="app.url" 
+                 target="_blank" 
+                 rel="noopener" 
+                 class="app-card-img-wrapper" 
+                 tabindex="-1" 
+                 aria-hidden="true">
+                <img :src="app.image_url" 
+                     alt="" 
+                     role="presentation" 
+                     @error="$event.target.src='https://placehold.co/400x225/f1f5f9/002868?text=SDO+App'">
+              </a>
+              <div class="app-card-footer">
+                <span style="color:#64748b;" x-text="app.region || cat.name"></span>
+                <a :href="app.url" target="_blank" rel="noopener">
+                  Launch ↗
+                  <span class="sr-only">(opens in a new window)</span>
+                </a>
+              </div>
+            </div>
+          </template>
+        </div>
+
+      </section>
+    </template>
+
+    <!-- Empty Results State -->
+    <div x-show="!loading && filteredApps.length === 0" aria-live="polite" style="text-align:center; padding:3rem 1rem; background:#fff; border:1px solid #e2e8f0; border-radius:12px; margin-top:1.5rem;">
+      <h3 style="font-size:16px; font-weight:bold; color:#1e293b; margin-bottom:0.25rem;">No applications match your criteria</h3>
+      <p style="font-size:12px; color:#64748b; margin-bottom:1rem;">Try clearing tag selections, choosing another category, or broadening your search terms.</p>
+      <button type="button" @click="selectedCategory = 'all'; selectedTags = []; searchQuery = ''" style="padding:0.5rem 1rem; background:#002868; color:#fff; font-weight:600; font-size:12px; border:none; border-radius:6px; cursor:pointer;">
+        Reset All Filters
+      </button>
+    </div>
+
+  </main>
+</div>

@@ -1,0 +1,53 @@
+<!-- Load Alpine.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>
+
+<!-- 
+  Developer Parameters:
+  - category: 'census' (ID matching sheet)
+  - limit: 5 (caps visible items; 0 for no limit)
+  - galleryUrl: '/path-to-main-gallery' (relative path to main gallery page)
+-->
+<div x-data="sdoAppStrip({ category: 'census', limit: 5, galleryUrl: '/app-library' })" class="sdo-strip-wrapper">
+
+  <!-- Application Card Grid (Matches main gallery column & density rules) -->
+  <div x-show="!loading && items.length > 0" class="app-card-grid">
+    <template x-for="app in items" :key="app.title">
+      <div class="app-card">
+        <div class="app-card-header">
+          <h3>
+            <a :href="app.url" target="_blank" rel="noopener">
+              <span x-text="app.title"></span>
+              <span class="sr-only">(opens in a new window)</span>
+            </a>
+          </h3>
+        </div>
+        <a :href="app.url" 
+           target="_blank" 
+           rel="noopener" 
+           class="app-card-img-wrapper" 
+           tabindex="-1" 
+           aria-hidden="true">
+          <img :src="app.image_url" 
+               alt="" 
+               role="presentation" 
+               @error="$event.target.src='https://placehold.co/400x225/f1f5f9/002868?text=SDO+App'">
+        </a>
+        <div class="app-card-footer">
+          <span style="color:#64748b;" x-text="app.region || app.category"></span>
+          <a :href="app.url" target="_blank" rel="noopener">
+            Launch ↗
+            <span class="sr-only">(opens in a new window)</span>
+          </a>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Footer Link: Points to Main Gallery Page -->
+  <div x-show="!loading && items.length > 0" class="sdo-strip-footer">
+    <a :href="targetGalleryUrl" class="sdo-strip-link">
+      View all applications in the Map Gallery &rarr;
+    </a>
+  </div>
+
+</div>
