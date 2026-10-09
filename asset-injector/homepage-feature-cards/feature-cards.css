@@ -1,0 +1,197 @@
+/* --- Override Drupal's Default Card Wrapping --- */
+/* Neutralize the Drupal card background, shadow, and padding ONLY if our custom cards are inside */
+.paragraph--type--card-basic:has(.sdo-feature-card),
+.paragraph--type--card-basic:has(.sdo-overlay-card-interior),
+.paragraph__card:has(.sdo-feature-card),
+.paragraph__card:has(.sdo-overlay-card-interior) {
+    padding: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+}
+
+/* Neutralize the Drupal column padding */
+.paragraph_column:has(.sdo-feature-card),
+.paragraph_column:has(.sdo-overlay-card-interior) {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* --- SDO Full-Width Feature Cards --- */
+.sdo-feature-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden; 
+    background-color: #0f2439; /* DOLA Navy */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 0;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+/* Switch to side-by-side on tablet/desktop */
+@media (min-width: 768px) {
+    .sdo-feature-card {
+        flex-direction: row;
+    }
+}
+
+/* -- Media/Image Side -- */
+.sdo-feature-media {
+    flex: 1 1 50%; 
+    min-height: 250px;
+    position: relative; 
+    background-color: #e5e7eb; 
+}
+
+/* Direct Image Styling */
+.sdo-feature-media img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+}
+
+/* -- Content Side -- */
+.sdo-feature-content {
+    flex: 1 1 50%;
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top: 4px solid #c8102e; /* The DOLA Red accent line */
+    box-sizing: border-box;
+}
+
+.sdo-feature-content h3 {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.sdo-feature-content p {
+    color: #e5e7eb;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.sdo-feature-action {
+    margin-top: auto; 
+}
+
+/* Override Drupal's default button */
+.sdo-feature-card .btn {
+    display: inline-block;
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.sdo-feature-card .btn:hover {
+    background-color: #ffffff !important;
+    color: #0f2439 !important;
+}
+
+/* --- SDO Overlay Card Interior --- */
+.sdo-overlay-card-interior {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    min-height: 350px;
+    border-radius: 10px; 
+    overflow: hidden;    /* Forces image to respect the rounded corners */
+    height: 100%; 
+    border-top: 4px solid #c8102e; 
+    background-color: #0f2439; 
+    padding: 2.5rem 2rem;
+    box-sizing: border-box;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+/* Hardcoded Absolute Image */
+.sdo-overlay-card-interior .sdo-overlay-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    margin: 0 !important;
+}
+
+/* The Gradient "Scrim" (Darkens the image behind the text) */
+.sdo-overlay-card-interior .sdo-overlay-scrim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to top, 
+        rgba(15, 36, 57, 1) 0%,      /* Solid DOLA Navy at the very bottom */
+        rgba(0, 0, 0, 0.85) 40%,     /* Deep black shadow behind paragraphs */
+        rgba(0, 0, 0, 0.5) 75%,      /* Medium shadow for headers that wrap on mobile */
+        rgba(0, 0, 0, 0.25) 100%     /* Maintains a 25% dark wash over the top of the photo */
+    );
+    z-index: 2;
+}
+
+/* Overlay Content Container */
+.sdo-overlay-card-interior .sdo-overlay-content {
+    position: relative;
+    z-index: 3; /* Keeps text above the scrim and image */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sdo-overlay-card-interior h3 {
+    color: #ffffff;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.sdo-overlay-card-interior p {
+    color: #e5e7eb;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Outline Buttons */
+.sdo-overlay-card-interior .btn {
+    display: inline-block;
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+.sdo-overlay-card-interior .btn:hover {
+    background-color: #ffffff !important;
+    color: #0f2439 !important;
+}

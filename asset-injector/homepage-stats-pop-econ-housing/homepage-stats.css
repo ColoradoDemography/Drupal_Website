@@ -1,0 +1,95 @@
+/* --- SDO KPI Card Interiors --- */
+.sdo-stat-card-interior {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    font-family: "Trebuchet MS", sans-serif;
+    padding-bottom: 0.5rem;
+}
+
+.sdo-top-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.sdo-stat-value {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+
+.sdo-stat-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.sdo-chart-wrapper {
+    margin-top: 12px; 
+    margin-bottom: 1.5rem !important; /*Forces space below the labels */
+    width: 100%;
+    position: relative;
+}
+
+.sdo-sparkline {
+    height: 90px; 
+    width: 100%;
+    position: relative;
+    cursor: crosshair;
+}
+
+/* Bulletproof Labels */
+.sdo-sparkline-labels {
+    position: relative;
+    height: 20px; /* Reduced height since we removed the sub-label */
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 600;
+    display: block !important; 
+}
+
+.sdo-lbl-start, .sdo-lbl-mid, .sdo-lbl-end {
+    position: absolute !important; 
+    top: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.sdo-lbl-start { left: 0 !important; text-align: left; }
+.sdo-lbl-mid { transform: translateX(-50%); text-align: center; }
+.sdo-lbl-end { right: 0 !important; text-align: right; }
+
+/* Drupal-style Outline Buttons */
+.sdo-btn {
+    display: inline-block; /* <-- ADD THIS: Forces the box model to respect margins */
+    align-self: flex-start;
+    margin-top: 1.5rem; 
+    margin-bottom: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    border-radius: 0.25rem;
+    border: 2px solid;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+/* Theme Colors for Buttons */
+.sdo-stat-card-interior[data-theme="pop"] .sdo-btn { color: #2563eb; border-color: #2563eb; }
+.sdo-stat-card-interior[data-theme="pop"] .sdo-btn:hover { background-color: #2563eb; color: #fff; }
+
+.sdo-stat-card-interior[data-theme="econ"] .sdo-btn { color: #059669; border-color: #059669; }
+.sdo-stat-card-interior[data-theme="econ"] .sdo-btn:hover { background-color: #059669; color: #fff; }
+
+.sdo-stat-card-interior[data-theme="housing"] .sdo-btn { color: #7c3aed; border-color: #7c3aed; }
+.sdo-stat-card-interior[data-theme="housing"] .sdo-btn:hover { background-color: #7c3aed; color: #fff; }
