@@ -51,12 +51,12 @@ function registerGalleryComponents() {
     showTags: false,
 
     categories: [
-      { id: 'overview', name: 'Overview and Maps', desc: 'High-level statewide summaries, municipal boundary maps, and spatial overview tools.' },
-      { id: 'pop-totals', name: 'Population Totals & Demographics', desc: 'Track population headcounts, age pyramids, race/ethnicity estimates, and regional trends.' },
-      { id: 'births-deaths', name: 'Births & Deaths (Components)', desc: 'Explore vital statistics, fertility rates by age, and natural increase components of population change.' },
-      { id: 'migration', name: 'Migration & Geographic Mobility', desc: 'Visualize net migration, working age mobility, state-to-state movement, and birthplace statistics.' },
+      { id: 'overview', name: 'Overview and Maps', desc: 'High-level statewide summaries, municipal boundary maps, and featured tools.' },
+      { id: 'pop-totals', name: 'Population Totals & Demographics', desc: 'Track population totals, age distribution, race/ethnicity estimates, and regional trends.' },
+      { id: 'births-deaths', name: 'Births & Deaths (Components of Change)', desc: 'Explore births, deaths, and net migration components of population change.' },
+      { id: 'migration', name: 'Migration & Geographic Mobility', desc: 'Visualize migration patterns, working age mobility, and state-to-state movement.' },
       { id: 'housing', name: 'Housing & Households', desc: 'Explore housing stock, residential growth, and localized Housing Needs Assessments (HNA).' },
-      { id: 'census', name: 'Census Applications', desc: 'Decennial census results, American Community Survey (ACS) interactive maps, and geographic utilities.' },
+      { id: 'census', name: 'Census Applications', desc: 'Decennial census results, American Community Survey (ACS) interactive maps, and data overviews.' },
       { id: 'economy', name: 'Economy & Jobs Applications', desc: 'Dashboards and maps tracking employment sectors, base industry dynamics, and local unemployment rates.' },
       { id: 'program', name: 'Program Applications', desc: 'Specialized mapping tools supporting state grant programs, community development, and economic designation zones.' }
     ],
