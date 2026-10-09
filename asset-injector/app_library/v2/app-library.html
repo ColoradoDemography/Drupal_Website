@@ -49,7 +49,7 @@
   <!-- Main Content Area -->
   <main id="sdo-gallery-main">
 
-    <!-- Collapsible Tag Filter Drawer -->
+    <!-- Collapsible Tag Filter Drawer 
     <div x-show="availableTags.length > 0" class="sdo-tag-section">
       <div class="sdo-tag-header">
         <button type="button" @click="showTags = !showTags" class="sdo-tag-toggle-btn" :aria-expanded="showTags.toString()" aria-controls="sdo-tag-drawer">
@@ -71,9 +71,9 @@
           </button>
         </template>
       </div>
-    </div>
+    </div>-->
     
-    <!-- Active Counter Status Bar (Polite ARIA Live Region) -->
+    <!-- Active Counter Status Bar (Polite ARIA Live Region) 
     <div class="sdo-counter-banner" aria-live="polite" aria-atomic="true">
       <div>
         <span style="font-size:11px; text-transform:uppercase; font-weight:bold; color:#64748b;">Live Inventory State</span>
@@ -82,7 +82,7 @@
       <div x-show="loading" style="font-size:12px; font-weight:600; color:#002868;">
         Loading API Data...
       </div>
-    </div>
+    </div>-->
 
     <!-- Category Sections Flow (With Accessible H2 Headings) -->
     <template x-for="cat in categories" :key="cat.id">
