@@ -1,0 +1,322 @@
+<!-- Combined State and Region and County Single Year of Age Lookup Page A Bickford REV 3/2026 -->
+<!-- This version is the blank combined page for inclusion on the Drupal site... -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> SDO Single Year of Age Lookup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="content-type" content="text/html; charset=utf-8">
+<!-- FONT AWESOME CSS  Source for buttons the list of icons is here: https://fontawesome.com/icons?d=gallery&p=2 -->
+<!-- angle-down, angle-double-down, angle-circle-down, angle-right, angle-circle-right, the new button is in common.css --> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- SDO CSS -->
+<link type="text/css" rel="stylesheet" href="../css/common.css" async=""> 
+<!-- adding d3.js  for data manipulation-->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<!-- Adding Plotly.js for  charting -->
+
+<!-- Adding jquery and datatables for table production -->
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+ <script src="https://cdn.plot.ly/plotly-2.24.1.min.js" charset="utf-8"></script>
+<!-- Datatables -->
+<link href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.css" rel="stylesheet"/>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/datatables.min.js"></script>
+
+
+<!-- SDO suport functions, genSYA, insertHTML, -->
+<script src="../js/funct.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/lookup.js"></script>
+<!-- GoogleAnalytics Script -->
+<script defer src="../js/googleAnalytics.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W27DQ8VRCX"></script>
+<a href="#mainx" class="skip-main" tabindex='1'>Skip to main content</a>
+</head>
+<body>
+<div>
+<a href='https://cdola.colorado.gov/'><img class="logoSDO" src="../img/SDO-1600x400.jpg"  alt='Department of Local Affairs Homepage' aria-label='Department of Local Affairs Homepage'></a>
+</div>
+<div w3-include-html="../html/navheader.html"></div>
+
+<!-- First Grid, linked images -->
+
+  <div class="grid-item app-panel_2_2">
+  <h1 class='h1_style' id='mainx' title='Single Year of Age Lookup' aria-label='Single Year of Age Lookup'>Single Year of Age Lookup</h1>
+  <p>
+  <ul style="list-style-type:none">
+
+  <li style='color:black;'><a href='https://gis.dola.colorado.gov/RegionsMap/' target='_blank' title='Colorado Regions Map' aria-label='Colorado Regions Map'>Colorado Regions Map</a></li>
+  </ul>
+  </p>
+   <h2 class='h2_style' title='INSTRUCTIONS:' aria-label='INSTRUCTIONS:'>INSTRUCTIONS:</h2>
+   <p class="lookup_p">
+   This application creates custom tables for SDO population estimates and forecasts by age
+   </p>
+   <p class="lookup_p">
+   Note; Values may not sum to state totals due to rounding error.
+  </p>
+  <p class="lookup_p">
+   Spreadsheet with detailed information for population by age is available here:
+  </p>   
+   <ul>
+    <li style='color:black;'><a href='https://drive.google.com/uc?export=download&id=1NduGXgK1_vEIfqq9lJ4HYRp3RN8YNYeg'   title="State and Regional Population Estimates by Single Year of Age, 1990 to 2060"
+	aria-label="State and Regional Population Estimates by Single Year of Age, 1990 to 2060"><p style="font-size:11pt;">State and Regional Population Estimates by Single Year of Age, 1990 to 2060<i class="fas fa-file-excel"  alt='XLSX' style="color:green;"></i></a></li>
+     <li style='color:black;'><a href='https://drive.google.com/uc?export=download&id=11CTx4WyCf2tPNVNNFDwhyywkdHPPokMV'   title="County Population Estimates by Single Year of Age, 1990 to 2060"
+	aria-label="County Population Estimates by Single Year of Age, 1990 to 2060"><p style="font-size:11pt;">County Population Estimates by Single Year of Age, 1990 to 2060<i class="fas fa-file-excel"  alt='XLSX' style="color:green;"></i></a></li>
+   </ul>
+
+<table class='lookup_tab' id="input_tab" cellspacing="0" cellpadding="0">
+   <tr>
+   	<td class="look_cll">
+		<label class="entry_text" for="geo-dropdown" id="geo-lbl"  alt='Select a geography type' aria-label='Select a geography'>Select a Geography Type:</label> 
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="location-dropdown" id="region-lbl"  alt='Select one or more locations' aria-label='Select one or more locations'>Select one or more locations:</label> 
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="year-dropdown" id="year-lbl"  alt='Select one or more years' aria-label='Select one or more years'>Select one or more years:</label>
+	</td>
+	<td class="look_cll">
+		<label class="entry_text" for="group-dropdown" id="group-lbl"  alt='Select Summary Groups' aria-label='Select Summary Groups'>Select Age Groups:</label>
+	</td>
+	<td class="look_cll">
+	</td>
+	<td class="look_cll">
+	</td>
+	</tr>
+	<tr>
+	<td class="look_cll"> 
+	<select class="geo-dropdown" id="geo-dropdown" size="2">
+		<option value = "region">Region</option>
+		<option value="county">County</option>
+	 </select>
+	 </td>
+	<td class="look_cll">
+	<select class="location-dropdown" id="location-dropdown" style='width:310px;' size="6" multiple role='listbox'>
+		<option></option>
+	</select>
+    </td>
+	<td class="look_cll">
+	<select class="year-dropdown" id="year-dropdown" style='width:50px;' size="6" multiple role='listbox'>
+		<option></option>
+	</select>
+    </td>
+	<td class="look_cll">
+		<input type="radio" id="age5" name="age_grouping" value="5yr" onclick="genAgeGroup(this.value,'region')" checked />
+		<label id="age5_lbl" for="age5">Five Year Intervals (0-4,5-9,10-14,etc.)</label><br>
+		<input type="radio" id="census" name="age_grouping" value="census" onclick="genAgeGroup(this.value,'region')"/>
+		<label id="census_lbl" for="census">Census Age Categories</label><br>
+		<input type="radio" id="customage" name="age_grouping" value="custom" onclick="genAgeGroup(this.value,'region')"/>
+		<label id="customage_lbl" for="customage">Custom Age Intervals</label><br>
+		<input type="radio" id="sya" name="age_grouping" value="single" onclick="genAgeGroup(this.value,'region')"/>
+		<label id="sya_lbl" for="sya">Custom Single Year Selections</label><br>
+		<input type="radio" id="comp" name="county_comp" value="comp"/>
+		<label id="comp_lbl" for="comp">Show Component Counties</label><br>
+    </td>
+	<td class="look_cll" id='ageselect'>
+	</td>
+	<td class="look_cll">
+		<button class='databutton' id='gentable' aria-label='Generate Table'>Generate Table</button><br><br>
+		<button class='databutton' id='cleartable' aria-label='Reset Selections'>Reset Selections</button><br>
+	</td>
+	</tr>
+	</table>
+	<hr>
+   </div>
+  <div class="grid-item app-panel_3_2">
+	 <div id="tbl_output"></div>
+  </div> 
+  </div>  <!-- End of Grid Container -->
+ <script> 
+
+//Hiding input objects
+
+
+	document.getElementById('region-lbl').style.display = "none";
+	document.getElementById('year-lbl').style.display = "none";
+	document.getElementById('group-lbl').style.display = "none";
+	
+	document.getElementById('location-dropdown').hidden = true;
+	document.getElementById('year-dropdown').hidden = true;
+	
+	document.getElementById('age5').style.display = "none";
+	document.getElementById('census').style.display = "none";
+	document.getElementById('customage').style.display = "none";
+	document.getElementById('sya').style.display = "none";
+	document.getElementById('comp').style.display = "none";
+	
+	document.getElementById('age5_lbl').style.display = "none";
+	document.getElementById('census_lbl').style.display = "none";
+	document.getElementById('customage_lbl').style.display = "none";
+	document.getElementById('sya_lbl').style.display = "none";
+	document.getElementById('comp_lbl').style.display = "none";
+	
+// Extract Yange or years
+var urlstr = "https://gis.dola.colorado.gov/lookups/componentYRS";
+d3.json(urlstr).then(function(yeardata){
+ var yeardata2 = yeardata.filter(i => i.year >= 1990)
+ 
+
+//Button Event
+ document.getElementById('gentable').addEventListener("click", chkInputs)
+ document.getElementById('cleartable').addEventListener("click", clearInputs)
+ 
+ //Location Dropdown Event
+
+ document.getElementById('geo-dropdown').addEventListener('change', function(event) {
+	  var geo_level = event.target.value
+	  
+	document.getElementById('geo-lbl').style.display = "";
+	document.getElementById('region-lbl').style.display = "";
+	document.getElementById('year-lbl').style.display = "";
+	document.getElementById('group-lbl').style.display = "";
+	
+    document.getElementById('geo-dropdown').hidden = false;
+	document.getElementById('location-dropdown').hidden = false;
+	document.getElementById('year-dropdown').hidden = false;
+	
+	document.getElementById('age5').style.display = "";
+	document.getElementById('census').style.display = "";
+	document.getElementById('customage').style.display = "";
+	document.getElementById('sya').style.display = "";
+	
+	document.getElementById('age5_lbl').style.display = "";
+	document.getElementById('census_lbl').style.display = "";
+	document.getElementById('customage_lbl').style.display = "";
+	document.getElementById('sya_lbl').style.display = "";
+	if(geo_level == 'region'){
+		document.getElementById('comp').style.display = "";
+		document.getElementById('comp_lbl').style.display = "";
+	}
+	if(geo_level == "county"){
+		document.getElementById('comp').style.display = "none";
+		document.getElementById('comp_lbl').style.display = "none";
+	}
+	popDropdown(geo_level,'location-dropdown','lookup');
+	popYrdd("year-dropdown",yeardata2);  //Change this range to match data
+   })
+
+ 
+ function chkInputs(){
+ var complete = true;
+ var outputmsg = "";
+ document.getElementById('tbl_output').innerHTML = "";
+        var geodd = document.getElementById('geo-dropdown');
+		var geo_level = getSelectValues(geodd);
+
+	    var fipsdd = document.getElementById('location-dropdown');
+		var selectedloc = getSelectValues(fipsdd);
+		selectedfips = [];
+		selectedloc.forEach(d => {
+			var tmpcty = regionCOL(+d);
+		    selectedfips.push(tmpcty[0].fips)
+		})
+		if(selectedfips.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more locations.\n";
+			complete = false;
+		}
+		
+		var yrdd = document.getElementById('year-dropdown');
+		var selectedyr = getSelectValues(yrdd);
+
+		if(selectedyr.length == 0){
+		    outputmsg = outputmsg +  " > Please select one or more years.\n";
+			complete = false;
+		}
+		
+//Age selection
+        var selectedgroup = "";
+
+		var age_range = [];
+		var age_group = document.querySelector('input[name="age_grouping"]:checked').value;
+		switch(age_group) {
+		case "custom":
+   			for(i = 0;i < 5;i++){
+				complete = true;
+			   var box_val1 = "agestart" + i;
+			   var box_val2 = "ageend" + i;
+			   var startval = 0;
+			   var endval = 0;
+			   if(!(document.getElementById(box_val1).value == "")) {
+			        startval = document.getElementById(box_val1).value
+					if(isNaN(startval)) {
+					 outputmsg = outputmsg +  " > One of the age entries is not numeric.  Please check the inputs.\n";
+					 complete = false;
+				    } else {
+			   	      age_range.push(+startval)
+					}
+				}
+			   if(!(document.getElementById(box_val2).value == "")) {
+			        endval = document.getElementById(box_val2).value
+					if(isNaN(endval)) {
+					 outputmsg = outputmsg +  " > One of the age entries is not numeric.  Please check the inputs.\n";
+					 complete = false;
+				    } else {
+			   	      age_range.push(+endval)
+					}
+			   }
+			   if(+startval > +endval){
+				outputmsg = outputmsg +  " > One of the age ranges is incorrect.  Please check the inputs.\n";
+				complete = false;
+				}  
+		if(complete) {
+		   if(!((+startval == 0) && (+endval == 0))){
+		      age_range.push([+startval, +endval]);
+		   }
+		}
+		} //the loop
+		break;
+		case "single" :
+		  var agesel = document.getElementById("agesel")
+		  age_range = getSelectValues(agesel)	  
+		   if(age_range.length == 0){
+		      	outputmsg = outputmsg +  " > Please select a range of ages.\n";
+				complete = false;
+		  }
+		  selectedgroup = document.querySelector('input[name="age_summary"]:checked').value;
+		break;
+		}
+
+		var county_components = "";
+		if(geo_level == "region"){
+		    if(document.getElementById("comp").checked){
+		        var county_components = "comp";
+			}
+		} 
+		if(complete){
+		     if(geo_level == "region") {
+		          genSYAComb(geo_level,selectedloc, selectedfips,selectedyr,county_components, selectedgroup,age_group, age_range, yeardata2);
+				} else {
+		          genSYAComb(geo_level,selectedloc, selectedloc,selectedyr,county_components, selectedgroup,age_group, age_range, yeardata2);
+				}
+			 } else {
+			 window.alert(outputmsg);
+			 }
+	 };  //chkInputs
+})  //D3_json
+
+function clearInputs() {
+   document.getElementById('tbl_output').innerHTML = "";
+    var table = document.getElementById("input_tab");
+    var secondRow = table.rows[1];
+    secondRow.deleteCell(3);
+
+   var elements = document.getElementsByTagName('select');
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].selectedIndex = -1;
+	}
+   var ele = document.getElementsByName("age_grouping");
+   for(var i=0;i<ele.length;i++) {
+    ele[i].checked = false;
+	}
+	ele[0].checked = true;
+}; //clearInputs
+
+
+ 
+ </script>
+</body>
+</html> 
