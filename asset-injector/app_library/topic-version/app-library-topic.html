@@ -5,9 +5,9 @@
   Developer Parameters:
   - category: 'census' (ID matching sheet)
   - limit: 5 (caps visible items; 0 for no limit)
-  - galleryUrl: '/path-to-main-gallery' (relative path to main gallery page)
+  - galleryUrl: '/node/10761' (relative path to main gallery page)
 -->
-<div x-data="sdoAppStrip({ category: 'census', limit: 5, galleryUrl: '/app-library' })" class="sdo-strip-wrapper">
+<div x-data="sdoAppStrip({ category: 'census', limit: 5, galleryUrl: '/node/10761' })" class="sdo-strip-wrapper">
 
   <!-- Application Card Grid (Matches main gallery column & density rules) -->
   <div x-show="!loading && items.length > 0" class="app-card-grid">
@@ -33,7 +33,10 @@
                @error="$event.target.src='https://placehold.co/400x225/f1f5f9/002868?text=SDO+App'">
         </a>
         <div class="app-card-footer">
-          <span style="color:#64748b;" x-text="app.region || app.category"></span>
+          <!-- Region/category tag temporarily disabled 
+                <span style="color:#64748b;" x-text="app.region || app.category"></span>
+                -->
+                <span></span>
           <a :href="app.url" target="_blank" rel="noopener">
             Launch ↗
             <span class="sr-only">(opens in a new window)</span>
@@ -46,7 +49,7 @@
   <!-- Footer Link: Points to Main Gallery Page -->
   <div x-show="!loading && items.length > 0" class="sdo-strip-footer">
     <a :href="targetGalleryUrl" class="sdo-strip-link">
-      View all applications in the App Library &rarr;
+      View all applications in the gallery &rarr;
     </a>
   </div>
 
