@@ -11,7 +11,7 @@ function getSelectValues(select) {
 //getSelectValues Works with multiple selection boxes from Stack Overflow https://stackoverflow.com/questions/5866169/how-to-get-all-selected-values-of-a-multiple-select-box
 
   var result = [];
-  var options = select && select.options;
+  var options = select;
   var opt;
 
   for (i = 0; i < options.length; i++) {
@@ -581,20 +581,20 @@ if(nam == 'Eastern Plains') {regionNum = 2};
 if(nam == 'Front Range') {regionNum = 3};
 if(nam == 'San Luis Valley') {regionNum = 4};
 if(nam == 'Western Slope') {regionNum = 5};
-if(nam == 'Region 1: Northern Eastern Plains') {regionNum = 6};
-if(nam == 'Region 2: Northern Front Range') {regionNum = 7};
-if(nam == 'Region 3: Denver Metropolitan Area') {regionNum = 8};
-if(nam == 'Region 4: Southern Front Range') {regionNum = 9};
-if(nam == 'Region 5: Central Eastern Plains') {regionNum = 10};
-if(nam == 'Region 6: Southern Eastern Plains') {regionNum = 11};
-if(nam == 'Region 7: Pueblo County') {regionNum = 12};
-if(nam == 'Region 8: San Luis Valley') {regionNum = 13};
-if(nam == 'Region 9: Southern Western Slope') {regionNum = 14};
-if(nam == 'Region 10: Central Western Slope') {regionNum = 15};
-if(nam == 'Region 11: Northern Western Slope') {regionNum = 16};
-if(nam == 'Region 12: Northern Mountains') {regionNum = 17};
-if(nam == 'Region 13: Central Mountains') {regionNum = 18};
-if(nam == 'Region 14: Southern Mountains') {regionNum = 19};
+if(nam == 'Region 1 Northern Eastern Plains') {regionNum = 6};
+if(nam == 'Region 2 Northern Front Range') {regionNum = 7};
+if(nam == 'Region 3 Denver Metropolitan Area') {regionNum = 8};
+if(nam == 'Region 4 Southern Front Range') {regionNum = 9};
+if(nam == 'Region 5 Central Eastern Plains') {regionNum = 10};
+if(nam == 'Region 6 Southern Eastern Plains') {regionNum = 11};
+if(nam == 'Region 7 Pueblo County') {regionNum = 12};
+if(nam == 'Region 8 San Luis Valley') {regionNum = 13};
+if(nam == 'Region 9 Southern Western Slope') {regionNum = 14};
+if(nam == 'Region 10 Central Western Slope') {regionNum = 15};
+if(nam == 'Region 11 Northern Western Slope') {regionNum = 16};
+if(nam == 'Region 12 Northern Mountains') {regionNum = 17};
+if(nam == 'Region 13 Central Mountains') {regionNum = 18};
+if(nam == 'Region 14 Southern Mountains') {regionNum = 19};
 if(nam == 'Boulder') {regionNum = 20};
 if(nam == 'Colorado Springs') {regionNum = 21};
 if(nam == 'Denver-Aurora-Lakewood') {regionNum = 22};
@@ -629,20 +629,20 @@ if(reg == 2) {name =  'Eastern Plains'};
 if(reg == 3) {name =  'Front Range'};
 if(reg == 4) {name =  'San Luis Valley'};
 if(reg == 5) {name =  'Western Slope'};
-if(reg == 6) {name = 'Region 1: Northern Eastern Plains'};
-if(reg == 7) {name = 'Region 2: Northern Front Range'};
-if(reg == 8) {name = 'Region 3: Denver Metropolitan Area'};
-if(reg == 9) {name = 'Region 4: Southern Front Range'};
-if(reg == 10) {name = 'Region 5: Central Eastern Plains'};
-if(reg == 11) {name = 'Region 6: Southern Eastern Plains'};
-if(reg == 12) {name = 'Region 7: Pueblo County'};
-if(reg == 13) {name = 'Region 8: San Luis Valley'};
-if(reg == 14) {name = 'Region 9: Southern Western Slope'};
-if(reg == 15) {name = 'Region 10: Central Western Slope'};
-if(reg == 16) {name = 'Region 11: Northern Western Slope'};
-if(reg == 17) {name = 'Region 12: Northern Mountains'};
-if(reg == 18) {name = 'Region 13: Central Mountains'};
-if(reg == 19) {name = 'Region 14: Southern Mountains'};
+if(reg == 6) {name = 'Region 1 Northern Eastern Plains'};
+if(reg == 7) {name = 'Region 2 Northern Front Range'};
+if(reg == 8) {name = 'Region 3 Denver Metropolitan Area'};
+if(reg == 9) {name = 'Region 4 Southern Front Range'};
+if(reg == 10) {name = 'Region 5 Central Eastern Plains'};
+if(reg == 11) {name = 'Region 6 Southern Eastern Plains'};
+if(reg == 12) {name = 'Region 7 Pueblo County'};
+if(reg == 13) {name = 'Region 8 San Luis Valley'};
+if(reg == 14) {name = 'Region 9 Southern Western Slope'};
+if(reg == 15) {name = 'Region 10 Central Western Slope'};
+if(reg == 16) {name = 'Region 11 Northern Western Slope'};
+if(reg == 17) {name = 'Region 12 Northern Mountains'};
+if(reg == 18) {name = 'Region 13 Central Mountains'};
+if(reg == 19) {name = 'Region 14 Southern Mountains'};
 if(reg == 20) {name =  'Boulder'};
 if(reg == 21) {name =  'Colorado Springs'};
 if(reg == 22) {name =  'Denver-Aurora-Lakewood'};
@@ -2015,6 +2015,31 @@ var ctymuni = [{'location' : 'Aguilar', 'fips' : '07100760'}, {'location' : 'Akr
 		{'location' : 'Unincorporated Washington County', 'fips' : '12199990'}, {'location' : 'Unincorporated Weld County', 'fips' : '12399990'},
 		{'location' : 'Unincorporated Yuma County', 'fips' : '12599990'}]
 		
+//regions
+var region = [{'location' : 'Central Mountains','fips' : '515'},
+			{'location' : 'Eastern Plains','fips' : '516'},
+			{'location' : 'Front Range','fips' : '517'},
+			{'location' : 'San Luis Valley','fips' : '518'},
+			{'location' : 'Western Slope','fips' : '519'},
+			{'location' : 'Region 1 Northern Eastern Plains','fips' : '501'},
+			{'location' : 'Region 2 Northern Front Range','fips' : '502'},
+			{'location' : 'Region 3 Denver Metropolitan Area','fips' : '503'},
+			{'location' : 'Region 4 Southern Front Range','fips' : '504'},
+			{'location' : 'Region 5 Central Eastern Plains','fips' : '505'},
+			{'location' : 'Region 6 Southern Eastern Plains','fips' : '506'},
+			{'location' : 'Region 7 Pueblo County','fips' : '507'},
+			{'location' : 'Region 8 San Luis Valley','fips' : '508'},
+			{'location' : 'Region 9 Southern Western Slope','fips' : '509'},
+			{'location' : 'Region 10 Central Western Slope','fips' : '510'},
+			{'location' : 'Region 11 Northern Western Slope','fips' : '511'},
+			{'location' : 'Region 12 Northern Mountains','fips' : '512'},
+			{'location' : 'Region 13 Central Mountains','fips' : '513'},
+			{'location' : 'Region 14 Southern Mountains','fips' : '514'},
+			{'location' : 'Denver PMSA','fips' : '520'},
+			{'location' : 'Denver-Boulder Metro Area','fips' : '521'},
+			{'location' : 'Denver-Boulder-Greeley CMSA','fips' : '522'},
+			{'location' : '10 County Denver Metro Area','fips' : '523'}]
+
 //CSGB Agencies
 var csbg = [
 		{'location' :  'Adams County', 'fips' : '11riMRpReXocorCgvKeryZoC0W3uc7vAs'},
@@ -2050,6 +2075,7 @@ var csbg = [
 if(level == 'CSBG') { var locarr = csbg};
 if(level == 'county') { var locarr = county};
 if(level == 'municipality') { var locarr = municipality};
+if(level == 'region') { var locarr = region };
 
 
 var sel = document.getElementById(ddid);
@@ -2346,7 +2372,7 @@ if(regnum == 39) {fips.push({'fips' : ['001', '005', '013', '014', '031', '035',
 	};
 // regionCOL
 
-function update_link(name) {
+function update_link_HNA(name) {
 	//Returns list of Google Links for each selection
 link_list = [
 {'location' :  'Adams County', 'name' : ['Adams County'], 'id' : ['1QyhNdbc7XFkCYxZH-8xb9rx4rXGVzWXB']},
@@ -2870,7 +2896,375 @@ link_list = [
 
 outid = link_list.filter(d => (d.location == name))
 return outid;
-} //update_link
+} //update_link_HNA
+
+function update_link_PROFILE(name) {
+	
+	//Returns list of Google Links for each selection
+link_list = [
+{'location' :  '10 County Denver Metro Area', 'name' : ['10 County Denver Metro Area'], 'id' : ['1CD5W_SE1euE0clZECtpfSCFDoQaWh7xC']},
+{'location' :  'Denver PMSA', 'name' : ['Denver PMSA'], 'id' : ['1fUg62p8ALAluD9x84Z_1Cy-aWgTS-W_K']},
+{'location' :  'Denver-Boulder Metro Area', 'name' : ['Denver-Boulder Metro Area'], 'id' : ['1EBWbFXAHhD86qSQxC7BRfn09eGj7lxff']},
+{'location' :  'Denver-Boulder-Greeley CMSA', 'name' : ['Denver-Boulder-Greeley CMSA'], 'id' : ['16DldDXA7BFO7Fjssd5A0K3f6cVdFD_On']},
+{'location' :  'Central Mountains', 'name' : ['Central Mountains'], 'id' : ['1Uv6zTw-NEgBbKtd_rIGm1OI4z5fuENIp']},
+{'location' :  'Eastern Plains', 'name' : ['Eastern Plains'], 'id' : ['1CnRcqspOBHHlBdE7V0Y74ILquYXcvA8y']},
+{'location' :  'Front Range', 'name' : ['Front Range'], 'id' : ['1UYi1ovhEBksW62G1Ba29hggNnMPhSyQc']},
+{'location' :  'San Luis Valley', 'name' : ['San Luis Valley'], 'id' : ['1H1mKBp8LqDESgFDjYgDLwuMqyEKTHg6W']},
+{'location' :  'Western Slope', 'name' : ['Western Slope'], 'id' : ['19KrYaYFYjU-tGg7FDuWjXYkSJy05-Dp6']},
+{'location' :  'Region 1 Northern Eastern Plains', 'name' : ['Region 1 Northern Eastern Plains'], 'id' : ['1NrpL-tZKGKyKvKiyrsYJGmUehZLinmv2']},
+{'location' :  'Region 10 Central Western Slope', 'name' : ['Region 10 Central Western Slope'], 'id' : ['1gFWDkyCB7ZRRZJLUlEPhSPmAzkoW-B20']},
+{'location' :  'Region 11 Northern Western Slope', 'name' : ['Region 11 Northern Western Slope'], 'id' : ['1jxBObT5uP38V27wrNWOLZMvYjegpirky']},
+{'location' :  'Region 12 Northern Mountains', 'name' : ['Region 12 Northern Mountains'], 'id' : ['1hhG3C4Fh-gkP-f7MlU0XHhSj3fT8REbt']},
+{'location' :  'Region 13 Central Mountains', 'name' : ['Region 13 Central Mountains'], 'id' : ['1MJPqydHaKAmVYp9L4B_SBmUHpYLsAwji']},
+{'location' :  'Region 14 Southern Mountains', 'name' : ['Region 14 Southern Mountains'], 'id' : ['192K0X_Gvm0HmxX9bTqcPy_v9E4KnbKYd']},
+{'location' :  'Region 2 Northern Front Range', 'name' : ['Region 2 Northern Front Range'], 'id' : ['1TZ6Do0LbFYwkEwdj3EaDVQAXHzcek9zm']},
+{'location' :  'Region 3 Denver Metropolitan Area', 'name' : ['Region 3 Denver Metropolitan Area'], 'id' : ['1cqnDo98zZucU3E3d8GCNWJvhT54xd5hq']},
+{'location' :  'Region 4 Southern Front Range', 'name' : ['Region 4 Southern Front Range'], 'id' : ['1h8z-90QaJmE7ibLNAVlINSqxPvqzj_uo']},
+{'location' :  'Region 5 Central Eastern Plains', 'name' : ['Region 5 Central Eastern Plains'], 'id' : ['1yd7ufwc6uN-KD5tiMFugeSzEHkwf32nv']},
+{'location' :  'Region 6 Southern Eastern Plains', 'name' : ['Region 6 Southern Eastern Plains'], 'id' : ['1G4THvZvBTgMdEm9wvS40odNsrm2WcHAY']},
+{'location' :  'Region 7 Pueblo County', 'name' : ['Region 7 Pueblo County'], 'id' : ['1RPk-BQelMuLy-AWtG2ydKBpaJaIwwrn2']},
+{'location' :  'Region 8 San Luis Valley', 'name' : ['Region 8 San Luis Valley'], 'id' : ['1jD4l3Of-nRjaieFE0rbovLp1ATiOTpfR']},
+{'location' :  'Region 9 Southern Western Slope', 'name' : ['Region 9 Southern Western Slope'], 'id' : ['10E_lSl2Jt9WdbQbi61g46nnlBq_H8dtT']},
+{'location' :  'Adams County', 'name' : ['Adams County'], 'id' : ['1CGt9PF3AsuuMomWITXQAzRYrv-JwxAYa']},
+{'location' :  'Alamosa County', 'name' : ['Alamosa County'], 'id' : ['1NlXC2zXKXAiS7x5fzZrcmMPalXttTLAy']},
+{'location' :  'Arapahoe County', 'name' : ['Arapahoe County'], 'id' : ['1rCHrS9RBaidHNGqjMtjZthcbZOz87fyU']},
+{'location' :  'Archuleta County', 'name' : ['Archuleta County'], 'id' : ['10e46E5kFNL4ulaiu5BD4YifykxLiYq2d']},
+{'location' :  'Baca County', 'name' : ['Baca County'], 'id' : ['1Sm3VD27jhRKIf9XqsNz7231lsRQZkBo-']},
+{'location' :  'Bent County', 'name' : ['Bent County'], 'id' : ['1BB3DcnYbiphRQQoudGmF0c8jD1Lb6f7L']},
+{'location' :  'Boulder County', 'name' : ['Boulder County'], 'id' : ['1hAGZThB6aIMDao3-CtrjAcvvzXlTO5R_']},
+{'location' :  'Broomfield County', 'name' : ['Broomfield County'], 'id' : ['1UWy8e8jmlQaQdojn6vhGoIX2S059Wrgx']},
+{'location' :  'Chaffee County', 'name' : ['Chaffee County'], 'id' : ['1XqpYUuDCaIaFoUpN77Tr6edTwcwpg7wS']},
+{'location' :  'Cheyenne County', 'name' : ['Cheyenne County'], 'id' : ['13Q7QpYVvmtA3IFLgIBIacCJBHXBIBR0k']},
+{'location' :  'Clear Creek County', 'name' : ['Clear Creek County'], 'id' : ['1wljk7oT0D3rfTDaMhM-rQz5n-459YlNY']},
+{'location' :  'Conejos County', 'name' : ['Conejos County'], 'id' : ['1CdKDNPt2-eBUXuMBXRkMN7t9XLsdqPLV']},
+{'location' :  'Costilla County', 'name' : ['Costilla County'], 'id' : ['1JusTE6IztMCSGVNQkX_P1IvjaSaKqaBf']},
+{'location' :  'Crowley County', 'name' : ['Crowley County'], 'id' : ['1Z0GEZTtksE7yoNYvyz4E3is-eg2LxFsV']},
+{'location' :  'Custer County', 'name' : ['Custer County'], 'id' : ['1iCnDS61BTd6ldS7wfdpAJV6ExmRnumn3']},
+{'location' :  'Delta County', 'name' : ['Delta County'], 'id' : ['1TlFaoyah4biMmHFkVu_1OLndOc93cQn7']},
+{'location' :  'Denver County', 'name' : ['Denver County'], 'id' : ['1r9TbcQKEylopM6599pjZCShGUWri0A-a']},
+{'location' :  'Dolores County', 'name' : ['Dolores County'], 'id' : ['1Z27eFjl5n0bQ27nVb6haZfIB0y8Hmnp-']},
+{'location' :  'Douglas County', 'name' : ['Douglas County'], 'id' : ['1NnC6SdhjA0Guowb-PXn6p4YCeU1onl-f']},
+{'location' :  'Eagle County', 'name' : ['Eagle County'], 'id' : ['1g4LAuJ-Sn9eCRgOccXaQc2q7O2L7y4V6']},
+{'location' :  'El Paso County', 'name' : ['El Paso County'], 'id' : ['1GWFFTE3kscUWZjjwjeiTLCUDs_MpITbd']},
+{'location' :  'Elbert County', 'name' : ['Elbert County'], 'id' : ['1eqNhF0bQE_BppPfaDf4UW2gn-Io7N9fs']},
+{'location' :  'Fremont County', 'name' : ['Fremont County'], 'id' : ['1OdfuDUb64dfFr7G9WuXoOEJM6bcXhy51']},
+{'location' :  'Garfield County', 'name' : ['Garfield County'], 'id' : ['1pxdeekGN3vWYuHLfIgIIAGAjDF8F0Rdv']},
+{'location' :  'Gilpin County', 'name' : ['Gilpin County'], 'id' : ['1RBMVtYH4F1sGuKqzcMyT8LAqECP4iWXu']},
+{'location' :  'Grand County', 'name' : ['Grand County'], 'id' : ['1dKASjJ3kEgf1Z9MHq4Jyf6HCLiQQv1hy']},
+{'location' :  'Gunnison County', 'name' : ['Gunnison County'], 'id' : ['1kJ2OlweBTY2IGmP5nBkCMx8aA-CgwjV3']},
+{'location' :  'Hinsdale County', 'name' : ['Hinsdale County'], 'id' : ['1wZ2saowjB5Jpo2Sfi9flRuY_TrScW44t']},
+{'location' :  'Huerfano County', 'name' : ['Huerfano County'], 'id' : ['1SoIXFX-2jkoHDiTnuIKVOCiVpuUAr3E6']},
+{'location' :  'Jackson County', 'name' : ['Jackson County'], 'id' : ['1chaJqqtoAonb4wBjD-VUDemKUkrcuATk']},
+{'location' :  'Jefferson County', 'name' : ['Jefferson County'], 'id' : ['1buXzt4m5pqmUyMrayz-dvfZ1xkcLlLjD']},
+{'location' :  'Kiowa County', 'name' : ['Kiowa County'], 'id' : ['1GMH_lDEQKf_G6D6-zVGvRc_DUFvx1S0h']},
+{'location' :  'Kit Carson County', 'name' : ['Kit Carson County'], 'id' : ['1_-voNCxf2ih8COtsc7TaG-d4-_SN1jyg']},
+{'location' :  'La Plata County', 'name' : ['La Plata County'], 'id' : ['177MOeC0UNAcFiFdGdPD3RxObKEHUMEyk']},
+{'location' :  'Lake County', 'name' : ['Lake County'], 'id' : ['15538-KkO-r1cZgQ9cxshH4-I0G6d36BD']},
+{'location' :  'Larimer County', 'name' : ['Larimer County'], 'id' : ['1EKaynYugbNtbwFzypDWP5v1G7Wx8TlLh']},
+{'location' :  'Las Animas County', 'name' : ['Las Animas County'], 'id' : ['1nRaM-xHQ_nm1JXmBDUWt59ow_5kujcbo']},
+{'location' :  'Lincoln County', 'name' : ['Lincoln County'], 'id' : ['1Rp9weoUVVyKUESvP2ezXsm7PLAfuwJED']},
+{'location' :  'Logan County', 'name' : ['Logan County'], 'id' : ['1ayVn4vnJXh-7VFwWJu2D7yeYOrSmo0Pt']},
+{'location' :  'Mesa County', 'name' : ['Mesa County'], 'id' : ['1Jli17tlD64l4qfOjrJEGaY_dtw7yuuRG']},
+{'location' :  'Mineral County', 'name' : ['Mineral County'], 'id' : ['1zigbKkiFYu16xIWWbawSSnucxR6eDwOv']},
+{'location' :  'Moffat County', 'name' : ['Moffat County'], 'id' : ['1GsnMkxvNuJEf0dmZSPnNPOOX-H0CF8cd']},
+{'location' :  'Montezuma County', 'name' : ['Montezuma County'], 'id' : ['1Pa1uYa9L765-toudDFrUOlCL0Y1Q7QNe']},
+{'location' :  'Montrose County', 'name' : ['Montrose County'], 'id' : ['1gG5eVMDnxyhYcR5OUyeTpnKDHjLIErBw']},
+{'location' :  'Morgan County', 'name' : ['Morgan County'], 'id' : ['1W0dA0A_mKK7a2ZutMGR2iiiK1f-XfLww']},
+{'location' :  'Otero County', 'name' : ['Otero County'], 'id' : ['1yvkRC_cIgZ_nXt7369moqvP_g95nkxBR']},
+{'location' :  'Ouray County', 'name' : ['Ouray County'], 'id' : ['1e0RNdhR6PyEoJ3Yu4-cbK2dfjnA0wqyS']},
+{'location' :  'Park County', 'name' : ['Park County'], 'id' : ['1xDh51YWZmN-7_Kfn-GLMOwgeuJ7ayI3A']},
+{'location' :  'Phillips County', 'name' : ['Phillips County'], 'id' : ['12nIZ-fhs_RhEz33W1e1Tc-Q39BPok8Z2']},
+{'location' :  'Pitkin County', 'name' : ['Pitkin County'], 'id' : ['1i9362cEfMbLEf4S-WXDbTCwPydMyyIOX']},
+{'location' :  'Prowers County', 'name' : ['Prowers County'], 'id' : ['1IyJ2NjAWWC60JzuPjpsTVCzUxPnSfXA3']},
+{'location' :  'Pueblo County', 'name' : ['Pueblo County'], 'id' : ['1wNJJ170aqtEapbmh0towYuP57sN7chB8']},
+{'location' :  'Rio Blanco County', 'name' : ['Rio Blanco County'], 'id' : ['10PjgU1Rj1PBZivF-Q0DMl6XpAMyUfoC1']},
+{'location' :  'Rio Grande County', 'name' : ['Rio Grande County'], 'id' : ['1UWqRkBu1_H6ej9s9U-7nqrWhqKNaO2kS']},
+{'location' :  'Routt County', 'name' : ['Routt County'], 'id' : ['117GqBapYFenFNBOty4dIpfaGNfo3NCik']},
+{'location' :  'Saguache County', 'name' : ['Saguache County'], 'id' : ['1LSGwnKDdb89SxJQ73XHEY1NMDzKQUmiJ']},
+{'location' :  'San Juan County', 'name' : ['San Juan County'], 'id' : ['12vTLf4MLaN5aceM3L_Jajtb-O8itYEvN']},
+{'location' :  'San Miguel County', 'name' : ['San Miguel County'], 'id' : ['1Gduk0TjUoSEja6QlJGwEphO-1btPqOYW']},
+{'location' :  'Sedgwick County', 'name' : ['Sedgwick County'], 'id' : ['1QXIixvRwqbQwJ-N2IyEiXCT2ytvoSpTv']},
+{'location' :  'Summit County', 'name' : ['Summit County'], 'id' : ['1JtXRPXk8V4vUNcRAhLNNX_NabP8n3Glt']},
+{'location' :  'Teller County', 'name' : ['Teller County'], 'id' : ['10-r8ceGzcIc_u1TNWO_yiV6bjx10yUI7']},
+{'location' :  'Washington County', 'name' : ['Washington County'], 'id' : ['19-eh7MhDAY2F8qDW_F94FtWBl_ySFayM']},
+{'location' :  'Weld County', 'name' : ['Weld County'], 'id' : ['1DsyJrQFTiAKeru3wrLY8gXLxfftRddHU']},
+{'location' :  'Yuma County', 'name' : ['Yuma County'], 'id' : ['1pwVqoFCR2p566mBYoZdYCTUvtwS3ieYH']},
+{'location' :  'Aguilar', 'name' : ['Aguilar'], 'id' : ['1t2a4Neii8JC-ETXtIzWkGDK3dl-HJNFy']},
+{'location' :  'Akron', 'name' : ['Akron'], 'id' : ['1Gsk42hxrpMJKR4bZyQLxAr6Gb9rBeUNI']},
+{'location' :  'Alamosa', 'name' : ['Alamosa'], 'id' : ['1Bqvb5-Kdv9KkBqN0PmgfkIzWFWb72K_V']},
+{'location' :  'Alma', 'name' : ['Alma'], 'id' : ['1WjxSN2BUs5igZRhq02hrBZVRcXTf75ZT']},
+{'location' :  'Antonito', 'name' : ['Antonito'], 'id' : ['1jZ_RCt5kFmMnCRhRTeQJVHYYVl-FQuoS']},
+{'location' :  'Arriba', 'name' : ['Arriba'], 'id' : ['1cOSXKtR5AkBLQuR7KLxn8nPR5ynik_I5']},
+{'location' :  'Arvada', 'name' : ['Arvada'], 'id' : ['1gygDEdWhlSiz7uqcoFIdkyrXHSFtJHuH']},
+{'location' :  'Aspen', 'name' : ['Aspen'], 'id' : ['13-U-AfIInMP_AO5JzZVLBCu7_2PzYTX8']},
+{'location' :  'Ault', 'name' : ['Ault'], 'id' : ['1tHeR0fJB1ySfH14xmNE357rrt9CqE_D_']},
+{'location' :  'Aurora', 'name' : ['Aurora'], 'id' : ['1W5gyHJilGAmN1W0Pl1aXU7KSubHbRVlS']},
+{'location' :  'Avon', 'name' : ['Avon'], 'id' : ['1rMu8jzjT7sXYaqssYHy22gyeLnRFlZ6N']},
+{'location' :  'Basalt', 'name' : ['Basalt'], 'id' : ['1BB5kGKA3smaFv_iwdQNfmXeYREvODR3T']},
+{'location' :  'Bayfield', 'name' : ['Bayfield'], 'id' : ['1h0zstna0Ge7hBBkEWU6GU2JwsHqQwc-x']},
+{'location' :  'Bennett', 'name' : ['Bennett'], 'id' : ['1ZmZYRFaPcW973M0yc-Vth4aG641v9rio']},
+{'location' :  'Berthoud', 'name' : ['Berthoud'], 'id' : ['1lrxHsR-uE1mMWI5LY4SNUC3FOz3y2rGg']},
+{'location' :  'Bethune', 'name' : ['Bethune'], 'id' : ['18kGEDoK54pIdFavg3whAt3NUHgdMot5Y']},
+{'location' :  'Black Hawk', 'name' : ['Black Hawk'], 'id' : ['19mdftD3zxIyJS0HeJko03CJZPMY8COgV']},
+{'location' :  'Blanca', 'name' : ['Blanca'], 'id' : ['1hYFoUV5mn6rPhBtmwQeVF1ZBgLOZRcz_']},
+{'location' :  'Blue River', 'name' : ['Blue River'], 'id' : ['1PiNzwTl6DEiSSEwWmp7pW9YusRUkWf5Y']},
+{'location' :  'Bonanza City', 'name' : ['Bonanza City'], 'id' : ['1qyef2P2N6jE56kFK_BdjwGLwG9gEI5_d']},
+{'location' :  'Boone', 'name' : ['Boone'], 'id' : ['1CTVooofJP4nC7qtvbyUtVM5dz4wje5Dd']},
+{'location' :  'Boulder', 'name' : ['Boulder'], 'id' : ['1pWKZRnNNkKIr7k1yHxXLsSqYeSXG7wJw']},
+{'location' :  'Bow Mar', 'name' : ['Bow Mar'], 'id' : ['1YU2vxuvnAYjqCpelUBNawtGkCC2t4zcV']},
+{'location' :  'Branson', 'name' : ['Branson'], 'id' : ['1WbNLJqmZKt7gbGlPvpBYSzT5yCPsDF1E']},
+{'location' :  'Breckenridge', 'name' : ['Breckenridge'], 'id' : ['1brqTIWy3Bzf6sS-koBD-TpHEQe7ZE_ja']},
+{'location' :  'Brighton', 'name' : ['Brighton'], 'id' : ['13_E-QiIEmzcdLXESCsQA0-LLhV-GfbYY']},
+{'location' :  'Brookside', 'name' : ['Brookside'], 'id' : ['1kzMNX4zG599phPK5zQi3GB_gCapBUYjv']},
+{'location' :  'Broomfield', 'name' : ['Broomfield'], 'id' : ['1qRk709i3wH0ZSp1u51db09eHozNrNYIj']},
+{'location' :  'Brush', 'name' : ['Brush'], 'id' : ['1IX83TaLREd4Pupr9q7Q4skLzS6BDquXE']},
+{'location' :  'Buena Vista', 'name' : ['Buena Vista'], 'id' : ['1vX1c2rXb9EmwS3eojD4Kq8gIfY30-suc']},
+{'location' :  'Burlington', 'name' : ['Burlington'], 'id' : ['1wm1Wfmx0awr4XvHtObq2sp6ojeAwUvpP']},
+{'location' :  'Calhan', 'name' : ['Calhan'], 'id' : ['1P0-M0uE0O5Ks2vLzovqFF2otuHu28KYa']},
+{'location' :  'Campo', 'name' : ['Campo'], 'id' : ['1qXxnRmYxK5zDlWIDmXy88tyC37IzfDGE']},
+{'location' :  'Canon City', 'name' : ['Canon City'], 'id' : ['1qWvBRTml8tBHAtjm2eSs2GPJG70nah7g']},
+{'location' :  'Carbondale', 'name' : ['Carbondale'], 'id' : ['1w_euPmnu4eDNFqcm4Kzt6hlJvevUo_pM']},
+{'location' :  'Castle Pines', 'name' : ['Castle Pines'], 'id' : ['1nErX8MXjs9ckE2CacBUUx9AOYwtvDMfM']},
+{'location' :  'Castle Rock', 'name' : ['Castle Rock'], 'id' : ['1yy8U8SOLuhuiAYWjTkXHjLKK4zZnqxNN']},
+{'location' :  'Cedaredge', 'name' : ['Cedaredge'], 'id' : ['1qs3zwKe4Gb3rGHShdBV6EC9u9V5FlUth']},
+{'location' :  'Centennial', 'name' : ['Centennial'], 'id' : ['1ahm6X5BNhnsZDWWGieQ7Wd8sI0drpIep']},
+{'location' :  'Center', 'name' : ['Center'], 'id' : ['1ff5BhTXOf4stp9k_lLrUMiP8Z5OSJTZi']},
+{'location' :  'Central City', 'name' : ['Central City'], 'id' : ['1WkRnizNHl2bxnavIjsexcSzGzGlHukls']},
+{'location' :  'Cheraw', 'name' : ['Cheraw'], 'id' : ['1r6MeX7j-rON3532dT8OC_JDIu4j18i1o']},
+{'location' :  'Cherry Hills Village', 'name' : ['Cherry Hills Village'], 'id' : ['1qtTSANTxuRZOHEoLYh4iYQCQLfAFguic']},
+{'location' :  'Cheyenne Wells', 'name' : ['Cheyenne Wells'], 'id' : ['1RQ9C4GJBm1VmnfdoO83WgYlei2Xm_xcx']},
+{'location' :  'City of Creede', 'name' : ['City of Creede'], 'id' : ['1s5OqN2UGLiJj8mHA7LK4XllA2Uj6Hb3c']},
+{'location' :  'Coal Creek', 'name' : ['Coal Creek'], 'id' : ['1o_4HG092Y4z8OJKA5XtWalw8qSvWFXay']},
+{'location' :  'Cokedale', 'name' : ['Cokedale'], 'id' : ['1b_d62Yg2PxNQ4COvBi9hnTN5Ez6-6CVW']},
+{'location' :  'Collbran', 'name' : ['Collbran'], 'id' : ['1UJEBaRVOLgLV-7cuQ2Lk5VF0s4ETbAng']},
+{'location' :  'Colorado Springs', 'name' : ['Colorado Springs'], 'id' : ['1vrKCCk54IQu3N0yRC-P6blYsGXAA3SvB']},
+{'location' :  'Columbine Valley', 'name' : ['Columbine Valley'], 'id' : ['1pMyHqLhhPi-5e7C_FuXsMJ8Sus1EnvTH']},
+{'location' :  'Commerce City', 'name' : ['Commerce City'], 'id' : ['1Rp8ipdO0j2aOaxgcHiHfTW2M0Dy66gfu']},
+{'location' :  'Cortez', 'name' : ['Cortez'], 'id' : ['1rXZd4w4tAScdeEuQ2vp1lrJ8lM3MYyuS']},
+{'location' :  'Craig', 'name' : ['Craig'], 'id' : ['1hK2dvcNXlGbHjhUZdaPmrq2RGMQBY2t6']},
+{'location' :  'Crawford', 'name' : ['Crawford'], 'id' : ['12ayRfr8calPrWqznvkThdjU7MvmZQlso']},
+{'location' :  'Crested Butte', 'name' : ['Crested Butte'], 'id' : ['1_V45sw2seEx9pY3DkxDQaiFwAsxdroZN']},
+{'location' :  'Crestone', 'name' : ['Crestone'], 'id' : ['1TTcNMzffTLjOojqzJEjyeZ3Hb3dgif-n']},
+{'location' :  'Cripple Creek', 'name' : ['Cripple Creek'], 'id' : ['1HazcKCUqud38-edz9Jzdrtvw4wu4V0j0']},
+{'location' :  'Crook', 'name' : ['Crook'], 'id' : ['1K-oOvJC4ydDlJ93YfUFOabDWIFpeMFtN']},
+{'location' :  'Crowley', 'name' : ['Crowley'], 'id' : ['1InkPwHGuLaIZhjoSSghp-PTxlZXb26Zc']},
+{'location' :  'Dacono', 'name' : ['Dacono'], 'id' : ['1NkvQT2Kh3AQyIKJEF2QFJKRyE4-8AbE5']},
+{'location' :  'De Beque', 'name' : ['De Beque'], 'id' : ['1RekNfA49Mp9OoYdrSgIu47Bt_XL-Sqgu']},
+{'location' :  'Deer Trail', 'name' : ['Deer Trail'], 'id' : ['1uRV8UorLBpRdpaex-1UPTH6fJLygwKp2']},
+{'location' :  'Del Norte', 'name' : ['Del Norte'], 'id' : ['111itMl5o42jQpbFRrLplR4rPF59npEeD']},
+{'location' :  'Delta', 'name' : ['Delta'], 'id' : ['1T-B5WiKqiQVY8VjlE-juDS0h1hxUmzfq']},
+{'location' :  'Denver', 'name' : ['Denver'], 'id' : ['12FptaFcnY2yVDYiuj5yi9vrRZKR9VUM1']},
+{'location' :  'Dillon', 'name' : ['Dillon'], 'id' : ['1Qq4xFy6recMWY167jw3STT5a4fivYtxD']},
+{'location' :  'Dinosaur', 'name' : ['Dinosaur'], 'id' : ['1omzUHgei7tZyQ0rmRaMQmeVUTWSeuBvZ']},
+{'location' :  'Dolores', 'name' : ['Dolores'], 'id' : ['1rAgp4Ycn2knU_nPMi-OOVboCsDBMhEr6']},
+{'location' :  'Dove Creek', 'name' : ['Dove Creek'], 'id' : ['1WSAR_LS1y2YcK3HRvSkXRfp6RRyczxAr']},
+{'location' :  'Durango', 'name' : ['Durango'], 'id' : ['1Mx3Yr81EBni8EovTnI2lDktkBclit61L']},
+{'location' :  'Eads', 'name' : ['Eads'], 'id' : ['1Ws9p_Aat-mc2ZMKfQ2LCvhA4Se5rnUHK']},
+{'location' :  'Eagle', 'name' : ['Eagle'], 'id' : ['1FGFMLcyC_Ajo6agmj9VLX2qzNuWdUp_a']},
+{'location' :  'Eaton', 'name' : ['Eaton'], 'id' : ['1Xt_sbu_uy2hS3jpazn42o4uoC8-kO3Ki']},
+{'location' :  'Eckley', 'name' : ['Eckley'], 'id' : ['1IN_E1hwB7Z74bucAbjyG3Rf9dPVQ7V0D']},
+{'location' :  'Edgewater', 'name' : ['Edgewater'], 'id' : ['1LQiqjgsMuaklIiM-eOmQBeDiqZVHJPBq']},
+{'location' :  'Elizabeth', 'name' : ['Elizabeth'], 'id' : ['1KdI0g-st0qeCfrmnr-_BghQhNz__IOmE']},
+{'location' :  'Empire', 'name' : ['Empire'], 'id' : ['1kdoEhB_BrlywUgRPsE1iy95_0C7yTxYS']},
+{'location' :  'Englewood', 'name' : ['Englewood'], 'id' : ['1IeCANXeDCrR6j4a4P8Lc32dthwLBVrvp']},
+{'location' :  'Erie', 'name' : ['Erie'], 'id' : ['1vbswYD7rnPR_TUQnyjQCXdKhFTvr39jc']},
+{'location' :  'Estes Park', 'name' : ['Estes Park'], 'id' : ['11PbtTgZBnSibgT8zIVIWarVtSGewXkgq']},
+{'location' :  'Evans', 'name' : ['Evans'], 'id' : ['18ZezK5hOM4XEL0ydm4MXgP8dAW-dbboy']},
+{'location' :  'Fairplay', 'name' : ['Fairplay'], 'id' : ['1mh0tETb_ouLoB8qTHALo56DuLcdH7Yu3']},
+{'location' :  'Federal Heights', 'name' : ['Federal Heights'], 'id' : ['1Si1BM8rckFYvp_OJawCU6It8y8s1Esze']},
+{'location' :  'Firestone', 'name' : ['Firestone'], 'id' : ['10LtY4jjyv4zei7t-VC3md7-BCjkqRlxC']},
+{'location' :  'Flagler', 'name' : ['Flagler'], 'id' : ['1iTRkID5DGc_2GJTMqIrt-BNINLQBPaUG']},
+{'location' :  'Fleming', 'name' : ['Fleming'], 'id' : ['1Y6f8Xo4LO5i5IojuQqVjyeIFeO_K7gd8']},
+{'location' :  'Florence', 'name' : ['Florence'], 'id' : ['1v7UqU6w3z8qe9rNRa_aP0Yu4G6pO1Q6E']},
+{'location' :  'Fort Collins', 'name' : ['Fort Collins'], 'id' : ['1YLEb_7i0xBXK6lLUA1gpTUUzNAMEweH4']},
+{'location' :  'Fort Lupton', 'name' : ['Fort Lupton'], 'id' : ['1TQAVSHuPDOVw3ttzjZ4xLkPmsx-PduDj']},
+{'location' :  'Fort Morgan', 'name' : ['Fort Morgan'], 'id' : ['1TvFFm_uu1XqjAVIinREHINvkUrZ7MbAP']},
+{'location' :  'Fountain', 'name' : ['Fountain'], 'id' : ['1JbNU1i-iNqYysayLMZ-eFfJaViGvswUD']},
+{'location' :  'Fowler', 'name' : ['Fowler'], 'id' : ['1Z3TjdR8-DR75w6Uan1WIuM2pHZwTcHlE']},
+{'location' :  'Foxfield', 'name' : ['Foxfield'], 'id' : ['1xTWs6yAbIGDftuW0iuyY1sKF5I_lSmKp']},
+{'location' :  'Fraser', 'name' : ['Fraser'], 'id' : ['1U5Cc6yuIEZ7MEMP3od5dhqi_9ra4hEho']},
+{'location' :  'Frederick', 'name' : ['Frederick'], 'id' : ['1fHgeC_n51WNNumY4CUubgBtPxxWGExua']},
+{'location' :  'Frisco', 'name' : ['Frisco'], 'id' : ['1CE7rdknbO5i5cbkJHCsC2WKtWhBwDCdn']},
+{'location' :  'Fruita', 'name' : ['Fruita'], 'id' : ['1Q1EYr0nPbQsbME46DBQNsv5zw9Hveb1h']},
+{'location' :  'Garden City', 'name' : ['Garden City'], 'id' : ['1Ajx8Op7v-ANjMlD_fDR-eL7rifhi7d3h']},
+{'location' :  'Genoa', 'name' : ['Genoa'], 'id' : ['1IABZ7MBkrxDY66XidqJdF0DHfvLHH_-e']},
+{'location' :  'Georgetown', 'name' : ['Georgetown'], 'id' : ['1VHjuEcEHwp-3i9ecvH8wC4LjF4K9rDzN']},
+{'location' :  'Gilcrest', 'name' : ['Gilcrest'], 'id' : ['1LigzG7M50ODHTO_cy6s5RjZEF17tBMRI']},
+{'location' :  'Glendale', 'name' : ['Glendale'], 'id' : ['1pJA3-aXtLI5AWT91TkP1O0o7F2pLKKMu']},
+{'location' :  'Glenwood Springs', 'name' : ['Glenwood Springs'], 'id' : ['1-nseo-eaB_t8uEhwWPySBFbVNHjD5Ipm']},
+{'location' :  'Golden', 'name' : ['Golden'], 'id' : ['1FIxUCEsVFegOMFJWbWAPJCOpncYDT5i7']},
+{'location' :  'Granada', 'name' : ['Granada'], 'id' : ['1UTYBaElDcUQuma9J443AY56izqUS2lYz']},
+{'location' :  'Granby', 'name' : ['Granby'], 'id' : ['1UqxeMrj8pok3YWAaznw43ApJxXOU50qs']},
+{'location' :  'Grand Junction', 'name' : ['Grand Junction'], 'id' : ['1WCE_iNAJlzX6mpua65vj61oOfdlrbTxh']},
+{'location' :  'Grand Lake', 'name' : ['Grand Lake'], 'id' : ['1M5W8OAk138eQL_28wEJ-JUuz7uxOYvcL']},
+{'location' :  'Greeley', 'name' : ['Greeley'], 'id' : ['1gX_24uIFOHtABa2trytkRV4JsqSHtjPb']},
+{'location' :  'Green Mountain Falls', 'name' : ['Green Mountain Falls'], 'id' : ['1AwzKnY8RjF_-djaKX7-W6xbBsofgg-gP']},
+{'location' :  'Greenwood Village', 'name' : ['Greenwood Village'], 'id' : ['1S4eitplmz4BtbwyQTEXWf9KR4aPkRYmk']},
+{'location' :  'Grover', 'name' : ['Grover'], 'id' : ['16e8Dyoq6bxCvqwH0ya6oZJF5iWKNLUqo']},
+{'location' :  'Gunnison', 'name' : ['Gunnison'], 'id' : ['1F-qOFrdQARByiT55Shg_1CcZlhcKZGNZ']},
+{'location' :  'Gypsum', 'name' : ['Gypsum'], 'id' : ['1ngQY4t9gQSw2U5LtBCCFGe-o15nEEVDR']},
+{'location' :  'Hartman', 'name' : ['Hartman'], 'id' : ['137jC7iXJyvYIF7Mdzzm9izpRLqbkHXID']},
+{'location' :  'Haswell', 'name' : ['Haswell'], 'id' : ['1zUkWisl2ZpbS3cKs48qbCJLw9nsIN0dy']},
+{'location' :  'Haxtun', 'name' : ['Haxtun'], 'id' : ['1ail4LyYh_LnvOhwIc3pex79lBLRJfgnV']},
+{'location' :  'Hayden', 'name' : ['Hayden'], 'id' : ['1GR7jWisTqahXoMELcu4BQ3_-3OwFvXfa']},
+{'location' :  'Hillrose', 'name' : ['Hillrose'], 'id' : ['1e3uadmez1ehT4-KcuyrJ4iyDVOiJTR1b']},
+{'location' :  'Holly', 'name' : ['Holly'], 'id' : ['1EpwaJXWC9jc7_a83ID2TsuiZSPOJdKWG']},
+{'location' :  'Holyoke', 'name' : ['Holyoke'], 'id' : ['1192mqZ3OOy_NmfHzMBL9bJFLCSmpjE6d']},
+{'location' :  'Hooper', 'name' : ['Hooper'], 'id' : ['1L1eUGvrcy4CEqbQFrVXIvVil7MnTzTYx']},
+{'location' :  'Hot Sulphur Springs', 'name' : ['Hot Sulphur Springs'], 'id' : ['1mP0x5OdwnlXVfORk6ksG0X1S7UWgQvm3']},
+{'location' :  'Hotchkiss', 'name' : ['Hotchkiss'], 'id' : ['1YIBMXO9rytuYMPakQr7YPaFTZboa8uC2']},
+{'location' :  'Hudson', 'name' : ['Hudson'], 'id' : ['1arGhsxtvMLGTHwUF--KI1mB_yVbD5Ga0']},
+{'location' :  'Hugo', 'name' : ['Hugo'], 'id' : ['1k3iUTJw9UGPQbqlHW5iE1bzner5j8gNz']},
+{'location' :  'Idaho Springs', 'name' : ['Idaho Springs'], 'id' : ['1TPL4yEpA5piBjvvYElBoJAAcbRDvbdJX']},
+{'location' :  'Ignacio', 'name' : ['Ignacio'], 'id' : ['155WKhZsntdea2oRUKLaHsxsRsFrM0dxX']},
+{'location' :  'Iliff', 'name' : ['Iliff'], 'id' : ['12okF5eMt0LbMvR2lqMmbiNc-Po3Dl9Gd']},
+{'location' :  'Jamestown', 'name' : ['Jamestown'], 'id' : ['1QN4TpA1Bx964zZhxW39zPgpB3jV1YwWY']},
+{'location' :  'Johnstown', 'name' : ['Johnstown'], 'id' : ['1xXryAocuCVy1drbGhS4Awy2JVJGQKt64']},
+{'location' :  'Julesburg', 'name' : ['Julesburg'], 'id' : ['1euHhe3VrCxqWpSvevXbMvIQVBFYYgOZR']},
+{'location' :  'Keenesburg', 'name' : ['Keenesburg'], 'id' : ['1wxTZjBAVV5WEHKs7bjInoq33gkMEHE5c']},
+{'location' :  'Kersey', 'name' : ['Kersey'], 'id' : ['1knNcndGNOFwr1P_T7XBMj1Q0QwNWteP1']},
+{'location' :  'Kim', 'name' : ['Kim'], 'id' : ['1QkzqmmDRZaak4gjhl0GsFGTNoPCkWGGs']},
+{'location' :  'Kiowa', 'name' : ['Kiowa'], 'id' : ['1M2oADESpc7MjvKw8gOpV84ZCdV-iCoki']},
+{'location' :  'Kit Carson', 'name' : ['Kit Carson'], 'id' : ['133xzJ0z4o0YQNK40w83fpxn4CTNs_aum']},
+{'location' :  'Kremmling', 'name' : ['Kremmling'], 'id' : ['18sBw1NSo69q8MZBL5oQ58vXiijVibexW']},
+{'location' :  'La Jara', 'name' : ['La Jara'], 'id' : ['1g3oPuut_Ve2ZReBFkgcc2SuZNlGVr56N']},
+{'location' :  'La Junta', 'name' : ['La Junta'], 'id' : ['1fdnvT_Smtwk7aQVVdJrnYibfeR304U2r']},
+{'location' :  'La Salle', 'name' : ['La Salle'], 'id' : ['1SeBJ_XsFmR8h4zcLsYF1ccI6CyOo6iS2']},
+{'location' :  'La Veta', 'name' : ['La Veta'], 'id' : ['1hguLepQNMmH5zuMpN0PcxxpWEl4RQc_I']},
+{'location' :  'Lafayette', 'name' : ['Lafayette'], 'id' : ['1ACDJmU9S6WnOK055RvIDRMN6Yj9-5Gjm']},
+{'location' :  'Lake City', 'name' : ['Lake City'], 'id' : ['1lYM14qUzKpVLkkyUhMqdZY4N0KLGwHv_']},
+{'location' :  'Lakeside', 'name' : ['Lakeside'], 'id' : ['10yisrvoMPexwVFA87o1f6du4dNW3Uzf2']},
+{'location' :  'Lakewood', 'name' : ['Lakewood'], 'id' : ['18iDDkAUAwWvPmWSjvZwv3Ky0XkWGZwQ2']},
+{'location' :  'Lamar', 'name' : ['Lamar'], 'id' : ['1NwytdV3E0LIJv1JUEcdYB0Nox9Kr6b84']},
+{'location' :  'Larkspur', 'name' : ['Larkspur'], 'id' : ['1isw-b-aavFdjiemNMPMphRSpiu5gpo2D']},
+{'location' :  'Las Animas', 'name' : ['Las Animas'], 'id' : ['1FaqoxjE2n58YFvUtqa6AH9o3PwuPpfKd']},
+{'location' :  'Leadville', 'name' : ['Leadville'], 'id' : ['19HXC_ZTVvXQat0dmhgdVbEmb96zuEthQ']},
+{'location' :  'Limon', 'name' : ['Limon'], 'id' : ['1_j7HeITgO0NgXdEaKJuib521Ah-iCJoW']},
+{'location' :  'Littleton', 'name' : ['Littleton'], 'id' : ['1zFvtoPHji-DQiUDuZFmyoPNYcr6bKg-d']},
+{'location' :  'Lochbuie', 'name' : ['Lochbuie'], 'id' : ['197dCRz-wdR32kO6iFERv0h25ailyShxZ']},
+{'location' :  'Log Lane Village', 'name' : ['Log Lane Village'], 'id' : ['14PkeLFgyLEWt5M8u5fpUdaraqd0kQOMT']},
+{'location' :  'Lone Tree', 'name' : ['Lone Tree'], 'id' : ['1DhTV-X1YY-CBGayUWgUIZPgW9suYd621']},
+{'location' :  'Longmont', 'name' : ['Longmont'], 'id' : ['1r8IO4JPCFHZKS2wS9ar5BeHcJxKy2HK9']},
+{'location' :  'Louisville', 'name' : ['Louisville'], 'id' : ['1wCg7vulrmkF6XdfMk7Ls3AoHT7tVupaZ']},
+{'location' :  'Loveland', 'name' : ['Loveland'], 'id' : ['1_t8Vsz_U00KNj5-CxptLgavhHJC8t_Ry']},
+{'location' :  'Lyons', 'name' : ['Lyons'], 'id' : ['13c5lYcKxeeXChP0iR2LzDtON9zLYbPgn']},
+{'location' :  'Manassa', 'name' : ['Manassa'], 'id' : ['1ZPPDvoBhi4iu95hUhEo3cNl6xhLV-Xnh']},
+{'location' :  'Mancos', 'name' : ['Mancos'], 'id' : ['1xh_XbHHHR3PkVV4T_cWeJPsI0g04nrbC']},
+{'location' :  'Manitou Springs', 'name' : ['Manitou Springs'], 'id' : ['1ZpEU40gOQDaYbEE1lZOwwc8PflV2SUkB']},
+{'location' :  'Manzanola', 'name' : ['Manzanola'], 'id' : ['1UHtDB90L2bznFM-NLPj5XdDiGxWy5K9i']},
+{'location' :  'Marble', 'name' : ['Marble'], 'id' : ['1QXl1DeQRmsIDLjYja5AHNACfwdLTfDsW']},
+{'location' :  'Mead', 'name' : ['Mead'], 'id' : ['1TZ6H6v4hf_LRRhhT9FFUoQYv5mMOGqpc']},
+{'location' :  'Meeker', 'name' : ['Meeker'], 'id' : ['1IlPlsgouvIcumbF0FJEPDtNNhokRbAdR']},
+{'location' :  'Merino', 'name' : ['Merino'], 'id' : ['1308NRWgF7fhwq-GInJBNQeJReRPxjtBw']},
+{'location' :  'Milliken', 'name' : ['Milliken'], 'id' : ['1_82KdWOlPw7oGxAOSTgM6ZaOvw4pnfyH']},
+{'location' :  'Minturn', 'name' : ['Minturn'], 'id' : ['1oTdjD2irOFN9s9kzUtCiDxUFuZjB1y7M']},
+{'location' :  'Moffat', 'name' : ['Moffat'], 'id' : ['16Tx3RObeIeFxMhXY6fDPpg_KBlwa43Ea']},
+{'location' :  'Monte Vista', 'name' : ['Monte Vista'], 'id' : ['1irD9o9z0X8dg10IeTd9Un1u22KFXLJt2']},
+{'location' :  'Montezuma', 'name' : ['Montezuma'], 'id' : ['1vK-KjwDJEQrnnB8Ko0sOH4boHQKqD_UP']},
+{'location' :  'Montrose', 'name' : ['Montrose'], 'id' : ['1BkHUmyCLnUZiusV6vEOWuf5DSVdHD2fj']},
+{'location' :  'Monument', 'name' : ['Monument'], 'id' : ['1Bk70iuO30HlNjJVrEeTaQdwDJXR0y74X']},
+{'location' :  'Morrison', 'name' : ['Morrison'], 'id' : ['1VDs0mxWxCTjBIYB6kOVHtKANlDZS45Fs']},
+{'location' :  'Mount Crested Butte', 'name' : ['Mount Crested Butte'], 'id' : ['1VMjvb6zs5WoXV_slPZtaE48EF37MIx-k']},
+{'location' :  'Mountain View', 'name' : ['Mountain View'], 'id' : ['1jYoT7UFh_XbdYJtFui7aNyApuYiK9RoG']},
+{'location' :  'Mountain Village', 'name' : ['Mountain Village'], 'id' : ['14DnnTEoOKCJcgpiiCX5Yw7S5jkSLbGqe']},
+{'location' :  'Naturita', 'name' : ['Naturita'], 'id' : ['13uXcuIlnOc_XgcB9ApPp_pScaP1daVPE']},
+{'location' :  'Nederland', 'name' : ['Nederland'], 'id' : ['14FkWuVoxXiN6C2J3rovLaqOVr5BL1F3O']},
+{'location' :  'New Castle', 'name' : ['New Castle'], 'id' : ['1M90BCfBZKCKP_Fr8U9Ii0EvCDD-of49d']},
+{'location' :  'Northglenn', 'name' : ['Northglenn'], 'id' : ['1uOvX2NKsncRY3PyV2zzVMYb7JJLEcGX7']},
+{'location' :  'Norwood', 'name' : ['Norwood'], 'id' : ['1gd7pfiyYd1avboqOBDhvaMNIgfMuP2WD']},
+{'location' :  'Nucla', 'name' : ['Nucla'], 'id' : ['1MXbx4uHNbrvZ2WEIeuF49P_Ee9Up1RYN']},
+{'location' :  'Nunn', 'name' : ['Nunn'], 'id' : ['1btoBl-cI2Jxu1gOTgs9zHLpGO9S_Oj8N']},
+{'location' :  'Oak Creek', 'name' : ['Oak Creek'], 'id' : ['1yhKDhD-979tDVUBDbaza8vGNGrnKXfMm']},
+{'location' :  'Olathe', 'name' : ['Olathe'], 'id' : ['1OY1agb4zII9rC6pw-QqzGFb3dG7o-n3x']},
+{'location' :  'Olney Springs', 'name' : ['Olney Springs'], 'id' : ['1B8WracTYyGvI6DOXK4uvMiYvVq0NN_6_']},
+{'location' :  'Ophir', 'name' : ['Ophir'], 'id' : ['12F4jrQ6GGOwR3YlndxrT7Fhhb1pqgaun']},
+{'location' :  'Orchard City', 'name' : ['Orchard City'], 'id' : ['10cHz5GXLS5wt_CGjdQYQda5h_30uH38O']},
+{'location' :  'Ordway', 'name' : ['Ordway'], 'id' : ['1EoPTtAy3w_1fNb0TzAm2glTVCHmSxo6u']},
+{'location' :  'Otis', 'name' : ['Otis'], 'id' : ['1z4o_YrcTftCI5EXld9iGlhZe-J94DXFV']},
+{'location' :  'Ouray', 'name' : ['Ouray'], 'id' : ['1MJsgYLBOuyjDa2sAZidV9uoHhik6RZT1']},
+{'location' :  'Ovid', 'name' : ['Ovid'], 'id' : ['1D5r9Qe09EgiN9EL5eW6B9DouVd6DG-CC']},
+{'location' :  'Pagosa Springs', 'name' : ['Pagosa Springs'], 'id' : ['1GDk0XMiLLACweNMyJ4a12sFyQJGY0QjT']},
+{'location' :  'Palisade', 'name' : ['Palisade'], 'id' : ['1uaJ-KPWh9Jc5gt9JJqnPAt66aTMOsHu2']},
+{'location' :  'Palmer Lake', 'name' : ['Palmer Lake'], 'id' : ['1Wzi0Uz7xEuIoxHz1bzZEdqtEr7T91w35']},
+{'location' :  'Paoli', 'name' : ['Paoli'], 'id' : ['1WcwgU3t-c_FfQolSAapWuTrSK4lFqJwr']},
+{'location' :  'Paonia', 'name' : ['Paonia'], 'id' : ['19Cb67Yga4tYM0Holp5sak8Otz94QI_sK']},
+{'location' :  'Parachute', 'name' : ['Parachute'], 'id' : ['1L66EgEl7sjNntu1lQxnJwvvGBWpSmWY5']},
+{'location' :  'Parker', 'name' : ['Parker'], 'id' : ['1xDd3ERPK27ZTtAJ8ZcELL52boTnEYpZ3']},
+{'location' :  'Peetz', 'name' : ['Peetz'], 'id' : ['1veY92d-aw0aIltCjLiPbsVLE1dak2Odr']},
+{'location' :  'Pierce', 'name' : ['Pierce'], 'id' : ['1z0AqTpH0eE2ZaoLB0fnaGhi_dc0eQrCL']},
+{'location' :  'Pitkin', 'name' : ['Pitkin'], 'id' : ['1Ci4RzfFbbrth8jc23WS_i1KnfY4YfjXr']},
+{'location' :  'Platteville', 'name' : ['Platteville'], 'id' : ['1i29zKpygiuwJVeMSGa7BBRyEARBXRKNS']},
+{'location' :  'Poncha Springs', 'name' : ['Poncha Springs'], 'id' : ['1eeVI2U2obZlSkuom5n_skzpzOjTscYE6']},
+{'location' :  'Pritchett', 'name' : ['Pritchett'], 'id' : ['1Jko2m11zCoKosVn17nl1P8H7fT3NQeJO']},
+{'location' :  'Pueblo', 'name' : ['Pueblo'], 'id' : ['1t3zHFATF3NnqRDm_mMpoFGUdZhZuwqvC']},
+{'location' :  'Ramah', 'name' : ['Ramah'], 'id' : ['1Yl9xjwphNCmYnC2fJVmLU5b187qAXn-s']},
+{'location' :  'Rangely', 'name' : ['Rangely'], 'id' : ['1u4-kSXtOHPV1j0xHevq5JlEVZulU-mBd']},
+{'location' :  'Raymer', 'name' : ['Raymer'], 'id' : ['16EHC8u4Bcq8N_WwdHNcygSDSXWzE78MD']},
+{'location' :  'Red Cliff', 'name' : ['Red Cliff'], 'id' : ['1qa0YUWki6YNhBcxnRUtssUm0Q2FSS-1H']},
+{'location' :  'Rico', 'name' : ['Rico'], 'id' : ['1deAzvQlsm-7wWPAHMqbwnLpUm7F1EpRm']},
+{'location' :  'Ridgway', 'name' : ['Ridgway'], 'id' : ['1djlXOcKgCQCtrmHbq3b02d4ow3BZf8q2']},
+{'location' :  'Rifle', 'name' : ['Rifle'], 'id' : ['1zilVas3gfFa8CSKqegfbJ4ziJOEkphRF']},
+{'location' :  'Rockvale', 'name' : ['Rockvale'], 'id' : ['1qbZ5HWU6ZjMf9Z2OVPxJ5HX1ry55bvUh']},
+{'location' :  'Rocky Ford', 'name' : ['Rocky Ford'], 'id' : ['1vedRuf7J2cA2IsYOSRCoPW3xOeC2yByD']},
+{'location' :  'Romeo', 'name' : ['Romeo'], 'id' : ['1xp817_tQ21RGfhMjDVNHYaniHmunr7C_']},
+{'location' :  'Rye', 'name' : ['Rye'], 'id' : ['1gDViQX4-zOdx0uv6CO6ABZsRxBGQsL3P']},
+{'location' :  'Saguache', 'name' : ['Saguache'], 'id' : ['1kfxLEn8I0lDSpBAzEvqdg2iVHWtww-Dr']},
+{'location' :  'Salida', 'name' : ['Salida'], 'id' : ['1n4Pw6poJag117WngMBkAeJzvXcs38YnD']},
+{'location' :  'San Luis', 'name' : ['San Luis'], 'id' : ['1THedu7B7-hHpfQebHEZmlIMqjVHhamS3']},
+{'location' :  'Sanford', 'name' : ['Sanford'], 'id' : ['1ojwjuRpPdXaxe_d2eZ359k1nDdbG8r1y']},
+{'location' :  'Sedgwick', 'name' : ['Sedgwick'], 'id' : ['1vkR_a6I3HWBgIFoqbKaks6W7UcEAIdw1']},
+{'location' :  'Seibert', 'name' : ['Seibert'], 'id' : ['1xXiubEk0fuCBuZiCg7-_5kWkmJUZ99TF']},
+{'location' :  'Severance', 'name' : ['Severance'], 'id' : ['1dc7kq_0EpDZRjle2Ek0L2JNJKga5fPWy']},
+{'location' :  'Sheridan Lake', 'name' : ['Sheridan Lake'], 'id' : ['1w6eqTj7UQ-lGShqguY1qzmSOkvzP9W7k']},
+{'location' :  'Sheridan', 'name' : ['Sheridan'], 'id' : ['1vl8_deXDMcQkdS-VELm3J4G-xfIgrNBh']},
+{'location' :  'Silt', 'name' : ['Silt'], 'id' : ['11aezRgzWr2jmIUvkcQWTQR1OQxN6LECZ']},
+{'location' :  'Silver Cliff', 'name' : ['Silver Cliff'], 'id' : ['1p4gJXrLD5M1KyzYw4cvoXcx5FH-ebq74']},
+{'location' :  'Silver Plume', 'name' : ['Silver Plume'], 'id' : ['1_wT65QQ0k8RVuU2YPaXHRTIBit4-8v-x']},
+{'location' :  'Silverthorne', 'name' : ['Silverthorne'], 'id' : ['16zOFhUUXCPk9pt2WzRqQfUtYLrwYuUkM']},
+{'location' :  'Silverton', 'name' : ['Silverton'], 'id' : ['1HjYrkMhV-Lain1fpMVWGb0ipl02DrRUn']},
+{'location' :  'Simla', 'name' : ['Simla'], 'id' : ['1MkeWtDG-iwVciNgXuGxM7lNW3XVw-LSP']},
+{'location' :  'Snowmass Village', 'name' : ['Snowmass Village'], 'id' : ['1OB-UlQ4_8s5-kxQcwNmtckiBhLXFgmAf']},
+{'location' :  'South Fork', 'name' : ['South Fork'], 'id' : ['1F-fJ-usN8ROSMi_1crOF2a6hjck6Jduf']},
+{'location' :  'Springfield', 'name' : ['Springfield'], 'id' : ['1stKMZt-LSLVkmqB_AzZNrZDhyAAXLua-']},
+{'location' :  'Starkville', 'name' : ['Starkville'], 'id' : ['1rdDe0UAgvDlkMmZYCX1IzlESPxE8kE81']},
+{'location' :  'Steamboat Springs', 'name' : ['Steamboat Springs'], 'id' : ['1vjyMAWMHRNKncBJ9he48NuxnbK2Y9wNn']},
+{'location' :  'Sterling', 'name' : ['Sterling'], 'id' : ['1-1T4be1NOgHiVaZ4j5YC72xS5hkqYQmX']},
+{'location' :  'Stratton', 'name' : ['Stratton'], 'id' : ['1dMnRA5EBPiD5xWvz2wx6jHHsI_rBTece']},
+{'location' :  'Sugar City', 'name' : ['Sugar City'], 'id' : ['1xkk84mo45VZ7jMT7X9qWGmGyRz_KAcjd']},
+{'location' :  'Superior', 'name' : ['Superior'], 'id' : ['1BRN8Chghj3jMUmH9_nBKV-fcxMflJiU_']},
+{'location' :  'Swink', 'name' : ['Swink'], 'id' : ['1AwzJh_ETAY7sx650UmZ5HVtT9U_FRRt1']},
+{'location' :  'Telluride', 'name' : ['Telluride'], 'id' : ['1IQIjsWqwVVF1NIDdgWMoj3UnPrEZkh24']},
+{'location' :  'Thornton', 'name' : ['Thornton'], 'id' : ['1C3ZlLnSrmO362A9SbkQUn0q2E_5Hhau6']},
+{'location' :  'Timnath', 'name' : ['Timnath'], 'id' : ['1YiuH4MY_P0Y9FM6QGUAi5z26X76yjPdV']},
+{'location' :  'Trinidad', 'name' : ['Trinidad'], 'id' : ['1fxt_UjkMMynIufC0wF5MCXFxImZCXM8G']},
+{'location' :  'Two Buttes', 'name' : ['Two Buttes'], 'id' : ['1y-OnfEjMBVHXcnPNcSVrI9YhIxyvIWWq']},
+{'location' :  'Vail', 'name' : ['Vail'], 'id' : ['1uAL8mBicZvnWUQEtSOUkmjewsk7MID0K']},
+{'location' :  'Victor', 'name' : ['Victor'], 'id' : ['1_es_66NNyqoTDeq9y8-SUTc-KT0ctHRR']},
+{'location' :  'Vilas', 'name' : ['Vilas'], 'id' : ['12AUtJeWllWVk4JnfYoGf63HjUO1UkYxm']},
+{'location' :  'Vona', 'name' : ['Vona'], 'id' : ['15_JeHN9lx7mY77BcO_iGsBLHiqglKAsl']},
+{'location' :  'Walden', 'name' : ['Walden'], 'id' : ['1PBoXYvhEfrO5iU-LFfR1TpiGFG5gLkN2']},
+{'location' :  'Walsenburg', 'name' : ['Walsenburg'], 'id' : ['1bTQ5wqkrVTY_mepMagidPJX05e5ND7PI']},
+{'location' :  'Walsh', 'name' : ['Walsh'], 'id' : ['1SeL_0r1_xuXXllyrYiHgj27hGtCxozEU']},
+{'location' :  'Ward', 'name' : ['Ward'], 'id' : ['1qW3aVHN9f6ZWM2OxXqgod1FcGGqSLWyk']},
+{'location' :  'Wellington', 'name' : ['Wellington'], 'id' : ['1Q7KDb0eK25x7ejHGURfcepHyjX6E_gV4']},
+{'location' :  'Westcliffe', 'name' : ['Westcliffe'], 'id' : ['1dT11FU6VgixiEF-ratMGWJ6ts1aADqES']},
+{'location' :  'Westminster', 'name' : ['Westminster'], 'id' : ['1-HXQcX67wArgZ9vRa6SmVgwKpFiUd4FF']},
+{'location' :  'Wheat Ridge', 'name' : ['Wheat Ridge'], 'id' : ['1rHP6kxuK9vP-dSdC1xoMyxq2DMVvYOQP']},
+{'location' :  'Wiggins', 'name' : ['Wiggins'], 'id' : ['1P9tP7MBAAiI7Ink4Y6iPX_E_a7N1n5CO']},
+{'location' :  'Wiley', 'name' : ['Wiley'], 'id' : ['1sGTOD1NRFCwRIiAvFnc227aIg_NTY7zl']},
+{'location' :  'Williamsburg', 'name' : ['Williamsburg'], 'id' : ['1KnKryuopMfUWmW_RI7FKZcNKI6WULQ0a']},
+{'location' :  'Windsor', 'name' : ['Windsor'], 'id' : ['11aZ1xtT81cSCYBJ3zDwWxihoK7y-9Wqv']},
+{'location' :  'Winter Park', 'name' : ['Winter Park'], 'id' : ['1OVyzDlYdVfMUCNtdsCZZtpndFPN2uMxT']},
+{'location' :  'Woodland Park', 'name' : ['Woodland Park'], 'id' : ['1Zb-lDcncbb1fZoe08qzvtlx6wQn2DhCH']},
+{'location' :  'Wray', 'name' : ['Wray'], 'id' : ['1-EQF3uVK5Nqzi6C92xw25GNF6bEtxVXg']},
+{'location' :  'Yampa', 'name' : ['Yampa'], 'id' : ['1u-3OBIoyzDoXo8HD4aRkJEnBgokCAS3B']},
+{'location' :  'Yuma', 'name' : ['Yuma'], 'id' : ['1cQuf16N-gxcA-NSIhIVeWG0S5a0saKPt']}
+			]
+
+
+outid = link_list.filter(d => (d.location == name))
+return outid;
+} //update_link_PROFILE
 
 function downloadLinks(program, urls) {
 // downloadLinks generates DOM links for selected agencies and geographies
@@ -2894,9 +3288,34 @@ urls.forEach(links => {
     li_line.appendChild(outlink);
     olist.appendChild(li_line);
 	})
-}  else {
+}  
+if(program == "HNA"){
 	urls.forEach(links => {
-		out_link = update_link(links.name)
+		out_link = update_link_HNA(links.name)
+
+		for(i = 0; i < out_link.length; i ++){
+		nlinks = out_link[i].name.length
+		for(j = 0; j < nlinks; j++){
+			filelink = out_link[i].id[j]
+			filename = out_link[i].name[j]
+            var url = "https://drive.google.com/uc?export=download&id=" + filelink
+			var textName = "Download " + filename + " Data Bundle";
+			var outlink = document.createElement('a');
+			var li_line = document.createElement('li');
+			outlink.href = url;
+			outlink.innerText = textName;
+			outlink.title = textName;
+			outlink.ariaLabel = textName;
+			li_line.appendChild(outlink);
+			olist.appendChild(li_line);
+			}
+		}
+})
+}
+if(program == "PROFILE"){
+
+	urls.forEach(links => {
+		out_link = update_link_PROFILE(links.name)
 
 		for(i = 0; i < out_link.length; i ++){
 		nlinks = out_link[i].name.length
