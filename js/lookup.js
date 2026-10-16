@@ -4168,6 +4168,7 @@ var age_str = "";
 
 //sumSYA summarizes data based on agespec and group value
 function sumSYA(in_data,spec,grp, type){
+	
 	var out_data = [];
 	var columnsToSum = ["male", "female","total"]
 	switch(spec){
@@ -4189,21 +4190,18 @@ function sumSYA(in_data,spec,grp, type){
 		} 
 		
 		if(type == "region") {  // Region
-		var binroll =  d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.regionnum, d => d.countyfips, d => d.year);
+		var binroll =  d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.regval, d => d.year);
 		for (let [key, value] of binroll) {
 		for (let [key1, value1] of value){
-	    for (let [key2, value2] of value1) {
 		   out_data.push({ 'regionnum' : key,
 			'regionname' : regionName(key),
-			'countyfips' : key1,
-			'countyname' : key1 == 0 ? "Regional Total" : countyName(key1),
-			'year' : key2,
+			'countyname' : "Regional Total",
+			'year' : key1,
 			'age' : grp,
-			'male' : value2.male,
-			'female' : value2.female,
-			'total' : value2.total
+			'male' : value1.male,
+			'female' : value1.female,
+			'total' : value1.total
 		   })
-		};
 		};
 		};
 		} //type
@@ -4214,27 +4212,27 @@ function sumSYA(in_data,spec,grp, type){
 		if(type == "county"){
 		  out_data = in_data;
 		} else {
-		var binroll =  d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.regionnum, d => d.countyfips, d => d.year, d => d.age);
+		var binroll =  d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.regval,  d => d.year, d => d.age);
 		for (let [key, value] of binroll) {
 		for (let [key1, value1] of value){
 	    for (let [key2, value2] of value1) {
-	    for (let [key3, value3] of value2) {
 		   out_data.push({ 'regionnum' : key,
 			'regionname' : regionName(key),
-			'countyfips' : key1,
-			'countyname' : key1 == 0 ? "Regional Total" : countyName(key1),
-			'year' : key2,
-			'age' : key3,
-			'male' : value3.male,
-			'female' : value3.female,
-			'total' : value3.total
+			'year' : key1,
+			'age' : key2,
+			'male' : value2.male,
+			'female' : value2.female,
+			'total' : value2.total
 		   })
-		};
 		};
 		};
 		};
 		
 		} //type
+		debugger
+		console.log(in_data)
+		console.log(out_data)
+		
 		  break;
 		case "opt1" :
 		var binroll =  d3.rollup(in_data, v => Object.fromEntries(columnsToSum.map(col => [col, d3.sum(v, d => +d[col])])), d => d.regionnum, d => d.countyfips, d => d.year);
@@ -4549,10 +4547,12 @@ function genSYAReg(region,loc,year_arr,group,agespec, age_arr,yeardata) {
 	var year_list = year_arr.join(",")
 
 
+
 switch(agespec){
 	case "custom":
 	   var age_arr2 = []
-	   for(a = 0; a <= 100; a++) {age_arr2.push(a)}
+	   for(a = 0; a <= 100; a++) {
+		age_arr2.push(a)}
 		var age_list = age_arr2.join(",")
 	    var urlstr = "https://gis.dola.colorado.gov/lookups/sya?age=" + age_list + "&county=" + fips_list + "&year=" + year_list + "&choice=single"		
 		break;
@@ -4567,6 +4567,7 @@ switch(agespec){
 
 d3.json(urlstr).then(function(data){
 	
+
 
      var raw_data = []
 	  var raw_data = joinFUNCT(fips_arr,data,"countyfips","countyfips",function(dat,col){
@@ -4629,8 +4630,8 @@ d3.json(urlstr).then(function(data){
 	if(agespec == "single"){
 	  switch(group){
 		case "opt0" :
-			var el0 = "<td>" + tab_data[i].regval + "</td>"
-			var el1 = "<td>" + regionName(tab_data[i].regval) + "</td>"
+			var el0 = "<td>" + tab_data[i].regionnum + "</td>"
+			var el1 = "<td>" + regionName(tab_data[i].regionnum) + "</td>"
 			var el2 = "<td>" + tab_data[i].year + "</td>"
 			var el3 = "<td>" + tab_data[i].age + "</td>"
 			var el4 = "<td style='text-align: right'>" + fixNUMFMT(tab_data[i].male,"num") + "</td>"
@@ -4648,8 +4649,8 @@ d3.json(urlstr).then(function(data){
 			var tmp_row = "<tr>" + el0 + el1 + el2 + el3 + el4 + "</tr>";
 			break;
 		case "opt2" :
-			var el0 = "<td>" + tab_data[i].regval + "</td>"
-			var el1 = "<td>" + regionName(tab_data[i].regval) + "</td>"
+			var el0 = "<td>" + tab_data[i].regionnum + "</td>"
+			var el1 = "<td>" + regionName(tab_data[i].regionnum) + "</td>"
 			var el2 = "<td>" + tab_data[i].year + "</td>"
 			var el3 = "<td style='text-align: right'>" + fixNUMFMT(tab_data[i].male,"num") + "</td>"
 			var el4 = "<td style='text-align: right'>" + fixNUMFMT(tab_data[i].female,"num") + "</td>"
@@ -4668,8 +4669,8 @@ d3.json(urlstr).then(function(data){
 			break;
 	  }
 	} else {
-			var el0 = "<td>" + tab_data[i].regval + "</td>"
-			var el1 = "<td>" + regionName(tab_data[i].regval) + "</td>"
+			var el0 = "<td>" + tab_data[i].regionnum + "</td>"
+			var el1 = "<td>" + regionName(tab_data[i].regionnum) + "</td>"
 			var el2 = "<td>" + tab_data[i].year + "</td>"
 			var el3 = "<td>" + tab_data[i].age + "</td>"
 			var el4 = "<td style='text-align: right'>" + fixNUMFMT(tab_data[i].male,"num") + "</td>"
