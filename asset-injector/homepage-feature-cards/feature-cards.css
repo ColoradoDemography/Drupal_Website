@@ -195,3 +195,85 @@
     background-color: #ffffff !important;
     color: #0f2439 !important;
 }
+
+/* --- SDO List Button (Matches Data Help Tool Buttons) --- */
+/* --- Wrapper to center the button --- */
+.sdo-list-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* --- SDO List Button --- */
+/* --- Container to center the button --- */
+.sdo-list-btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* --- SDO List Button (Visual Styling) --- */
+/* --- Container to center the button --- */
+.sdo-list-btn-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;    /* Added breathing room above */
+    margin-bottom: 0;
+}
+
+/* --- SDO List Button (Visual Styling) --- */
+.sdo-list-btn {
+    position: relative; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem; /* Slightly wider side padding */
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #0f2439;
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 1.05rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Soft resting shadow */
+    
+    /* Removed width: 100% so it naturally hugs the text */
+    min-width: 320px; 
+}
+
+/* Icon styling */
+.sdo-list-btn i,
+.sdo-list-btn svg {
+    color: #0f2439;
+    flex-shrink: 0;
+}
+
+/* Base link styling inside the button */
+.sdo-list-btn a {
+    color: #0f2439 !important;
+    text-decoration: none !important; /* Forces the underline away */
+}
+
+/* Stretch the link invisibly over the entire .sdo-list-btn div */
+.sdo-list-btn .sdo-stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+}
+
+/* Hover state on the whole div */
+.sdo-list-btn:hover {
+    background-color: #f8f9fa;
+    border-color: #0f2439; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Slightly deeper shadow on hover */
+    transform: translateY(-1px); /* Subtle lift on hover */
+}
