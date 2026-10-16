@@ -205,7 +205,7 @@ if(muni == '12415'){cty_n = '035'};
 if(muni == '12635'){cty_n = '029'};
 if(muni == '12815'){cty_n = '005'};
 if(muni == '12855'){cty_n = '109'};
-if(muni == '12910'){cty_n = '047'};
+if(muni == '12900'){cty_n = '047'};
 if(muni == '13460'){cty_n = '089'};
 if(muni == '13845'){cty_n = '005'};
 if(muni == '14175'){cty_n = '017'};
@@ -849,7 +849,7 @@ function muniName(muni){
 	if(muni == 12635){name = 'Cedaredge'};
 	if(muni == 12815){name = 'Centennial'};
 	if(muni == 12855){name = 'Center'};
-	if(muni == 12910){name = 'Central City'};
+	if(muni == 12900){name = 'Central City'};
 	if(muni == 13460){name = 'Cheraw'};
 	if(muni == 13845){name = 'Cherry Hills Village'};
 	if(muni == 14175){name = 'Cheyenne Wells'};
@@ -1205,7 +1205,7 @@ function muniNum(name) {
 	if(name2 == 'Cedaredge'){num = 12635};
 	if(name2 == 'Centennial'){num = 12815};
 	if(name2 == 'Center'){num = 12855};
-	if(name2 == 'Central City'){num = 12910};
+	if(name2 == 'Central City'){num = 12900};
 	if(name2 == 'Cheraw'){num = 13460};
 	if(name2 == 'Cherry Hills Village'){num = 13845};
 	if(name2 == 'Cheyenne Wells'){num = 14175};
@@ -1640,7 +1640,7 @@ return name;
 
 function popDropdown(level,ddid,callpg) {
 //popDropdown populates drop down boxes based on input geography Type
-   
+
    //Counties
 var county = [  {'location':'Colorado', 'fips': '000'}, {'location':'Adams County', 'fips': '001'},
                 {'location':'Alamosa County', 'fips': '003'},{'location':'Arapahoe County', 'fips': '005'},
@@ -1780,7 +1780,7 @@ var municipality = [{'location' :  'Aguilar' , 'fips' : '00760'}, {'location' : 
 		{'location' :  'Carbonate' , 'fips' : '12030'},{'location' :  'Carbondale' , 'fips' : '12045'}, {'location' :  'Castle Pines' , 'fips' : '12387'},
 		{'location' :  'Castle Rock' , 'fips' : '12415'}, {'location' :  'Cedaredge' , 'fips' : '12635'},
 		{'location' :  'Centennial' , 'fips' : '12815'}, {'location' :  'Center' , 'fips' : '12855'},
-		{'location' :  'Central City' , 'fips' : '12910'}, {'location' :  'Cheraw' , 'fips' : '13460'},
+		{'location' :  'Central City' , 'fips' : '12900'}, {'location' :  'Cheraw' , 'fips' : '13460'},
 		{'location' :  'Cherry Hills Village' , 'fips' : '13845'}, {'location' :  'Cheyenne Wells' , 'fips' : '14175'},
 		{'location' :  'City of Creede' , 'fips' : '14765'}, {'location' :  'Coal Creek' , 'fips' : '15330'},
 		{'location' :  'Cokedale' , 'fips' : '15550'}, {'location' :  'Collbran' , 'fips' : '15605'},
@@ -2012,7 +2012,7 @@ var ctymuni = [{'location' : 'Aguilar', 'fips' : '07100760'}, {'location' : 'Akr
 		{'location' : 'Carbondale', 'fips' : '04512045'}, {'location' : 'Castle Pines', 'fips' : '03512390'},
 		{'location' : 'Castle Rock', 'fips' : '03512415'}, {'location' : 'Cedaredge', 'fips' : '02912635'},
 		{'location' : 'Centennial', 'fips' : '00512815'}, {'location' : 'Center', 'fips' : '10512855'},
-		{'location' : 'Central City', 'fips' : '01912910'}, {'location' : 'Cheraw', 'fips' : '08913460'},
+		{'location' : 'Central City', 'fips' : '01912900'}, {'location' : 'Cheraw', 'fips' : '08913460'},
 		{'location' : 'Cherry Hills Village', 'fips' : '00513845'}, {'location' : 'Cheyenne Wells', 'fips' : '01714175'},
 		{'location' : 'City of Creede', 'fips' : '07914765'}, {'location' : 'Coal Creek', 'fips' : '04315330'},
 		{'location' : 'Cokedale', 'fips' : '07115550'}, {'location' : 'Collbran', 'fips' : '07715605'},
@@ -2953,6 +2953,7 @@ hisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'population' : Math.round(+ob
     data[1].forEach(function(obj) {
      nonhisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'race' : obj.race, 'population' : Math.round(+obj.count)});
 });
+
 
 /*
     data[2].forEach(function(obj) {
@@ -4469,7 +4470,7 @@ if(fips == "000") {
  //Promise Structure
 var prom = [d3.json(povstr_prev),d3.json(povstr_cur),d3.json(educstr_prev),d3.json(educstr_cur),
             d3.json(incstr_prev),d3.json(incstr_cur),d3.json(homestr_prev),d3.json(homestr_cur),
-			d3.json(rentstr_prev),d3.json(rentstr_cur),d3.csv("../data/r-cpi-u-rs-allitems.csv")];
+			d3.json(rentstr_prev),d3.json(rentstr_cur),d3.csv("assets/data/r-cpi-u-rs-allitems.csv")];
 
 Promise.all(prom).then(function(data){
 
@@ -5738,7 +5739,7 @@ var CHART1 = document.getElementById("barcoc_output");
 		}
 	} else {
 	if(fips == "000") {
-      fips_list = [1,3,5,7,9,11,13,14,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87,89,91,93,95,97,99,101,103,105,107,109,111,113,115,117,119,121,123,125];
+      fips_list = 0;
     } else {
 		fips_list = [parseInt(fips)];
 	};		
@@ -5749,9 +5750,9 @@ var CHART1 = document.getElementById("barcoc_output");
 	for(i = 1991; i <= maxYr; i++){
 		yr_list = yr_list + "," + i;
 	};
-	
+
 	var esturl = "https://gis.dola.colorado.gov/lookups/sya?county=" + fips_list + "&year=" + yr_list + "&choice=single&group=3"
-	
+
 //forecasts and age projections
    var forc_yrs = 2010;
    	for(i = 2011; i <= maxYr; i++){
@@ -5801,11 +5802,14 @@ var netmig_data = [];
 	  netmig_data.push({'type' : 'region', 'fips' : parseInt(fips), 'name' : ctyName, 'age' : key,   'netmigration' : value.netmigration});
 		}
 
-} else {
+} else {  //counties
 	if(fips == "000") { //Colorado as a whole
+	
+
 //Estimates
 	var columnsEst = ['totalpopulation'];
  	var est_sum =      d3.rollup(data[0], v => Object.fromEntries(columnsEst.map(col => [col, d3.sum(v, d => +d[col])])), d => d.year);
+
 //Flatten Arrays
 	var est_data = [];
 	for (let [key, value] of est_sum) {
@@ -5830,6 +5834,7 @@ var netmig_data = [];
 //Estimates
 	var columnsEst = ['totalpopulation'];
  	var est_sum =      d3.rollup(data[0], v => Object.fromEntries(columnsEst.map(col => [col, d3.sum(v, d => +d[col])])), d => d.year);
+
 //Flatten Arrays
 	var est_data = [];
 	for (let [key, value] of est_sum) {
@@ -5848,6 +5853,7 @@ var netmig_data = [];
 }; 
 
 //Plotting 
+
 
 	estPlot(est_data, "dashboard", "County",  "est_output", "", yrvalue, maxYr, fips, ctyName, colors);
 	genCOCHIST(geotype, fips, yrvalue, 1970, endyr, ['births','deaths','netmig'], "yr5", "linecoc_output", "barcoc_output") 
@@ -8059,10 +8065,10 @@ var tit_str2 = "Occupied and Vacant Housing Units " + plName;
 			customdata : tr_vac_pct_lab,
 			hovertemplate : '%{customdata}',
 			hoverlabel : {namelength :0},
-			marker: {color: '#ff7f0e', opacity : 0.8},
+			marker: {color: 'brown', opacity : 0.8},
 			name : 'Vacant Housing Units',
 			type : 'bar',
-			color : '#ff7f0e'
+			color : colors[4]
 			};
  var ch_2 = [occ_bar, vac_bar];
  
