@@ -119,7 +119,7 @@ d3.json(urlstr).then(function(yeardata){
 
  popDropdown('county','county-dropdown','jobs');
  
- yeardata2 = yeardata.filter(i => i.year >= 2001 && i.year <= 2050);
+ yeardata2 = yeardata.filter(i => i.year >= 2001 && i.year <= 2050); console.log(yeardata2);
  
  popYrdd("year-dropdown",yeardata2);  //Change this range to match data
  
