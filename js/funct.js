@@ -2217,18 +2217,18 @@ if(level == 'region' || level == 'regioncomp') {
 		sel.add(grp)
 	}
 	
-    } else {
-	if(callpg == 'jobs'){
-		var sel = document.getElementById(ddid);
-		for(var i = 0; i < locarr.length; i++) {
-			var el = document.createElement("option");
-			el.textContent = locarr[i].location;
-			if(["001","005","013","014","031","035","059"].includes(locarr[i].fips)){
-				el.style.color = "#A51C30"
-			}
-			el.value = locarr[i].fips;
-			sel.appendChild(el);
-		}
+    //} else {
+	//if(callpg == 'jobs'){
+		//var sel = document.getElementById(ddid);
+		//for(var i = 0; i < locarr.length; i++) {
+			//var el = document.createElement("option");
+			//el.textContent = locarr[i].location;
+			//if(["001","005","013","014","031","035","059"].includes(locarr[i].fips)){
+				//el.style.color = "#A51C30"
+			//}
+			//el.value = locarr[i].fips;
+			//sel.appendChild(el);
+		//}
 	} else {
 	if(callpg == 'lookup') {
 		locarr.shift()
