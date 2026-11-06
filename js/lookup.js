@@ -46,13 +46,10 @@ function genYR(begYr, endYr){
 //genYR Range Generates year range data for lookup year dropdowns
 	outYr = [];
 	for(i = begYr; i <= endYr; i++){
-		if(i < 2025){
+	
 		outYr.push({"year" : i, 
 		"datatype" :'Estimate'})
-		} else {
-		outYr.push({"year" : i, 
-		"datatype" :'Projection'})
-		}
+
 	}
 return(outYr);
 }
