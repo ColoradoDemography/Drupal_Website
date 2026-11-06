@@ -2368,7 +2368,7 @@ function genHHTab(indata,yrdata,level){
 		} //for j
 
 		if(key_arr.includes("year")){
-			var yrtmp = yrdata.filter(d => d.year = i.year); console.log(yrtmp);
+			var yrtmp = yrdata.filter(d => d.year = i.year);
 			out_tab = out_tab + "<td>" + yrtmp[0].datatype + "</td>"
 		}
 			out_tab = out_tab + "</tr>" 
