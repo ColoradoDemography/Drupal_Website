@@ -1,0 +1,174 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* ==========================================================================
+   SDO DASHBOARD CONTROLS & TABLES (Standalone Non-Sticky Injector Rule)
+   ========================================================================== */
+
+/* --- TOP CONTROL BAR (Static Card) --- */
+.sdo-control-bar {
+  background-color: #0f2439; /* DOLA Navy */
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-top: 4px solid #c8102e; /* DOLA Red Accent Line */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 2rem;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+.sdo-control-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.sdo-dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sdo-dropdown-group label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sdo-dropdown-group label i {
+  color: #ffffff;
+  font-size: 1.2em;
+}
+
+.county-dropdown {
+  padding: 8px 16px;
+  font-size: 11pt;
+  font-weight: 700;
+  color: #0f2439;
+  background-color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.county-dropdown:focus, 
+.county-dropdown:hover {
+  border-color: #c8102e; /* DOLA Red highlight on hover */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.3);
+}
+
+/* --- QUICK JUMP LINKS --- */
+.sdo-jump-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.sdo-jump-links .jump-label {
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.sdo-jump-links a {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.12);
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none !important;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sdo-jump-links a:hover {
+  background-color: #ffffff !important;
+  color: #0f2439 !important;
+}
+
+/* --- DASHBOARD TABLES & CONTAINERS --- */
+#PopTab, #RaceTab, #HousTab, #TenureTab, #COCTab, #ACSTab {
+  background: #ffffff;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+/* Table Headings */
+.h2_style {
+  font-size: 1.25rem !important;
+  color: #0f2439 !important; /* DOLA Navy */
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+  font-weight: 700;
+}
+
+/* Table Design */
+.sdo-dashboard-card table,
+#PopTab table, #RaceTab table, #HousTab table, 
+#TenureTab table, #COCTab table, #ACSTab table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 9.5pt;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+thead th {
+  background-color: #0f2439 !important; /* DOLA Navy Header */
+  color: #ffffff !important;
+  border: 1px solid #0f2439 !important;
+  padding: 8px 6px !important;
+  font-weight: 600;
+}
+
+td {
+  border: 1px solid #cbd5e1 !important;
+  padding: 6px 8px !important;
+  vertical-align: middle;
+}
+
+tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Table Links */
+#PopTab a, #RaceTab a, #HousTab a, 
+#TenureTab a, #COCTab a, #ACSTab a {
+  color: #0062a0;
+  text-decoration: none;
+  font-size: 9pt;
+}
+
+#PopTab a:hover, #RaceTab a:hover, #HousTab a:hover, 
+#TenureTab a:hover, #COCTab a:hover, #ACSTab a:hover {
+  text-decoration: underline;
+  color: #c8102e; /* DOLA Red hover */
+}
+
+/* Font Awesome SVG Arrow Scale Fix */
+td svg.svg-inline--fa {
+  height: 0.85em !important;
+  width: auto !important;
+  vertical-align: middle;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .sdo-control-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .sdo-jump-links {
+    display: none;
+  }
+}
