@@ -188,13 +188,18 @@
   // --- DASHBOARD TABLE GENERATORS --- //
 
   function genSYA(fips, yrvalue, geoName) {
-    var fmt_comma = d3.format(",");
-    var fips_list = getFipsList(fips);
+    // Zero-Intercept Rule: use pre-aggregated county=0 for Statewide Colorado
+    var fips_list = (fips === "000" || fips === 0 || fips === "0") ? 0 : parseInt(fips, 10);
     var prevyear = yrvalue - 1;
     var year10 = 2030;
     var yr_list = prevyear + "," + yrvalue + "," + year10;
     var urlstr = "https://gis.dola.colorado.gov/lookups/sya?county=" + fips_list + "&year=" + yr_list + "&choice=single&group=3";
     var totaldata = [];
+
+    function fmtNum(val) {
+      var rounded = Math.round(val);
+      return typeof formatSDO === "function" ? formatSDO(rounded, "num") : d3.format(",")(rounded);
+    }
 
     d3.json(urlstr).then(function (data) {
       if (!data || !data.length) return;
@@ -204,7 +209,8 @@
         else if (obj.age >= 25 && obj.age <= 44) obj.age_cat = "25 to 44";
         else if (obj.age >= 45 && obj.age <= 64) obj.age_cat = "45 to 64";
         else if (obj.age >= 65) obj.age_cat = "65 +";
-        totaldata.push({ year: obj.year, age_cat: obj.age_cat, totalpopulation: parseInt(obj.totalpopulation, 10) });
+        // Sum unrounded floats; round only at display time to match SYA Lookup
+        totaldata.push({ year: +obj.year, age_cat: obj.age_cat, totalpopulation: +obj.totalpopulation });
       });
 
       var total_ann = d3.rollup(totaldata, v => d3.sum(v, d => d.totalpopulation), d => d.year);
@@ -230,9 +236,9 @@
       if (total_ann_flat.length >= 3) {
         tbl_arr.push({
           age_cat: '<b>Total</b>',
-          prevval: "<b>" + fmt_comma(total_ann_flat[0].totalpopulation) + "</b>",
-          curval: "<b>" + fmt_comma(total_ann_flat[1].totalpopulation) + "</b>",
-          forval: "<b>" + fmt_comma(total_ann_flat[2].totalpopulation) + "</b>"
+          prevval: "<b>" + fmtNum(total_ann_flat[0].totalpopulation) + "</b>",
+          curval: "<b>" + fmtNum(total_ann_flat[1].totalpopulation) + "</b>",
+          forval: "<b>" + fmtNum(total_ann_flat[2].totalpopulation) + "</b>"
         });
       }
 
@@ -242,9 +248,9 @@
         if (filt.length >= 3) {
           tbl_arr.push({
             age_cat: ages[i],
-            prevval: fmt_comma(filt[0].totalpopulation),
-            curval: fmt_comma(filt[1].totalpopulation),
-            forval: fmt_comma(filt[2].totalpopulation)
+            prevval: fmtNum(filt[0].totalpopulation),
+            curval: fmtNum(filt[1].totalpopulation),
+            forval: fmtNum(filt[2].totalpopulation)
           });
         }
       }
@@ -338,8 +344,12 @@
 
   function genRaceEth(fips, yrvalue, geoName) {
     var fmt_pct = d3.format(".2%");
-    var fmt_comma = d3.format(",");
     var fips_list = getFipsList(fips);
+
+    function fmtNum(val) {
+      var rounded = Math.round(val);
+      return typeof formatSDO === "function" ? formatSDO(rounded, "num") : d3.format(",")(rounded);
+    }
 
     var age_list = "0";
     for (var i = 1; i <= 100; i++) { age_list += "," + i; }
@@ -373,14 +383,25 @@
       var raceeth_est = hisp_flat.concat(nonhisp_flat);
       var tbl_arr = [];
       var race_eth_sum = d3.sum(raceeth_est, d => d.population);
-      var raceth = ['Hispanic', 'White alone NH', 'Black or African American alone NH',
-        'Asian alone NH', 'Native Hawaiian and Other Pacific Islander alone NH',
-        'American Indian and Alaska Native alone NH', 'Two or more NH'];
+      var raceth = [
+        'Hispanic',
+        'White alone NH',
+        'Black or African American alone NH',
+        'Asian alone NH',
+        'Native Hawaiian and Other Pacific Islander alone NH',
+        'American Indian and Alaska Native alone NH',
+        'Two or More NH'
+      ];
 
       for (var i = 0; i < raceth.length; i++) {
-        var filt = raceeth_est.filter(d => d.race_eth == raceth[i]);
+        var targetLabel = raceth[i].toLowerCase();
+        var filt = raceeth_est.filter(d => d.race_eth && d.race_eth.toLowerCase() === targetLabel);
         if (filt.length > 0) {
-          tbl_arr.push({ race_eth: raceth[i], percent: fmt_pct(filt[0].population / race_eth_sum), curval: fmt_comma(filt[0].population) });
+          tbl_arr.push({
+            race_eth: raceth[i],
+            percent: fmt_pct(race_eth_sum ? filt[0].population / race_eth_sum : 0),
+            curval: fmtNum(filt[0].population)
+          });
         }
       }
 
