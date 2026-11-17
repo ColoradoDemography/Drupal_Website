@@ -2343,7 +2343,7 @@ function restructureRace(inData) {
 				  if( tmp[j].race_eth == "Asian alone NH") {AS = tmp[j].population};
 				  if( tmp[j].race_eth == "Native Hawaiian and Other Pacific Islander alone NH") {NH = tmp[j].population};
 				  if( tmp[j].race_eth == "American Indian and Alaska Native alone NH") {AM = tmp[j].population};
-		          if( tmp[j].race_eth == "Two or more NH") {MULTI = tmp[j].population};
+		          if( tmp[j].race_eth == "Two or More NH") {MULTI = tmp[j].population};
 				}
 		output.push({"fips" : tmp[0].fips, "name" : tmp[0].name, "age" : tmp[0].age, 
 					"Hispanic" : HP, 
@@ -2925,9 +2925,10 @@ for(i = 1; i<= 100; i++){
   
  //Generate url
  if(fips == "000") {
- fips_list = "1,3,5,7,9,11,13,14,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87,89,91,93,95,97,99,101,103,105,107,109,111,113,115,117,119,121,123,125";
+ fips_list = "0";
 
  } 
+
 //estimates urls
 urlstr_hispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age="+ age_list + "&county="+ fips_list +"&year="+ yrvalue +"&race=1,2,3,4,5,6&ethnicity=1&group=opt7";
 urlstr_nonhispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age="+ age_list + "&county="+ fips_list +"&year="+ yrvalue +"&race=1,2,3,4,5,6&ethnicity=2&group=opt7";;
@@ -2939,7 +2940,6 @@ urlstr_nonhispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estim
 //Promise Structure
 //var prom = [d3.json(urlstr_hispest),d3.json(urlstr_nonhispest),d3.json(urlstr_for)];
 var prom = [d3.json(urlstr_hispest),d3.json(urlstr_nonhispest)];
-
 
 Promise.all(prom).then(function(data){
 	var hisp_est = [];
@@ -2953,7 +2953,6 @@ hisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'population' : Math.round(+ob
     data[1].forEach(function(obj) {
      nonhisp_est.push({'year' : obj.year, 'sex' : obj.sex, 'race' : obj.race, 'population' : Math.round(+obj.count)});
 });
-
 
 /*
     data[2].forEach(function(obj) {
@@ -3000,9 +2999,8 @@ var tbl_arr = []
 var race_eth_sum = d3.sum(raceeth_est, d => d.population);
 var raceth = ['Hispanic', 'White alone NH', 'Black or African American alone NH',
 			'Asian alone NH', 'Native Hawaiian and Other Pacific Islander alone NH', 
-			'American Indian and Alaska Native alone NH', 'Two or more NH'];
+			'American Indian and Alaska Native alone NH', 'Two or More NH'];
 			
-
 for(i = 0; i < raceth.length; i++) {
 	var filt = raceeth_fin.filter(function(d) {return d.race_eth == raceth[i]});
 	//tbl_arr.push({'race_eth' : raceth[i], 'percent' : fmt_pct(filt[0].population/race_eth_sum), 'curval' : fmt_comma(filt[0].population), 'forval' : fmt_comma(filt[1].population)});
@@ -6032,7 +6030,7 @@ for(i = 0; i < race_flat.length; i++){
 		age_line_arr_ai.push(race_flat[i].age);
 		pop_line_arr_ai.push(race_flat[i].population);
 	};
-	if(race_flat[i].race_eth == "Two or more NH" && race_flat[i].age < 85){
+	if(race_flat[i].race_eth == "Two or More NH" && race_flat[i].age < 85){
 		age_line_arr_mu.push(race_flat[i].age);
 		pop_line_arr_mu.push(race_flat[i].population);
 	};

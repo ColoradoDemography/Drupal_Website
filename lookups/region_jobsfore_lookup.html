@@ -52,7 +52,7 @@
   <!--<h1 class='h1_style' id='mainx' title='State and Regional Jobs Forecast Lookup' aria-label='State and Regional Jobs Forecast Lookup'>State and Regional Jobs Forecast Lookup</h1>-->
   <p>
   
-  <a href="https://demography.colorado.gov/county-jobs-estimate-and-forecast-lookup" target='_blank' title='Need County Data?' aria-label='Need County Data?'>Need County Data?</a><br>
+  <!--<a href="https://demography.colorado.gov/county-jobs-estimate-and-forecast-lookup" title='Need County Data?' aria-label='Need County Data?'>Need County Data?</a><br>-->
   <a href='https://gis.dola.colorado.gov/RegionsMap/' target='_blank' title='Colorado Regions Map' aria-label='Colorado Regions Map'>Colorado Regions Map</a>
   
   </p>
@@ -60,10 +60,10 @@
    <p class="lookup_p">
    This application creates custom tables for SDO State and Regional job forecasts.
    </p>
-  <p class="lookup_p">
+  <!--<p class="lookup_p">
    A spreadsheet with detailed information for jobs is available on the 
-   <a href='https://demography.colorado.gov/colorado-economy-and-jobs' target='_blank'>SDO Economy and Jobs Spreadsheets</a> page.
-  </p>
+   <a href='https://demography.colorado.gov/colorado-economy-and-jobs'>SDO Economy and Jobs Spreadsheets</a> page.
+  </p>-->
       <table class='lookup_tab' cellspacing="0" cellpadding="0">
    <tr>
 	<td class="look_cll">
@@ -124,7 +124,7 @@ d3.json(urlstr).then(function(yeardata){
 
  popDropdown('region','region-dropdown','lookup');
  
- yeardata2 = yeardata.filter(i => i.year >= 1990 && i.datatype == "Projection");
+ yeardata2 = yeardata.filter(i => i.year >= 1990 && i.datatype == "Projection" && i.year <= 2050);
  
  popYrdd("year-dropdown",yeardata2);  //Change this range to match data
  
