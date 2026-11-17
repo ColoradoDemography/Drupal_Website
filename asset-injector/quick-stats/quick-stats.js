@@ -22,28 +22,47 @@
       selectElem.setAttribute('data-sdo-init', 'true');
 
       loadD3(function () {
-        var currentYear = 2024; // State Estimate Year
-        var acsYear = 2024;     // ACS 5-Year Vintage
+        var acsYear = 2024; // ACS 5-Year Vintage (2020-2024)
 
         populateCountySelect(selectElem);
 
-        function updateDashboard(fips) {
-          var geoName = getGeoName(fips);
+        // Resolve latest SDO estimate year (2025) from componentYRS with safe 2025 fallback
+        d3.json("https://gis.dola.colorado.gov/lookups/componentYRS")
+          .then(function (yeardata) {
+            var detectedYear = (typeof sdoGetLatestEstimateYear === "function" && Array.isArray(yeardata) && yeardata.length)
+              ? sdoGetLatestEstimateYear(yeardata)
+              : 2025;
+            var currentYear = detectedYear >= 2025 ? detectedYear : 2025;
 
-          genSYA(fips, currentYear, geoName);
-          genHousing(fips, currentYear, geoName);
-          genCOC(fips, currentYear, geoName);
-          genRaceEth(fips, currentYear, geoName);
-          genTenure(fips, acsYear, geoName);
-          genACS(fips, acsYear, geoName);
+            if (typeof SDO_STATE !== "undefined") {
+              SDO_STATE.latestEstimateYear = currentYear;
+            }
+            initQuickStats(currentYear);
+          })
+          .catch(function (err) {
+            console.warn("componentYRS lookup failed, defaulting to 2025:", err);
+            initQuickStats(2025);
+          });
+
+        function initQuickStats(currentYear) {
+          function updateDashboard(fips) {
+            var geoName = getGeoName(fips);
+
+            genSYA(fips, currentYear, geoName);
+            genHousing(fips, currentYear, geoName);
+            genCOC(fips, currentYear, geoName);
+            genRaceEth(fips, currentYear, geoName);
+            genTenure(fips, acsYear, geoName);
+            genACS(fips, acsYear, geoName);
+          }
+
+          var initialFips = selectElem.value || '000';
+          updateDashboard(initialFips);
+
+          $(selectElem).on('change', function () {
+            updateDashboard($(this).val());
+          });
         }
-
-        var initialFips = selectElem.value || '000';
-        updateDashboard(initialFips);
-
-        $(selectElem).on('change', function () {
-          updateDashboard($(this).val());
-        });
       });
     }
   };
@@ -95,6 +114,9 @@
 
   function getFipsList(fips) {
     if (fips === "000" || fips === 0 || fips === "0") {
+      if (typeof sdoGetRegionCounties === "function") {
+        return sdoGetRegionCounties(0).map(function (d) { return parseInt(d, 10); }).join(",");
+      }
       return "1,3,5,7,9,11,13,14,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83,85,87,89,91,93,95,97,99,101,103,105,107,109,111,113,115,117,119,121,123,125";
     }
     return parseInt(fips, 10);
@@ -422,6 +444,7 @@
           hhldpoptothuratio: obj.householdpopulation / obj.totalhousingunits
         });
       }
+      housing_fin.sort((a, b) => d3.ascending(+a.year, +b.year));
 
       var housing_T = transpose(housing_fin);
       var housing_fint = Object.values(housing_T);
