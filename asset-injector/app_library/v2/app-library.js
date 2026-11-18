@@ -62,6 +62,7 @@ function registerGalleryComponents() {
     ],
 
     async init() {
+      this.loading = true;
       try {
         this.apps = await fetchGalleryData();
         this.extractTags();
