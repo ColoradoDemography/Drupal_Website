@@ -2194,6 +2194,7 @@ a.skip-main:focus, a.skip-main:active {
 
 
 /* Temporary Mobile Stopgap for Legacy Lookup Iframes 11/18/2026*/
+
 @media only screen and (max-width: 767px) {
     .grid-container2 {
         display: block !important;
@@ -2203,25 +2204,68 @@ a.skip-main:focus, a.skip-main:active {
         width: 100% !important;
         padding: 12px !important;
     }
-    .lookup_tab,
+    .lookup_tab {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
     .lookup_tab tbody,
-    .lookup_tab tr,
+    .lookup_tab tr {
+        display: contents !important;
+    }
     .lookup_tab td.look_cll,
     .lookup_tab td.lookup_cll {
         display: block !important;
         width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* Interleave Row 1 labels with Row 2 inputs */
+    .lookup_tab tr:nth-child(1) td:nth-child(1) { order: 1; }
+    .lookup_tab tr:nth-child(2) td:nth-child(1) { order: 2; }
+    .lookup_tab tr:nth-child(1) td:nth-child(2) { order: 3; }
+    .lookup_tab tr:nth-child(2) td:nth-child(2) { order: 4; }
+    .lookup_tab tr:nth-child(1) td:nth-child(3) { order: 5; }
+    .lookup_tab tr:nth-child(2) td:nth-child(3) { order: 6; }
+    .lookup_tab tr:nth-child(1) td:nth-child(4) { order: 7; }
+    .lookup_tab tr:nth-child(2) td:nth-child(4) { order: 8; }
+    .lookup_tab tr:nth-child(1) td:nth-child(5) { order: 9; }
+    .lookup_tab tr:nth-child(2) td:nth-child(5) { order: 10; }
+    .lookup_tab tr:nth-child(1) td:nth-child(6) { order: 11; }
+    .lookup_tab tr:nth-child(2) td:nth-child(6) { order: 12; }
+
+    /* Support 4-row lookup tables if any legacy pages stack a second pair of rows */
+    .lookup_tab tr:nth-child(3) td:nth-child(1) { order: 13; }
+    .lookup_tab tr:nth-child(4) td:nth-child(1) { order: 14; }
+    .lookup_tab tr:nth-child(3) td:nth-child(2) { order: 15; }
+    .lookup_tab tr:nth-child(4) td:nth-child(2) { order: 16; }
+    .lookup_tab tr:nth-child(3) td:nth-child(3) { order: 17; }
+    .lookup_tab tr:nth-child(4) td:nth-child(3) { order: 18; }
+    .lookup_tab tr:nth-child(3) td:nth-child(4) { order: 19; }
+    .lookup_tab tr:nth-child(4) td:nth-child(4) { order: 20; }
+    .lookup_tab tr:nth-child(3) td:nth-child(5) { order: 21; }
+    .lookup_tab tr:nth-child(4) td:nth-child(5) { order: 22; }
+    .lookup_tab tr:nth-child(3) td:nth-child(6) { order: 23; }
+    .lookup_tab tr:nth-child(4) td:nth-child(6) { order: 24; }
+
+    .lookup_tab label.entry_text {
+        display: block !important;
+        font-weight: bold !important;
+        margin-top: 10px !important;
+        margin-bottom: 4px !important;
     }
     .lookup_tab select {
         width: 100% !important;
         max-width: 100% !important;
-        font-size: 16px !important; /* Stops iOS Safari iframe zoom bug */
-        margin-bottom: 12px !important;
+        min-height: 44px !important;
+        font-size: 16px !important; /* Stops iOS auto-zoom inside iframes */
+        margin-bottom: 10px !important;
     }
     .lookup_tab .databutton {
         display: block !important;
         width: 100% !important;
         padding: 10px !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 4px !important;
     }
     #tbl_output {
         width: 100% !important;
