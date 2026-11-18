@@ -165,25 +165,27 @@ td svg.svg-inline--fa {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .sdo-control-bar {
-    padding: 1rem;
+    padding: 1rem !important;
   }
   .sdo-control-inner {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: column !important;
+    align-items: stretch !important;
   }
   .sdo-dropdown-group {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 8px !important;
   }
   .county-dropdown {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    font-size: 16px; /* Prevents iOS Safari/Chrome auto-zoom on tap */
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important; /* Prevents iOS auto-zoom on tap */
   }
   .sdo-jump-links {
-    display: none;
+    display: none !important;
   }
 }
