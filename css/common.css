@@ -2195,6 +2195,11 @@ a.skip-main:focus, a.skip-main:active {
 
 /* Temporary Mobile Stopgap for Legacy Lookup Iframes 11/18/2026*/
 
+/* Hide mobile multi-select summary pill on desktop */
+.sdo-mobile-select-summary {
+    display: none;
+}
+
 @media only screen and (max-width: 767px) {
     .grid-container2 {
         display: block !important;
@@ -2270,5 +2275,24 @@ a.skip-main:focus, a.skip-main:active {
     #tbl_output {
         width: 100% !important;
         overflow-x: auto !important;
+    }
+    /* Shows selection summary for mobile devices */
+    .sdo-mobile-select-summary {
+        display: block;
+        font-size: 13px;
+        color: #555;
+        background: #f4f6f8;
+        border: 1px solid #d9e2ec;
+        border-radius: 4px;
+        padding: 6px 10px;
+        margin-top: -6px;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+    .sdo-mobile-select-summary.has-selection {
+        color: #003b49;
+        background: #ebf4fa;
+        border-color: #90cdf4;
+        font-weight: 600;
     }
 }

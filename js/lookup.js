@@ -5545,3 +5545,60 @@ $(tabObj).DataTable({
 }) //data
 } 
 // genNetMIGReg
+
+// Mobile iOS WebKit Multi-Select Fix & Selection Readout
+(function initMobileMultiSelectFix() {
+    function syncSelectSummary(selectEl) {
+        if (!selectEl || !selectEl.multiple) return;
+        selectEl.removeAttribute('role'); // Fixes iOS WebKit stuck "0 items" pill bug
+
+        var summaryId = selectEl.id ? selectEl.id + '-mobile-summary' : null;
+        var summaryEl = summaryId ? document.getElementById(summaryId) : selectEl.nextElementSibling;
+
+        if (!summaryEl || !summaryEl.classList.contains('sdo-mobile-select-summary')) {
+            summaryEl = document.createElement('div');
+            summaryEl.className = 'sdo-mobile-select-summary';
+            if (summaryId) summaryEl.id = summaryId;
+            selectEl.parentNode.insertBefore(summaryEl, selectEl.nextSibling);
+        }
+
+        var selectedLabels = Array.from(selectEl.options)
+            .filter(function(opt) { return opt.selected && opt.text.trim() !== ''; })
+            .map(function(opt) { return opt.text.trim(); });
+
+        if (selectedLabels.length === 0) {
+            summaryEl.textContent = 'None selected';
+            summaryEl.classList.remove('has-selection');
+        } else {
+            summaryEl.textContent = 'Selected (' + selectedLabels.length + '): ' + selectedLabels.join(', ');
+            summaryEl.classList.add('has-selection');
+        }
+    }
+
+    function refreshAllMultiSelects() {
+        document.querySelectorAll('select[multiple]').forEach(syncSelectSummary);
+    }
+
+    document.addEventListener('DOMContentLoaded', refreshAllMultiSelects);
+    window.addEventListener('load', refreshAllMultiSelects);
+
+    // Handle dynamic selects (e.g., SYA single-year age selector) and live iOS sheet taps
+    document.addEventListener('touchstart', function(e) {
+        if (e.target && e.target.matches('select[multiple]')) {
+            syncSelectSummary(e.target);
+        }
+    }, { passive: true });
+
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.matches('select[multiple]')) {
+            syncSelectSummary(e.target);
+        }
+    });
+
+    // Sync readout when legacy "Reset Selections" button clears selectedIndex = -1
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'cleartable') {
+            setTimeout(refreshAllMultiSelects, 0);
+        }
+    });
+})();
