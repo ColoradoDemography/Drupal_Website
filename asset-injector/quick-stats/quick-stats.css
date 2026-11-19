@@ -164,28 +164,63 @@ td svg.svg-inline--fa {
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+  /* Safe 15px-per-side breakout (30px total) */
+  .sdo-control-bar,
+  #PopTab, #RaceTab, #HousTab, #TenureTab, #COCTab, #ACSTab {
+    width: calc(100% + 40px) !important;
+    max-width: none !important;
+    margin-left: -20px !important;
+    margin-right: -20px !important;
+    box-sizing: border-box !important;
+  }
+
   .sdo-control-bar {
-    padding: 1rem !important;
+    padding: 0.75rem 15px;
+    margin-bottom: 1.25rem;
+    border-radius: 4px;
   }
   .sdo-control-inner {
-    flex-direction: column !important;
-    align-items: stretch !important;
+    flex-direction: column;
+    align-items: stretch;
   }
   .sdo-dropdown-group {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    gap: 8px !important;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
   }
   .county-dropdown {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    font-size: 16px !important; /* Prevents iOS auto-zoom on tap */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 16px; /* Prevents iOS Safari auto-zoom */
   }
   .sdo-jump-links {
-    display: none !important;
+    display: none;
+  }
+
+  /* Reclaim table width and override fixed equal-width columns from funct.js */
+  #PopTab, #RaceTab, #HousTab, #TenureTab, #COCTab, #ACSTab {
+    padding: 8px 6px;
+    margin-bottom: 12px;
+    overflow-x: auto;
+  }
+  #PopTab table, #RaceTab table, #HousTab table,
+  #TenureTab table, #COCTab table, #ACSTab table {
+    table-layout: auto !important;
+    width: 100% !important;
+    font-size: 8.5pt;
+  }
+  #PopTab thead th, #RaceTab thead th, #HousTab thead th,
+  #TenureTab thead th, #COCTab thead th, #ACSTab thead th {
+    width: auto !important;
+    padding: 6px 4px !important;
+    font-size: 8.5pt !important;
+  }
+  #PopTab td, #RaceTab td, #HousTab td,
+  #TenureTab td, #COCTab td, #ACSTab td {
+    width: auto !important;
+    padding: 5px 4px !important;
+    font-size: 8.5pt !important;
   }
 }
