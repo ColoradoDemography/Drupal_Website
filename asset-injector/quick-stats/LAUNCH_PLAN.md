@@ -39,8 +39,8 @@ P1
 - [x] Remove the duplicate Census API key fallbacks; keep the key in one place (`getCensusKey()` in `quick-stats.js`; still prefers `SDO_CONFIG` from the shared utility).
 - [x] Review the hardcoded 2025 fallback year: now `FALLBACK_ESTIMATE_YEAR` in the settings block at the top of `quick-stats.js`; used only if `componentYRS` fails.
 - [x] 2030 forecast: decided to use latest estimate year + 5 (`FORECAST_YEARS_AHEAD`), so the column and label update automatically (currently 2030).
-- [x] `acsYear` is now `ACS_YEAR` in the same settings block. Annual update step: change `ACS_YEAR` and add the new year's CPI to `SDO_CPI_TABLE` (a missing CPI year silently gives an adjustment factor of 1 - still to be hardened).
-- [ ] Verify statewide, county and Broomfield (FIPS 14, combined city/county) calculations.
+- [x] Decide how `acsYear` (2024) and the CPI table are updated each year, and document it: see `ANNUAL_UPDATE.md`. A missing CPI year now shows an error and console message instead of silently using a factor of 1.
+- [x] Verify statewide, county and Broomfield (FIPS 14) calculations: population totals, components and Census tenure/income match the raw APIs exactly for Colorado, Broomfield and Hinsdale. Fixed "NaN%" change for zero-to-zero values (Hinsdale group quarters); zero-to-nonzero now shows "n/a".
 - [ ] Verify mobile layout.
 
 Do not redesign the shared utility in this step.

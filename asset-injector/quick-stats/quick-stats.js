@@ -150,10 +150,20 @@
     2020: 381.2, 2021: 399.0, 2022: 429.7, 2023: 447.2, 2024: 460.0
   };
 
+  // Returns null when either year is missing from SDO_CPI_TABLE so callers can fail visibly
+  // instead of silently comparing unadjusted dollars.
   function getCPIAdj(curyr, prevyr) {
-    var curCPI = SDO_CPI_TABLE[curyr] || 1;
-    var prevCPI = SDO_CPI_TABLE[prevyr] || 1;
+    var curCPI = SDO_CPI_TABLE[curyr];
+    var prevCPI = SDO_CPI_TABLE[prevyr];
+    if (!curCPI || !prevCPI) return null;
     return curCPI / prevCPI;
+  }
+
+  // Percent change that avoids "NaN%" / "Infinity%" when the earlier value is zero.
+  function pctChangeText(cur, prev, fmt) {
+    cur = +cur; prev = +prev;
+    if (prev === 0) return cur === 0 ? fmt(0) : "n/a";
+    return fmt((cur - prev) / prev);
   }
 
   function acsChkDiff(curpct, curmoe, prevpct, prevmoe) {
@@ -358,8 +368,7 @@
           var outname = COC_fint[i][0][0]['name'];
           var prevVal = COC_fint[i][0][0]['value'];
           var curVal = COC_fint[i][1][0]['value'];
-          var pctchg = prevVal === 0 ? 0 : (curVal - prevVal) / prevVal;
-          tbl_arr.push({ coc_name: outname, prevval: fmt_comma(prevVal), curval: fmt_comma(curVal), pct_chg: fmt_pct(pctchg) });
+          tbl_arr.push({ coc_name: outname, prevval: fmt_comma(prevVal), curval: fmt_comma(curVal), pct_chg: pctChangeText(curVal, prevVal, fmt_pct) });
         }
       }
 
@@ -536,22 +545,22 @@
           if (housing_fint[i][0][0].name == 'totalhousingunits') {
             out_name = "Total Housing Units";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'householdpopulation') {
             out_name = "Household Population";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'groupquarterspopulation') {
             out_name = "Group Quarters Population";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'censusbuildingpermits') {
             out_name = "Annual Building Permits";
             cVal = fmt_comma(currentVal);
-            pctVal = prevVal != 0 ? fmt_pct((currentVal - prevVal) / prevVal) : " ";
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'hhldpoptothuratio') {
             out_name = "Household Population to Housing Unit Ratio";
@@ -640,7 +649,13 @@
     var prevyr = curyr - 5;
     var apiKey = getCensusKey();
 
+    var isCurrent = beginSection('#ACSTab', geoName);
     var cpiAdj = getCPIAdj(curyr, prevyr);
+    if (cpiAdj === null) {
+      console.error("Quick Stats: SDO_CPI_TABLE is missing " + curyr + " or " + prevyr + ". Add the CPI values for the new ACS year.");
+      showSectionMessage('#ACSTab', isCurrent, "error");
+      return;
+    }
     var geoScope = (fips === "000") ? "for=state:*" : "for=county:*&in=state:08";
 
     var pov_cur_url = 'https://api.census.gov/data/' + curyr + '/acs/acs5?get=NAME,B06012_001E,B06012_001M,B06012_002E,B06012_002M&' + geoScope + '&key=' + apiKey;
@@ -665,8 +680,6 @@
       d3.json(home_cur_url), d3.json(home_prev_url),
       d3.json(rent_cur_url), d3.json(rent_prev_url)
     ];
-
-    var isCurrent = beginSection('#ACSTab', geoName);
 
     Promise.all(requests).then(function (res) {
       if (!isCurrent()) return;

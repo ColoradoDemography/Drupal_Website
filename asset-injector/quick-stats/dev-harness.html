@@ -38,6 +38,18 @@
     fetch('quick-stats.html').then(function (r) { return r.text(); }).then(function (html) {
       document.getElementById('harness-root').innerHTML = html;
       Drupal.attachBehaviors(document);
+      // ?geo=014 selects a geography once the dropdown is populated
+      var geo = new URLSearchParams(location.search).get('geo');
+      if (geo) {
+        var tries = 0, t = setInterval(function () {
+          var sel = document.getElementById('county-dropdown');
+          if (sel && sel.options.length > 1) {
+            clearInterval(t);
+            sel.value = geo;
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+          } else if (++tries > 100) clearInterval(t);
+        }, 100);
+      }
     });
   </script>
 </body>
