@@ -1,5 +1,15 @@
 (function ($, Drupal) {
 
+  // --- SETTINGS TO REVIEW EACH YEAR --- //
+  var FALLBACK_ESTIMATE_YEAR = 2025;  // used only if the componentYRS API cannot be read
+  var ACS_YEAR = 2024;                // ACS 5-Year vintage (2020-2024); also add the new year to SDO_CPI_TABLE
+  var FORECAST_YEARS_AHEAD = 5;       // forecast column = latest estimate year + this
+  var FALLBACK_CENSUS_KEY = "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+
+  function getCensusKey() {
+    return (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : FALLBACK_CENSUS_KEY;
+  }
+
   // Dynamic helper to load D3 if not already present
   function loadD3(callback) {
     if (window.d3) {
@@ -22,17 +32,17 @@
       selectElem.setAttribute('data-sdo-init', 'true');
 
       loadD3(function () {
-        var acsYear = 2024; // ACS 5-Year Vintage (2020-2024)
+        var acsYear = ACS_YEAR;
 
         populateCountySelect(selectElem);
 
-        // Resolve latest SDO estimate year (2025) from componentYRS with safe 2025 fallback
+        // Resolve latest SDO estimate year from componentYRS, falling back to FALLBACK_ESTIMATE_YEAR
         d3.json("https://gis.dola.colorado.gov/lookups/componentYRS")
           .then(function (yeardata) {
             var detectedYear = (typeof sdoGetLatestEstimateYear === "function" && Array.isArray(yeardata) && yeardata.length)
               ? sdoGetLatestEstimateYear(yeardata)
-              : 2025;
-            var currentYear = detectedYear >= 2025 ? detectedYear : 2025;
+              : FALLBACK_ESTIMATE_YEAR;
+            var currentYear = detectedYear >= FALLBACK_ESTIMATE_YEAR ? detectedYear : FALLBACK_ESTIMATE_YEAR;
 
             if (typeof SDO_STATE !== "undefined") {
               SDO_STATE.latestEstimateYear = currentYear;
@@ -40,8 +50,8 @@
             initQuickStats(currentYear);
           })
           .catch(function (err) {
-            console.warn("componentYRS lookup failed, defaulting to 2025:", err);
-            initQuickStats(2025);
+            console.warn("componentYRS lookup failed, defaulting to " + FALLBACK_ESTIMATE_YEAR + ":", err);
+            initQuickStats(FALLBACK_ESTIMATE_YEAR);
           });
 
         function initQuickStats(currentYear) {
@@ -214,7 +224,7 @@
     // Zero-Intercept Rule: use pre-aggregated county=0 for Statewide Colorado
     var fips_list = (fips === "000" || fips === 0 || fips === "0") ? 0 : parseInt(fips, 10);
     var prevyear = yrvalue - 1;
-    var year10 = 2030;
+    var year10 = yrvalue + FORECAST_YEARS_AHEAD;
     var yr_list = prevyear + "," + yrvalue + "," + year10;
     var urlstr = "https://gis.dola.colorado.gov/lookups/sya?county=" + fips_list + "&year=" + yr_list + "&choice=single&group=3";
     var totaldata = [];
@@ -285,7 +295,7 @@
       $("#PopTab").append("<h2 class='h2_style'>Population Estimates by Age — " + geoName + "</h2>");
       $("#PopTab").append("<a href='https://demography.colorado.gov/county-single-year-of-age-lookup' target='_blank'>Single Year of Age Lookup</a><p></p>");
 
-      var tblcolumns2 = ['Ages', 'Number, ' + prevyear, 'Number, ' + yrvalue, '2030 Forecast'];
+      var tblcolumns2 = ['Ages', 'Number, ' + prevyear, 'Number, ' + yrvalue, (yrvalue + FORECAST_YEARS_AHEAD) + ' Forecast'];
       var syatab = d3.select('#PopTab').append('table').style('table-layout', 'fixed');
       var thead = syatab.append('thead');
       var tbody = syatab.append('tbody');
@@ -579,7 +589,7 @@
   function genTenure(fips, ACSYR, geoName) {
     var fmt_pct = d3.format(".2%");
     var fmt_count = d3.format(",");
-    var apiKey = (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+    var apiKey = getCensusKey();
 
     var tenurestr_cur = (fips === "000")
       ? 'https://api.census.gov/data/' + ACSYR + '/acs/acs5?get=NAME,B25003_001E,B25003_001M,B25003_002E,B25003_002M,B25003_003E,B25003_003M&for=state:08&key=' + apiKey
@@ -628,7 +638,7 @@
     var fmt_pct = d3.format(".2%");
     var fmt_dollar = d3.format("$,");
     var prevyr = curyr - 5;
-    var apiKey = (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+    var apiKey = getCensusKey();
 
     var cpiAdj = getCPIAdj(curyr, prevyr);
     var geoScope = (fips === "000") ? "for=state:*" : "for=county:*&in=state:08";

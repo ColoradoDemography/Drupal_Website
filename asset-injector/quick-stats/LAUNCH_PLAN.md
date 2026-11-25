@@ -36,10 +36,10 @@ P0
 - [x] Add visible loading, empty and API-failure states for every table, including Census API calls. Also prevents a slow response for a previous geography from overwriting the current one. Tested with `dev-harness.html` (`?fail=gis`, `?fail=census`, `?empty=gis`).
 
 P1
-- [ ] Remove the duplicate Census API key fallbacks; keep the key in one place.
-- [ ] Review the hardcoded 2025 fallback year (`componentYRS` failure behavior).
-- [ ] Decide and document 2030 forecast handling (derive from API, or keep fixed with a documented update step).
-- [ ] Decide how `acsYear` (2024) and the CPI table (2010-2024) are updated each year, and document it.
+- [x] Remove the duplicate Census API key fallbacks; keep the key in one place (`getCensusKey()` in `quick-stats.js`; still prefers `SDO_CONFIG` from the shared utility).
+- [x] Review the hardcoded 2025 fallback year: now `FALLBACK_ESTIMATE_YEAR` in the settings block at the top of `quick-stats.js`; used only if `componentYRS` fails.
+- [x] 2030 forecast: decided to use latest estimate year + 5 (`FORECAST_YEARS_AHEAD`), so the column and label update automatically (currently 2030).
+- [x] `acsYear` is now `ACS_YEAR` in the same settings block. Annual update step: change `ACS_YEAR` and add the new year's CPI to `SDO_CPI_TABLE` (a missing CPI year silently gives an adjustment factor of 1 - still to be hardened).
 - [ ] Verify statewide, county and Broomfield (FIPS 14, combined city/county) calculations.
 - [ ] Verify mobile layout.
 
