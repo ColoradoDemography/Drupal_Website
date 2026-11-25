@@ -1,5 +1,15 @@
 (function ($, Drupal) {
 
+  // --- SETTINGS TO REVIEW EACH YEAR --- //
+  var FALLBACK_ESTIMATE_YEAR = 2025;  // used only if the componentYRS API cannot be read
+  var ACS_YEAR = 2024;                // ACS 5-Year vintage (2020-2024); also add the new year to SDO_CPI_TABLE
+  var FORECAST_YEARS_AHEAD = 5;       // forecast column = latest estimate year + this
+  var FALLBACK_CENSUS_KEY = "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+
+  function getCensusKey() {
+    return (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : FALLBACK_CENSUS_KEY;
+  }
+
   // Dynamic helper to load D3 if not already present
   function loadD3(callback) {
     if (window.d3) {
@@ -22,17 +32,17 @@
       selectElem.setAttribute('data-sdo-init', 'true');
 
       loadD3(function () {
-        var acsYear = 2024; // ACS 5-Year Vintage (2020-2024)
+        var acsYear = ACS_YEAR;
 
         populateCountySelect(selectElem);
 
-        // Resolve latest SDO estimate year (2025) from componentYRS with safe 2025 fallback
+        // Resolve latest SDO estimate year from componentYRS, falling back to FALLBACK_ESTIMATE_YEAR
         d3.json("https://gis.dola.colorado.gov/lookups/componentYRS")
           .then(function (yeardata) {
             var detectedYear = (typeof sdoGetLatestEstimateYear === "function" && Array.isArray(yeardata) && yeardata.length)
               ? sdoGetLatestEstimateYear(yeardata)
-              : 2025;
-            var currentYear = detectedYear >= 2025 ? detectedYear : 2025;
+              : FALLBACK_ESTIMATE_YEAR;
+            var currentYear = detectedYear >= FALLBACK_ESTIMATE_YEAR ? detectedYear : FALLBACK_ESTIMATE_YEAR;
 
             if (typeof SDO_STATE !== "undefined") {
               SDO_STATE.latestEstimateYear = currentYear;
@@ -40,8 +50,8 @@
             initQuickStats(currentYear);
           })
           .catch(function (err) {
-            console.warn("componentYRS lookup failed, defaulting to 2025:", err);
-            initQuickStats(2025);
+            console.warn("componentYRS lookup failed, defaulting to " + FALLBACK_ESTIMATE_YEAR + ":", err);
+            initQuickStats(FALLBACK_ESTIMATE_YEAR);
           });
 
         function initQuickStats(currentYear) {
@@ -140,10 +150,20 @@
     2020: 381.2, 2021: 399.0, 2022: 429.7, 2023: 447.2, 2024: 460.0
   };
 
+  // Returns null when either year is missing from SDO_CPI_TABLE so callers can fail visibly
+  // instead of silently comparing unadjusted dollars.
   function getCPIAdj(curyr, prevyr) {
-    var curCPI = SDO_CPI_TABLE[curyr] || 1;
-    var prevCPI = SDO_CPI_TABLE[prevyr] || 1;
+    var curCPI = SDO_CPI_TABLE[curyr];
+    var prevCPI = SDO_CPI_TABLE[prevyr];
+    if (!curCPI || !prevCPI) return null;
     return curCPI / prevCPI;
+  }
+
+  // Percent change that avoids "NaN%" / "Infinity%" when the earlier value is zero.
+  function pctChangeText(cur, prev, fmt) {
+    cur = +cur; prev = +prev;
+    if (prev === 0) return cur === 0 ? fmt(0) : "n/a";
+    return fmt((cur - prev) / prev);
   }
 
   function acsChkDiff(curpct, curmoe, prevpct, prevmoe) {
@@ -185,13 +205,50 @@
     return Math.sqrt(Math.abs(moePsq)) * fractionY;
   }
 
+  // Safari occasionally reports "Load failed" for a request that succeeds moments later,
+  // so retry a failed request twice (after 400 ms, then 1200 ms) before giving up.
+  // Retries bypass the browser cache so a bad cached response is not reused.
+  function fetchJSON(url, attempt) {
+    attempt = attempt || 0;
+    return (attempt === 0 ? d3.json(url) : d3.json(url, { cache: "reload" })).catch(function (err) {
+      if (attempt >= 2) throw err;
+      console.warn("Request failed, retrying (" + (attempt + 1) + "):", url, err);
+      return new Promise(function (resolve) {
+        setTimeout(resolve, attempt === 0 ? 400 : 1200);
+      }).then(function () { return fetchJSON(url, attempt + 1); });
+    });
+  }
+
+  // --- SECTION STATUS HELPERS --- //
+  // Each section gets a "ticket" so a slow response for a previously selected
+  // geography cannot overwrite the section after the user has changed geography.
+  var sectionTickets = {};
+
+  function beginSection(selector, geoName) {
+    var id = (sectionTickets[selector] = (sectionTickets[selector] || 0) + 1);
+    $(selector).empty().append(
+      $("<p class='sdo-status sdo-loading' role='status'></p>").text("Loading data for " + geoName + "…")
+    );
+    return function () { return sectionTickets[selector] === id; };
+  }
+
+  function showSectionMessage(selector, isCurrent, kind) {
+    if (!isCurrent()) return;
+    var msg = (kind === "empty")
+      ? "No data is available for this selection."
+      : "This data could not be loaded right now. Please try again later.";
+    $(selector).empty().append(
+      $("<p class='sdo-status sdo-" + kind + "' role='status'></p>").text(msg)
+    );
+  }
+
   // --- DASHBOARD TABLE GENERATORS --- //
 
   function genSYA(fips, yrvalue, geoName) {
     // Zero-Intercept Rule: use pre-aggregated county=0 for Statewide Colorado
     var fips_list = (fips === "000" || fips === 0 || fips === "0") ? 0 : parseInt(fips, 10);
     var prevyear = yrvalue - 1;
-    var year10 = 2030;
+    var year10 = yrvalue + FORECAST_YEARS_AHEAD;
     var yr_list = prevyear + "," + yrvalue + "," + year10;
     var urlstr = "https://gis.dola.colorado.gov/lookups/sya?county=" + fips_list + "&year=" + yr_list + "&choice=single&group=3";
     var totaldata = [];
@@ -201,8 +258,11 @@
       return typeof formatSDO === "function" ? formatSDO(rounded, "num") : d3.format(",")(rounded);
     }
 
-    d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+    var isCurrent = beginSection('#PopTab', geoName);
+
+    fetchJSON(urlstr).then(function (data) {
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#PopTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
         if (obj.age >= 0 && obj.age <= 17) obj.age_cat = "0 to 17";
         else if (obj.age >= 18 && obj.age <= 24) obj.age_cat = "18 to 24";
@@ -259,7 +319,7 @@
       $("#PopTab").append("<h2 class='h2_style'>Population Estimates by Age — " + geoName + "</h2>");
       $("#PopTab").append("<a href='https://demography.colorado.gov/county-single-year-of-age-lookup' target='_blank'>Single Year of Age Lookup</a><p></p>");
 
-      var tblcolumns2 = ['Ages', 'Number, ' + prevyear, 'Number, ' + yrvalue, '2030 Forecast'];
+      var tblcolumns2 = ['Ages', 'Number, ' + prevyear, 'Number, ' + yrvalue, (yrvalue + FORECAST_YEARS_AHEAD) + ' Forecast'];
       var syatab = d3.select('#PopTab').append('table').style('table-layout', 'fixed');
       var thead = syatab.append('thead');
       var tbody = syatab.append('tbody');
@@ -269,11 +329,14 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.age_cat);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.forval);
-    }).catch(err => console.error("SYA Fetch Error:", err));
+      rows.append('td').style("text-align", "left").html(m => m.age_cat);
+      rows.append('td').style("text-align", "right").html(m => m.prevval);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.forval);
+    }).catch(function (err) {
+      console.error("SYA Fetch Error:", err);
+      showSectionMessage('#PopTab', isCurrent, "error");
+    });
   }
 
   function genCOC(fips, yrvalue, geoName) {
@@ -284,8 +347,11 @@
     var yr_list = prevyear + "," + yrvalue;
     var urlstr = "https://gis.dola.colorado.gov/lookups/components?county=" + fips_list + "&year=" + yr_list;
 
-    d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+    var isCurrent = beginSection('#COCTab', geoName);
+
+    fetchJSON(urlstr).then(function (data) {
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#COCTab', isCurrent, "empty"); return; }
 
       // Roll up rows by year so multi-county queries (Colorado total) sum correctly
       var columnsToSum = ['estimate', 'births', 'deaths', 'netmig', 'change'];
@@ -316,8 +382,7 @@
           var outname = COC_fint[i][0][0]['name'];
           var prevVal = COC_fint[i][0][0]['value'];
           var curVal = COC_fint[i][1][0]['value'];
-          var pctchg = prevVal === 0 ? 0 : (curVal - prevVal) / prevVal;
-          tbl_arr.push({ coc_name: outname, prevval: fmt_comma(prevVal), curval: fmt_comma(curVal), pct_chg: fmt_pct(pctchg) });
+          tbl_arr.push({ coc_name: outname, prevval: fmt_comma(prevVal), curval: fmt_comma(curVal), pct_chg: pctChangeText(curVal, prevVal, fmt_pct) });
         }
       }
 
@@ -335,11 +400,14 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.coc_name);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
-    }).catch(err => console.error("COC Fetch Error:", err));
+      rows.append('td').style("text-align", "left").html(m => m.coc_name);
+      rows.append('td').style("text-align", "right").html(m => m.prevval);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.pct_chg);
+    }).catch(function (err) {
+      console.error("COC Fetch Error:", err);
+      showSectionMessage('#COCTab', isCurrent, "error");
+    });
   }
 
   function genRaceEth(fips, yrvalue, geoName) {
@@ -357,8 +425,11 @@
     var urlstr_hispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age=" + age_list + "&county=" + fips_list + "&year=" + yrvalue + "&race=1,2,3,4,5,6&ethnicity=1&group=opt7";
     var urlstr_nonhispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age=" + age_list + "&county=" + fips_list + "&year=" + yrvalue + "&race=1,2,3,4,5,6&ethnicity=2&group=opt7";
 
-    Promise.all([d3.json(urlstr_hispest), d3.json(urlstr_nonhispest)]).then(function (data) {
-      if (!data[0] || !data[1]) return;
+    var isCurrent = beginSection('#RaceTab', geoName);
+
+    Promise.all([fetchJSON(urlstr_hispest), fetchJSON(urlstr_nonhispest)]).then(function (data) {
+      if (!isCurrent()) return;
+      if (!data[0] || !data[1] || !data[0].length || !data[1].length) { showSectionMessage('#RaceTab', isCurrent, "empty"); return; }
       var hisp_est = [];
       var nonhisp_est = [];
 
@@ -419,10 +490,13 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').style('width', '60%').html(m => m.race_eth);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.percent);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.curval);
-    }).catch(err => console.error("Race/Eth Fetch Error:", err));
+      rows.append('td').style("text-align", "left").style('width', '60%').html(m => m.race_eth);
+      rows.append('td').style("text-align", "right").style('width', '20%').html(m => m.percent);
+      rows.append('td').style("text-align", "right").style('width', '20%').html(m => m.curval);
+    }).catch(function (err) {
+      console.error("Race/Eth Fetch Error:", err);
+      showSectionMessage('#RaceTab', isCurrent, "error");
+    });
   }
 
   function genHousing(fips, yrvalue, geoName) {
@@ -437,8 +511,11 @@
     var urlstr = "https://gis.dola.colorado.gov/lookups/profile?county=" + fips_list + "&year=" + yr_list + "&vars=totalhousingunits,householdpopulation,groupquarterspopulation,censusbuildingpermits,hhldpoptothuratio";
     var hous_tmp = [];
 
-    d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+    var isCurrent = beginSection('#HousTab', geoName);
+
+    fetchJSON(urlstr).then(function (data) {
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#HousTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
         hous_tmp.push({
           year: obj.year,
@@ -482,22 +559,22 @@
           if (housing_fint[i][0][0].name == 'totalhousingunits') {
             out_name = "Total Housing Units";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'householdpopulation') {
             out_name = "Household Population";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'groupquarterspopulation') {
             out_name = "Group Quarters Population";
             cVal = fmt_comma(currentVal);
-            pctVal = fmt_pct((currentVal - prevVal) / prevVal);
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'censusbuildingpermits') {
             out_name = "Annual Building Permits";
             cVal = fmt_comma(currentVal);
-            pctVal = prevVal != 0 ? fmt_pct((currentVal - prevVal) / prevVal) : " ";
+            pctVal = pctChangeText(currentVal, prevVal, fmt_pct);
           }
           if (housing_fint[i][0][0].name == 'hhldpoptothuratio') {
             out_name = "Household Population to Housing Unit Ratio";
@@ -523,23 +600,29 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.row_name);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
-    }).catch(err => console.error("Housing Fetch Error:", err));
+      rows.append('td').style("text-align", "left").html(m => m.row_name);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.pct_chg);
+    }).catch(function (err) {
+      console.error("Housing Fetch Error:", err);
+      showSectionMessage('#HousTab', isCurrent, "error");
+    });
   }
 
   function genTenure(fips, ACSYR, geoName) {
     var fmt_pct = d3.format(".2%");
     var fmt_count = d3.format(",");
-    var apiKey = (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+    var apiKey = getCensusKey();
 
     var tenurestr_cur = (fips === "000")
       ? 'https://api.census.gov/data/' + ACSYR + '/acs/acs5?get=NAME,B25003_001E,B25003_001M,B25003_002E,B25003_002M,B25003_003E,B25003_003M&for=state:08&key=' + apiKey
       : 'https://api.census.gov/data/' + ACSYR + '/acs/acs5?get=NAME,B25003_001E,B25003_001M,B25003_002E,B25003_002M,B25003_003E,B25003_003M&for=county:' + ("000" + parseInt(fips, 10)).slice(-3) + '&in=state:08&key=' + apiKey;
 
-    d3.json(tenurestr_cur).then(function (data) {
-      if (!data || data.length < 2) return;
+    var isCurrent = beginSection('#TenureTab', geoName);
+
+    fetchJSON(tenurestr_cur).then(function (data) {
+      if (!isCurrent()) return;
+      if (!data || data.length < 2) { showSectionMessage('#TenureTab', isCurrent, "empty"); return; }
       var row = data[1];
       var total = +row[1];
       var oo = +row[3];
@@ -565,19 +648,28 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.topic);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.count);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.percent);
-    }).catch(err => console.error("Tenure Fetch Error:", err));
+      rows.append('td').style("text-align", "left").html(m => m.topic);
+      rows.append('td').style("text-align", "right").html(m => m.count);
+      rows.append('td').style("text-align", "right").html(m => m.percent);
+    }).catch(function (err) {
+      console.error("Tenure Fetch Error:", err);
+      showSectionMessage('#TenureTab', isCurrent, "error");
+    });
   }
 
   function genACS(fips, curyr, geoName) {
     var fmt_pct = d3.format(".2%");
     var fmt_dollar = d3.format("$,");
     var prevyr = curyr - 5;
-    var apiKey = (typeof SDO_CONFIG !== "undefined" && SDO_CONFIG.CENSUS_API_KEY) ? SDO_CONFIG.CENSUS_API_KEY : "08fe07c2a7bf781b7771d7cccb264fe7ff8965ce";
+    var apiKey = getCensusKey();
 
+    var isCurrent = beginSection('#ACSTab', geoName);
     var cpiAdj = getCPIAdj(curyr, prevyr);
+    if (cpiAdj === null) {
+      console.error("Quick Stats: SDO_CPI_TABLE is missing " + curyr + " or " + prevyr + ". Add the CPI values for the new ACS year.");
+      showSectionMessage('#ACSTab', isCurrent, "error");
+      return;
+    }
     var geoScope = (fips === "000") ? "for=state:*" : "for=county:*&in=state:08";
 
     var pov_cur_url = 'https://api.census.gov/data/' + curyr + '/acs/acs5?get=NAME,B06012_001E,B06012_001M,B06012_002E,B06012_002M&' + geoScope + '&key=' + apiKey;
@@ -596,14 +688,15 @@
     var rent_prev_url = 'https://api.census.gov/data/' + prevyr + '/acs/acs5?get=NAME,B25064_001E,B25064_001M&' + geoScope + '&key=' + apiKey;
 
     var requests = [
-      d3.json(pov_cur_url), d3.json(pov_prev_url),
-      d3.json(educ_cur_url), d3.json(educ_prev_url),
-      d3.json(inc_cur_url), d3.json(inc_prev_url),
-      d3.json(home_cur_url), d3.json(home_prev_url),
-      d3.json(rent_cur_url), d3.json(rent_prev_url)
+      fetchJSON(pov_cur_url), fetchJSON(pov_prev_url),
+      fetchJSON(educ_cur_url), fetchJSON(educ_prev_url),
+      fetchJSON(inc_cur_url), fetchJSON(inc_prev_url),
+      fetchJSON(home_cur_url), fetchJSON(home_prev_url),
+      fetchJSON(rent_cur_url), fetchJSON(rent_prev_url)
     ];
 
     Promise.all(requests).then(function (res) {
+      if (!isCurrent()) return;
       function parseRes(arr, mapFn) {
         if (!arr || arr.length < 2) return [];
         var headers = arr[0];
@@ -748,11 +841,14 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.topic);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.value);
-      rows.append('td').style("text-align", "center").style('font-size', '10pt').html(m => m.diff);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.rank);
-    }).catch(err => console.error("ACS Selected Statistics Error:", err));
+      rows.append('td').style("text-align", "left").html(m => m.topic);
+      rows.append('td').style("text-align", "right").html(m => m.value);
+      rows.append('td').style("text-align", "center").html(m => m.diff);
+      rows.append('td').style("text-align", "right").html(m => m.rank);
+    }).catch(function (err) {
+      console.error("ACS Selected Statistics Error:", err);
+      showSectionMessage('#ACSTab', isCurrent, "error");
+    });
   }
 
 })(jQuery, Drupal);

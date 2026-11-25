@@ -48,7 +48,7 @@
 
 .county-dropdown {
   padding: 8px 16px;
-  font-size: 11pt;
+  font-size: 1rem;
   font-weight: 700;
   color: #0f2439;
   background-color: #ffffff;
@@ -102,6 +102,32 @@
   font-family: "Trebuchet MS", sans-serif;
 }
 
+/* Tighten section heading/link rhythm without changing Drupal's global styles. */
+.sdo-section-heading {
+  margin-block: 0 0.5rem;
+  line-height: 1.2;
+}
+
+p.sdo-section-backlink {
+  margin-block: 0 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Loading / empty / error messages inside each dashboard section */
+.sdo-status {
+  margin: 8px 0;
+  padding: 10px 12px;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #555555;
+}
+.sdo-status.sdo-error {
+  color: #8a1c1c;
+  background: #fdf2f2;
+  border-left: 4px solid #8a1c1c;
+}
+
 /* Table Headings */
 .h2_style {
   font-size: 1.25rem !important;
@@ -119,7 +145,7 @@
   border-collapse: collapse;
   width: 100%;
   margin-top: 10px;
-  font-size: 9.5pt;
+  font-size: 1rem;
   font-family: "Trebuchet MS", sans-serif;
 }
 
@@ -146,7 +172,7 @@ tbody tr:hover {
 #TenureTab a, #COCTab a, #ACSTab a {
   color: #0062a0;
   text-decoration: none;
-  font-size: 9pt;
+  font-size: 1rem;
 }
 
 #PopTab a:hover, #RaceTab a:hover, #HousTab a:hover, 
@@ -209,18 +235,18 @@ td svg.svg-inline--fa {
   #TenureTab table, #COCTab table, #ACSTab table {
     table-layout: auto !important;
     width: 100% !important;
-    font-size: 8.5pt;
+    font-size: 1rem;
   }
   #PopTab thead th, #RaceTab thead th, #HousTab thead th,
   #TenureTab thead th, #COCTab thead th, #ACSTab thead th {
     width: auto !important;
     padding: 6px 4px !important;
-    font-size: 8.5pt !important;
+    font-size: 1rem !important;
   }
   #PopTab td, #RaceTab td, #HousTab td,
   #TenureTab td, #COCTab td, #ACSTab td {
     width: auto !important;
     padding: 5px 4px !important;
-    font-size: 8.5pt !important;
+    font-size: 1rem !important;
   }
 }

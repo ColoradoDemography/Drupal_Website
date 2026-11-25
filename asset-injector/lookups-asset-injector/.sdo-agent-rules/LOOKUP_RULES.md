@@ -3,13 +3,15 @@
 
 This document outlines the strict architectural standards, API constraints, and boilerplate templates required to refactor legacy SDO client-side data query tools into modern, decoupled Drupal assets. All automated agents and human developers must follow these constraints to ensure stability inside aggregated production CMS environments.
 
+The v1 source file `Global_SDO_Utilities.js` has been retired. Existing applications currently use `Global_SDO_Utilities_v2_combined.js`; keep it unchanged during the Quick Stats launch because multiple applications depend on it.
+
 ---
 
 ## 🏗️ 1. Architectural Philosophy: The Hybrid-Bubble
 
 Every lookup application must be cleanly separated into two distinct components:
 1. **The HTML Snippet (`index.html`):** A pure, minimalist layout fragment. It must contain zero boilerplate layout definitions (`<html>`, `<head>`, `<body>`) and no embedded `<script>` or `<style>` tags. It maps 1:1 into a Drupal Custom Block container.
-2. **The JavaScript Director (`app.js`):** A sandboxed operation file containing only page-specific form listeners and UI state logic. It shifts formatting, data transformations, and geography resolution directly onto `Global_SDO_Utilities.js`. It maps into a Drupal Asset Injector instance.
+2. **The JavaScript Director (`app.js`):** A sandboxed operation file containing only page-specific form listeners and UI state logic. Existing applications use formatting, data transformations, and geography resolution from `Global_SDO_Utilities_v2_combined.js`. It maps into a Drupal Asset Injector instance.
 
 All application views must adhere to a single unified global stylesheet (`Global_SDO_Lookups.css`) to maintain visual consistency and limit payload sizes.
 
