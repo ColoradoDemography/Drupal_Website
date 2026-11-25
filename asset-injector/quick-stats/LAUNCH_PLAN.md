@@ -31,7 +31,7 @@ Quick Stats is launch-ready when every P0 and P1 item below is checked, the acce
 ### 2. Fix Quick Stats defects (Quick Stats only)
 
 P0
-- [ ] Correct race/ethnicity label mapping (API returns labels such as "White alone", "Two or More"; the county param must be numeric, e.g. `1`).
+- [x] Race/ethnicity label mapping: verified, no fix needed. `genRaceEth` uses `county_sya_race_estimates_current`, which returns "White alone", "Two or More", etc.; appending " NH" matches the code's list. Statewide Hispanic + non-Hispanic = 5,987,128 for 2024, identical whether queried as `county=0` or as the 64-county list. (An earlier review wrongly flagged this after testing a different endpoint.)
 - [ ] Fix the `#demo-section` jump link (add the target or remove the link).
 - [ ] Add visible loading, empty and API-failure states for every table, including Census API calls.
 
