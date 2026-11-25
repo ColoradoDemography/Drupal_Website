@@ -41,7 +41,7 @@ P1
 - [x] 2030 forecast: decided to use latest estimate year + 5 (`FORECAST_YEARS_AHEAD`), so the column and label update automatically (currently 2030).
 - [x] Decide how `acsYear` (2024) and the CPI table are updated each year, and document it: see `ANNUAL_UPDATE.md`. A missing CPI year now shows an error and console message instead of silently using a factor of 1.
 - [x] Verify statewide, county and Broomfield (FIPS 14) calculations: population totals, components and Census tenure/income match the raw APIs exactly for Colorado, Broomfield and Hinsdale. Fixed "NaN%" change for zero-to-zero values (Hinsdale group quarters); zero-to-nonzero now shows "n/a".
-- [ ] Verify mobile layout.
+- [x] Verify mobile layout: local harness checked at 390px and 1365px; the geography control stacks on mobile and tables can scroll horizontally. Drupal-specific spacing confirmed by user. Automated headless access to the Drupal page returned CloudFront 403, so the theme was not independently inspected.
 
 Do not redesign the shared utility in this step.
 
@@ -56,14 +56,14 @@ Do not redesign the shared utility in this step.
 
 Use a local harness served over HTTP, then browser DevTools overrides on the real page.
 
-- [ ] Colorado statewide, Adams, Broomfield, a rural county, a low-population county
-- [ ] Mobile and desktop viewports
+- [x] Colorado statewide, Adams, Broomfield, a rural county, a low-population county (Hinsdale covers the last two)
+- [x] Mobile and desktop viewports in local harness (390px and 1365px)
 - [ ] Slow API and failed API (DevTools throttling / Block request URL)
-- [ ] Failed Census API
+- [x] Failed Census API (simulated in local harness)
 - [ ] Repeated geography changes, and returning to statewide
 - [ ] Behavior does not initialize twice
 - [ ] Missing or negative API values, Census rankings, statewide rollups
-- [ ] No JavaScript errors in the console
+- [x] No uncaught JavaScript errors in normal local harness load
 - [ ] Basic accessibility: keyboard use of the dropdown, table headers
 
 ### 5. Deploy to Drupal preview
