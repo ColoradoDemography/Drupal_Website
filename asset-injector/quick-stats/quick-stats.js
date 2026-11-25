@@ -185,6 +185,29 @@
     return Math.sqrt(Math.abs(moePsq)) * fractionY;
   }
 
+  // --- SECTION STATUS HELPERS --- //
+  // Each section gets a "ticket" so a slow response for a previously selected
+  // geography cannot overwrite the section after the user has changed geography.
+  var sectionTickets = {};
+
+  function beginSection(selector, geoName) {
+    var id = (sectionTickets[selector] = (sectionTickets[selector] || 0) + 1);
+    $(selector).empty().append(
+      $("<p class='sdo-status sdo-loading' role='status'></p>").text("Loading data for " + geoName + "…")
+    );
+    return function () { return sectionTickets[selector] === id; };
+  }
+
+  function showSectionMessage(selector, isCurrent, kind) {
+    if (!isCurrent()) return;
+    var msg = (kind === "empty")
+      ? "No data is available for this selection."
+      : "This data could not be loaded right now. Please try again later.";
+    $(selector).empty().append(
+      $("<p class='sdo-status sdo-" + kind + "' role='status'></p>").text(msg)
+    );
+  }
+
   // --- DASHBOARD TABLE GENERATORS --- //
 
   function genSYA(fips, yrvalue, geoName) {
@@ -201,8 +224,11 @@
       return typeof formatSDO === "function" ? formatSDO(rounded, "num") : d3.format(",")(rounded);
     }
 
+    var isCurrent = beginSection('#PopTab', geoName);
+
     d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#PopTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
         if (obj.age >= 0 && obj.age <= 17) obj.age_cat = "0 to 17";
         else if (obj.age >= 18 && obj.age <= 24) obj.age_cat = "18 to 24";
@@ -273,7 +299,10 @@
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.forval);
-    }).catch(err => console.error("SYA Fetch Error:", err));
+    }).catch(function (err) {
+      console.error("SYA Fetch Error:", err);
+      showSectionMessage('#PopTab', isCurrent, "error");
+    });
   }
 
   function genCOC(fips, yrvalue, geoName) {
@@ -284,8 +313,11 @@
     var yr_list = prevyear + "," + yrvalue;
     var urlstr = "https://gis.dola.colorado.gov/lookups/components?county=" + fips_list + "&year=" + yr_list;
 
+    var isCurrent = beginSection('#COCTab', geoName);
+
     d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#COCTab', isCurrent, "empty"); return; }
 
       // Roll up rows by year so multi-county queries (Colorado total) sum correctly
       var columnsToSum = ['estimate', 'births', 'deaths', 'netmig', 'change'];
@@ -339,7 +371,10 @@
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
-    }).catch(err => console.error("COC Fetch Error:", err));
+    }).catch(function (err) {
+      console.error("COC Fetch Error:", err);
+      showSectionMessage('#COCTab', isCurrent, "error");
+    });
   }
 
   function genRaceEth(fips, yrvalue, geoName) {
@@ -357,8 +392,11 @@
     var urlstr_hispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age=" + age_list + "&county=" + fips_list + "&year=" + yrvalue + "&race=1,2,3,4,5,6&ethnicity=1&group=opt7";
     var urlstr_nonhispest = "https://gis.dola.colorado.gov/lookups/county_sya_race_estimates_current?age=" + age_list + "&county=" + fips_list + "&year=" + yrvalue + "&race=1,2,3,4,5,6&ethnicity=2&group=opt7";
 
+    var isCurrent = beginSection('#RaceTab', geoName);
+
     Promise.all([d3.json(urlstr_hispest), d3.json(urlstr_nonhispest)]).then(function (data) {
-      if (!data[0] || !data[1]) return;
+      if (!isCurrent()) return;
+      if (!data[0] || !data[1] || !data[0].length || !data[1].length) { showSectionMessage('#RaceTab', isCurrent, "empty"); return; }
       var hisp_est = [];
       var nonhisp_est = [];
 
@@ -422,7 +460,10 @@
       rows.append('td').style("text-align", "left").style('font-size', '10pt').style('width', '60%').html(m => m.race_eth);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.percent);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.curval);
-    }).catch(err => console.error("Race/Eth Fetch Error:", err));
+    }).catch(function (err) {
+      console.error("Race/Eth Fetch Error:", err);
+      showSectionMessage('#RaceTab', isCurrent, "error");
+    });
   }
 
   function genHousing(fips, yrvalue, geoName) {
@@ -437,8 +478,11 @@
     var urlstr = "https://gis.dola.colorado.gov/lookups/profile?county=" + fips_list + "&year=" + yr_list + "&vars=totalhousingunits,householdpopulation,groupquarterspopulation,censusbuildingpermits,hhldpoptothuratio";
     var hous_tmp = [];
 
+    var isCurrent = beginSection('#HousTab', geoName);
+
     d3.json(urlstr).then(function (data) {
-      if (!data || !data.length) return;
+      if (!isCurrent()) return;
+      if (!data || !data.length) { showSectionMessage('#HousTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
         hous_tmp.push({
           year: obj.year,
@@ -526,7 +570,10 @@
       rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.row_name);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
-    }).catch(err => console.error("Housing Fetch Error:", err));
+    }).catch(function (err) {
+      console.error("Housing Fetch Error:", err);
+      showSectionMessage('#HousTab', isCurrent, "error");
+    });
   }
 
   function genTenure(fips, ACSYR, geoName) {
@@ -538,8 +585,11 @@
       ? 'https://api.census.gov/data/' + ACSYR + '/acs/acs5?get=NAME,B25003_001E,B25003_001M,B25003_002E,B25003_002M,B25003_003E,B25003_003M&for=state:08&key=' + apiKey
       : 'https://api.census.gov/data/' + ACSYR + '/acs/acs5?get=NAME,B25003_001E,B25003_001M,B25003_002E,B25003_002M,B25003_003E,B25003_003M&for=county:' + ("000" + parseInt(fips, 10)).slice(-3) + '&in=state:08&key=' + apiKey;
 
+    var isCurrent = beginSection('#TenureTab', geoName);
+
     d3.json(tenurestr_cur).then(function (data) {
-      if (!data || data.length < 2) return;
+      if (!isCurrent()) return;
+      if (!data || data.length < 2) { showSectionMessage('#TenureTab', isCurrent, "empty"); return; }
       var row = data[1];
       var total = +row[1];
       var oo = +row[3];
@@ -568,7 +618,10 @@
       rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.topic);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.count);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.percent);
-    }).catch(err => console.error("Tenure Fetch Error:", err));
+    }).catch(function (err) {
+      console.error("Tenure Fetch Error:", err);
+      showSectionMessage('#TenureTab', isCurrent, "error");
+    });
   }
 
   function genACS(fips, curyr, geoName) {
@@ -603,7 +656,10 @@
       d3.json(rent_cur_url), d3.json(rent_prev_url)
     ];
 
+    var isCurrent = beginSection('#ACSTab', geoName);
+
     Promise.all(requests).then(function (res) {
+      if (!isCurrent()) return;
       function parseRes(arr, mapFn) {
         if (!arr || arr.length < 2) return [];
         var headers = arr[0];
@@ -752,7 +808,10 @@
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.value);
       rows.append('td').style("text-align", "center").style('font-size', '10pt').html(m => m.diff);
       rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.rank);
-    }).catch(err => console.error("ACS Selected Statistics Error:", err));
+    }).catch(function (err) {
+      console.error("ACS Selected Statistics Error:", err);
+      showSectionMessage('#ACSTab', isCurrent, "error");
+    });
   }
 
 })(jQuery, Drupal);

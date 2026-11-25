@@ -33,7 +33,7 @@ Quick Stats is launch-ready when every P0 and P1 item below is checked, the acce
 P0
 - [x] Race/ethnicity label mapping: verified, no fix needed. `genRaceEth` uses `county_sya_race_estimates_current`, which returns "White alone", "Two or More", etc.; appending " NH" matches the code's list. Statewide Hispanic + non-Hispanic = 5,987,128 for 2024, identical whether queried as `county=0` or as the 64-county list. (An earlier review wrongly flagged this after testing a different endpoint.)
 - [x] Fix the `#demo-section` jump link: the heading already existed in Drupal and was missing from the repo; synced into `quick-stats.html`.
-- [ ] Add visible loading, empty and API-failure states for every table, including Census API calls.
+- [x] Add visible loading, empty and API-failure states for every table, including Census API calls. Also prevents a slow response for a previous geography from overwriting the current one. Tested with `dev-harness.html` (`?fail=gis`, `?fail=census`, `?empty=gis`).
 
 P1
 - [ ] Remove the duplicate Census API key fallbacks; keep the key in one place.

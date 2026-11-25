@@ -102,6 +102,19 @@
   font-family: "Trebuchet MS", sans-serif;
 }
 
+/* Loading / empty / error messages inside each dashboard section */
+.sdo-status {
+  margin: 8px 0;
+  padding: 10px 12px;
+  font-size: 10pt;
+  color: #555555;
+}
+.sdo-status.sdo-error {
+  color: #8a1c1c;
+  background: #fdf2f2;
+  border-left: 4px solid #8a1c1c;
+}
+
 /* Table Headings */
 .h2_style {
   font-size: 1.25rem !important;
