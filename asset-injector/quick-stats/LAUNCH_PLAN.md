@@ -45,6 +45,12 @@ P1
 
 Do not redesign the shared utility in this step.
 
+### Design and accessibility follow-up
+
+- [x] Use 1rem text for table content, links, and status messages; remove inline point-sized cell fonts so CSS controls sizing.
+- [x] Add scoped section-heading and back-link classes with tighter margins.
+- [ ] After updating Drupal, review spacing with its row/card wrappers and test text zoom, narrow screens, and table horizontal scrolling.
+
 ### 3. Shared utility decision
 
 - [x] For launch, keep using the existing `Global_SDO_Utilities_v2_combined.js` and leave it unchanged; Quick Stats and other dashboards depend on it.

@@ -315,10 +315,10 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.age_cat);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.forval);
+      rows.append('td').style("text-align", "left").html(m => m.age_cat);
+      rows.append('td').style("text-align", "right").html(m => m.prevval);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.forval);
     }).catch(function (err) {
       console.error("SYA Fetch Error:", err);
       showSectionMessage('#PopTab', isCurrent, "error");
@@ -386,10 +386,10 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.coc_name);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.prevval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
+      rows.append('td').style("text-align", "left").html(m => m.coc_name);
+      rows.append('td').style("text-align", "right").html(m => m.prevval);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.pct_chg);
     }).catch(function (err) {
       console.error("COC Fetch Error:", err);
       showSectionMessage('#COCTab', isCurrent, "error");
@@ -476,9 +476,9 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').style('width', '60%').html(m => m.race_eth);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.percent);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').style('width', '20%').html(m => m.curval);
+      rows.append('td').style("text-align", "left").style('width', '60%').html(m => m.race_eth);
+      rows.append('td').style("text-align", "right").style('width', '20%').html(m => m.percent);
+      rows.append('td').style("text-align", "right").style('width', '20%').html(m => m.curval);
     }).catch(function (err) {
       console.error("Race/Eth Fetch Error:", err);
       showSectionMessage('#RaceTab', isCurrent, "error");
@@ -586,9 +586,9 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.row_name);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.curval);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.pct_chg);
+      rows.append('td').style("text-align", "left").html(m => m.row_name);
+      rows.append('td').style("text-align", "right").html(m => m.curval);
+      rows.append('td').style("text-align", "right").html(m => m.pct_chg);
     }).catch(function (err) {
       console.error("Housing Fetch Error:", err);
       showSectionMessage('#HousTab', isCurrent, "error");
@@ -634,9 +634,9 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.topic);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.count);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.percent);
+      rows.append('td').style("text-align", "left").html(m => m.topic);
+      rows.append('td').style("text-align", "right").html(m => m.count);
+      rows.append('td').style("text-align", "right").html(m => m.percent);
     }).catch(function (err) {
       console.error("Tenure Fetch Error:", err);
       showSectionMessage('#TenureTab', isCurrent, "error");
@@ -827,10 +827,10 @@
 
       var rows = tbody.selectAll('tr').data(tbl_arr).enter().append('tr').style("color", "black");
 
-      rows.append('td').style("text-align", "left").style('font-size', '10pt').html(m => m.topic);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.value);
-      rows.append('td').style("text-align", "center").style('font-size', '10pt').html(m => m.diff);
-      rows.append('td').style("text-align", "right").style('font-size', '10pt').html(m => m.rank);
+      rows.append('td').style("text-align", "left").html(m => m.topic);
+      rows.append('td').style("text-align", "right").html(m => m.value);
+      rows.append('td').style("text-align", "center").html(m => m.diff);
+      rows.append('td').style("text-align", "right").html(m => m.rank);
     }).catch(function (err) {
       console.error("ACS Selected Statistics Error:", err);
       showSectionMessage('#ACSTab', isCurrent, "error");
