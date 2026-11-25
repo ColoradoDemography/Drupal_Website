@@ -11,4 +11,4 @@ Update this each time something is pasted into Drupal. The repo does not deploy 
 
 ## Rollback
 
-Previous Drupal snippets are saved at: _TBD_
+Git history is the rollback. To go back, open the earlier version of the file on GitHub (file History, or the `quick-stats-launch` tag once created), copy it, and paste it into Drupal. Keep the repo and Drupal matching by pasting from committed files and updating the table above after each paste.

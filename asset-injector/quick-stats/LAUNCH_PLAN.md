@@ -23,7 +23,7 @@ Quick Stats is launch-ready when every P0 and P1 item below is checked, the acce
 ### 1. Baseline
 
 - [ ] Confirm `main` matches what is pasted in Drupal: copy each live snippet to a temp file and run `git diff --no-index <temp> <repo file>`.
-- [ ] Save the current Drupal HTML, CSS and JS snippets outside Git (rollback copies).
+- [x] Rollback: Git history is the rollback; keep the repo and Drupal matching (see DEPLOYMENT.md).
 - [ ] Record the shared utility currently loaded and which injectors load it.
 - [ ] Record every page path where each Quick Stats injector is scoped.
 - [x] Create working branch `quick-stats-fixes`.
@@ -100,7 +100,7 @@ Prefer creating a new injector scoped to a test path, or confirm the preview-onl
 
 ### 8. Public launch
 
-- [ ] Rollback copies of existing Drupal snippets saved and findable.
+- [x] Rollback handled through Git history (no separate copies).
 - [ ] Update production HTML block, CSS injector, JS injector, and any shared utility.
 - [ ] Confirm production path scope.
 - [ ] Run the acceptance checklist; monitor the console and API errors.
