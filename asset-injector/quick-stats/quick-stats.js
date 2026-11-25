@@ -207,9 +207,10 @@
 
   // Safari occasionally reports "Load failed" for a request that succeeds moments later,
   // so retry a failed request twice (after 400 ms, then 1200 ms) before giving up.
+  // Retries bypass the browser cache so a bad cached response is not reused.
   function fetchJSON(url, attempt) {
     attempt = attempt || 0;
-    return d3.json(url).catch(function (err) {
+    return (attempt === 0 ? d3.json(url) : d3.json(url, { cache: "reload" })).catch(function (err) {
       if (attempt >= 2) throw err;
       console.warn("Request failed, retrying (" + (attempt + 1) + "):", url, err);
       return new Promise(function (resolve) {
