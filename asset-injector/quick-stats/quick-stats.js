@@ -205,6 +205,19 @@
     return Math.sqrt(Math.abs(moePsq)) * fractionY;
   }
 
+  // Safari occasionally reports "Load failed" for a request that succeeds moments later,
+  // so retry a failed request twice (after 400 ms, then 1200 ms) before giving up.
+  function fetchJSON(url, attempt) {
+    attempt = attempt || 0;
+    return d3.json(url).catch(function (err) {
+      if (attempt >= 2) throw err;
+      console.warn("Request failed, retrying (" + (attempt + 1) + "):", url, err);
+      return new Promise(function (resolve) {
+        setTimeout(resolve, attempt === 0 ? 400 : 1200);
+      }).then(function () { return fetchJSON(url, attempt + 1); });
+    });
+  }
+
   // --- SECTION STATUS HELPERS --- //
   // Each section gets a "ticket" so a slow response for a previously selected
   // geography cannot overwrite the section after the user has changed geography.
@@ -246,7 +259,7 @@
 
     var isCurrent = beginSection('#PopTab', geoName);
 
-    d3.json(urlstr).then(function (data) {
+    fetchJSON(urlstr).then(function (data) {
       if (!isCurrent()) return;
       if (!data || !data.length) { showSectionMessage('#PopTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
@@ -335,7 +348,7 @@
 
     var isCurrent = beginSection('#COCTab', geoName);
 
-    d3.json(urlstr).then(function (data) {
+    fetchJSON(urlstr).then(function (data) {
       if (!isCurrent()) return;
       if (!data || !data.length) { showSectionMessage('#COCTab', isCurrent, "empty"); return; }
 
@@ -413,7 +426,7 @@
 
     var isCurrent = beginSection('#RaceTab', geoName);
 
-    Promise.all([d3.json(urlstr_hispest), d3.json(urlstr_nonhispest)]).then(function (data) {
+    Promise.all([fetchJSON(urlstr_hispest), fetchJSON(urlstr_nonhispest)]).then(function (data) {
       if (!isCurrent()) return;
       if (!data[0] || !data[1] || !data[0].length || !data[1].length) { showSectionMessage('#RaceTab', isCurrent, "empty"); return; }
       var hisp_est = [];
@@ -499,7 +512,7 @@
 
     var isCurrent = beginSection('#HousTab', geoName);
 
-    d3.json(urlstr).then(function (data) {
+    fetchJSON(urlstr).then(function (data) {
       if (!isCurrent()) return;
       if (!data || !data.length) { showSectionMessage('#HousTab', isCurrent, "empty"); return; }
       data.forEach(function (obj) {
@@ -606,7 +619,7 @@
 
     var isCurrent = beginSection('#TenureTab', geoName);
 
-    d3.json(tenurestr_cur).then(function (data) {
+    fetchJSON(tenurestr_cur).then(function (data) {
       if (!isCurrent()) return;
       if (!data || data.length < 2) { showSectionMessage('#TenureTab', isCurrent, "empty"); return; }
       var row = data[1];
@@ -674,11 +687,11 @@
     var rent_prev_url = 'https://api.census.gov/data/' + prevyr + '/acs/acs5?get=NAME,B25064_001E,B25064_001M&' + geoScope + '&key=' + apiKey;
 
     var requests = [
-      d3.json(pov_cur_url), d3.json(pov_prev_url),
-      d3.json(educ_cur_url), d3.json(educ_prev_url),
-      d3.json(inc_cur_url), d3.json(inc_prev_url),
-      d3.json(home_cur_url), d3.json(home_prev_url),
-      d3.json(rent_cur_url), d3.json(rent_prev_url)
+      fetchJSON(pov_cur_url), fetchJSON(pov_prev_url),
+      fetchJSON(educ_cur_url), fetchJSON(educ_prev_url),
+      fetchJSON(inc_cur_url), fetchJSON(inc_prev_url),
+      fetchJSON(home_cur_url), fetchJSON(home_prev_url),
+      fetchJSON(rent_cur_url), fetchJSON(rent_prev_url)
     ];
 
     Promise.all(requests).then(function (res) {

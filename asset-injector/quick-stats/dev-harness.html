@@ -17,12 +17,13 @@
       document.getElementById('harness-errors').textContent += 'JS ERROR: ' + e.message + ' | ';
     });
     window.drupalSettings = {};
-    // Test switches: ?fail=gis | ?fail=census  (requests fail), ?empty=gis (empty results)
+    // Test switches: ?fail=gis | ?fail=census  (requests fail), ?empty=gis (empty results), ?flaky=1 (first try of each request fails)
     (function () {
-      var q = new URLSearchParams(location.search), realFetch = window.fetch;
+      var q = new URLSearchParams(location.search), realFetch = window.fetch, seen = {};
       window.fetch = function (url) {
         var u = String(url);
         var host = u.indexOf('gis.dola.colorado.gov') > -1 ? 'gis' : (u.indexOf('api.census.gov') > -1 ? 'census' : '');
+        if (host && q.get('flaky') && u.indexOf('componentYRS') === -1 && !seen[u]) { seen[u] = true; return Promise.reject(new TypeError('Load failed')); }
         if (host && q.get('fail') === host && u.indexOf('componentYRS') === -1) return Promise.reject(new TypeError('Simulated failure'));
         if (host && q.get('empty') === host && u.indexOf('componentYRS') === -1) return Promise.resolve(new Response('[]', { status: 200 }));
         return realFetch.apply(this, arguments);
