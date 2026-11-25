@@ -47,9 +47,10 @@ Do not redesign the shared utility in this step.
 
 ### 3. Shared utility decision
 
-- [ ] List which utility functions Quick Stats actually uses.
-- [ ] Decide: (a) inline them into `quick-stats.js`, or (b) create a small versioned file (`sdo-core-v1.js`).
-- [ ] Do not modify `Global_SDO_Utilities_v2_combined.js`; other apps depend on it.
+- [x] For launch, keep using the existing `Global_SDO_Utilities_v2_combined.js` and leave it unchanged; Quick Stats and other dashboards depend on it.
+- [x] Retire the obsolete `Global_SDO_Utilities.js` v1 source and update the stale lookup-rule reference. This repository cleanup does not change Drupal's manually pasted code.
+- [ ] Record the exact utility injector and its page scopes in `DEPLOYMENT.md`.
+- [ ] Defer utility modularization until after Quick Stats is stable; inventory consumers before extracting modules.
 
 ### 4. Test outside Drupal
 
